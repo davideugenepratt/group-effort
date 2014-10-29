@@ -1,6 +1,6 @@
 <?php
  
-class DEP_Base_Plugin_Loader {
+class DEP_Plugin_Base_Loader {
  
     protected $actions;
  

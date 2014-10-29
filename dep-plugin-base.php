@@ -15,3 +15,14 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
+
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-dep-plugin-base.php';
+ 
+function run_dep_plugin_base() {
+ 
+    $dep_p_b = new DEP_Plugin_Base();
+    $dep_p_b->run();
+ 
+}
+ 
+run_dep_plugin_base();
