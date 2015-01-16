@@ -16,13 +16,13 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-dep-plugin-base.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-group-effort.php';
  
-function run_dep_plugin_base() {
+function run_group_effort() {
  
-    $dep_p_b = new DEP_Plugin_Base();
-    $dep_p_b->run();
+    $group_effort = new Group_Effort();
+    $group_effort->run();
  
 }
  
-run_dep_plugin_base();
+run_group_effort();

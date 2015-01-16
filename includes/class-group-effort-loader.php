@@ -1,6 +1,6 @@
 <?php
  
-class DEP_Plugin_Base_Loader {
+class Group_Effort_Loader {
  
     protected $actions;
  
