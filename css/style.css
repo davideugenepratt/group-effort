@@ -1,0 +1,86 @@
+/* Empty. Add your own CSS if you like */
+
+/*
+body {
+	background-image:url('../img/bg.png');
+	background-size:cover;
+	background-position:center center;
+	background-repeat:no-repeat;
+}
+*/
+
+p.time {
+	font-size:11px;
+	color:#aaa;
+}
+
+.effort-list-item {
+	padding:0 10px;
+}
+
+.effort-list-item a {
+	color:#387EF5;
+	display:block;
+	padding:15px 0px;
+	text-decoration:none;
+}
+
+img.avatar {
+	border-radius:50%;
+	max-width:100%;
+	height:auto;
+}
+
+.monthly-week {
+	width:100%;
+	display:block;
+	height:auto;
+	margin-bottom:5px;
+}
+
+.monthly-week input {
+	position:fixed;
+	top:-9999px;
+	left:-9999px;
+	display:block;
+	height:0;
+	width:0;
+}
+
+.monthly-week label {
+	display:block;
+	float:left;
+	width:14.285714285714285714285714285714%;
+	height:0;
+	padding-top:14.285714285714285714285714285714%;
+	background:#999;	
+	position:relative;	
+	overflow:hidden;
+}
+
+.monthly-week label div {
+	position:absolute;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;	
+}
+
+.monthly-week label input:checked + div {
+	background:#4A87EE;
+}
+
+.monthly-week label div span {
+	display:block;
+	text-align:center;
+	font-size:12px;
+	color:#FFF;
+	height:12px;
+	position:absolute;
+	top:0; left:0; right:0; bottom:0;
+	margin:auto;
+}
+
+.task .item-avatar > img:first-child {
+	top:5px;
+}

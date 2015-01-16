@@ -1,0 +1,42 @@
+<!--
+  This template loads for the 'tab.friend-detail' state (app.js)
+  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
+  The FriendsCtrl pulls data from the Friends service (service.js)
+  The Friends service returns an array of friend data
+-->
+<ion-view view-title="{{effort.title}} - Tasks">
+	
+  <ion-content >
+  <div ng-include src="'templates/effort-tabs.html'"></div>
+  <ion-list>
+      <div class="item item-button-right">
+        Add Task
+        <a class="button button-positive" href="#/tab/efforts/{{effort.id}}/tasks/add">
+          <i class="icon ion-plus"></i>
+        </a>
+      </div>
+    <div class="item item-icon-left item-icon-right task"  ng-repeat="task in tasks track by $index"  >
+            <div class="icon" ng-show="data.tasks[ $index ].available">
+            	<button class="button button-light button-small" ng-show="!data.tasks[ $index ].finished" ng-click="data.tasks[ $index ].finished = true" >
+                
+                </button>
+                <button class="button button-light button-small ion-checkmark" ng-show="data.tasks[ $index ].finished" ng-click="data.tasks[ $index ].finished = false" >
+                </button>
+            </div>
+            <div class="item-toggle">
+            {{task.title}}
+            <label class="toggle toggle-calm task" ng-show="data.tasks[ $index ].available" >
+               <input type="checkbox" ng-model="data.tasks[ $index ].dibs" ng-checked="data.tasks[ $index ].dibs" ng-click="dibs( effort.id , $index )">               
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+            </label>
+            
+            
+            </div>
+            <div class="item-avatar icon" ng-bind-html="data.tasks[ $index  ].face" ng-hide="data.tasks[ $index ].available"></div>                
+    </div>
+    
+  </ion-list>
+  </ion-content>
+</ion-view>

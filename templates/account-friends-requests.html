@@ -1,0 +1,40 @@
+<ion-view view-title="Account - Friends - Requests">
+  <ion-content>
+  <div class="button-bar">
+      <a class="button button-calm" href="#/tab/account/friends">Friends</a>
+      <span class="button button-positive">Requests <span class="badge badge-assertive" ng-hide="friends.requestReceived.length == 0">{{friends.requestReceived.length}}</span></span>
+    </div>
+    <ion-list>
+    <ion-item class="item item-divider" >
+        New Friend Request
+      </ion-item>
+    <form ng-submit="addFriend()">
+        <ion-item class="item item-input-inset">
+                <label class="item-input-wrapper">
+                  <input type="text" placeholder="Email Address" ng-model="newFriendData.email">
+                </label>        
+                <button class="button button-positive button-small" type="submit"><i class="icon ion-person-add"></i></button>
+        </ion-item>
+    </form>
+      <ion-item class="item item-divider" >
+        Friend Requests
+      </ion-item>
+      <ion-item ng-show="friends.requestReceived.length == 0">No Friend Requests</ion-item>
+      <ion-item class="item"  ng-repeat="friend in friends.requestReceived">
+      <div class="item-note">
+            <a class="button button-positive button-small" ng-click="acceptRequest( friend.email )"><i class="ion-plus"></i></a>
+            <a class="button button-outline button-positive button-small" ng-click="denyRequest( friend.email )"><i class="ion-minus"></i></a>
+        </div>
+      	<div class="item-avatar" type="item-text-wrap"  ng-bind-html="friend.face+'<h2>'+friend.username+'</h2><p>'+friend.email+'</p>'" ></div>      
+        
+      </ion-item>
+      <ion-item class="item item-divider"  >
+        Pending Requests
+      </ion-item>
+      <ion-item ng-show="friends.requestSent.length == 0">No Pending Requests</ion-item>
+      <ion-item class="item-avatar" ng-repeat="friend in friends.requestSent" type="item-text-wrap"  ng-bind-html="friend.face+'<h2>'+friend.username+'</h2><p>'+friend.email+'</p>'" >
+        
+      </ion-item>            
+    </ion-list>
+  </ion-content>
+</ion-view>

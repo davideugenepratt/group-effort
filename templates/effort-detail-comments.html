@@ -1,0 +1,27 @@
+<!--
+  This template loads for the 'tab.friend-detail' state (app.js)
+  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
+  The FriendsCtrl pulls data from the Friends service (service.js)
+  The Friends service returns an array of friend data
+-->
+<ion-view view-title="{{effort.title}} - Comments">
+  <ion-content >
+  <div ng-include src="'templates/effort-tabs.html'"></div>
+  <ion-list>
+    <ion-item class="item">
+        <form ng-submit="addEffortComment()">
+            <label class="item-input">                
+            <textarea placeholder="Comment" ng-model="addCommentData.comment" ng-keyup="autoExpand($event)" data-min-height="50" data-max-height="300" ></textarea>
+            </label>        
+            <button class="button button-positive button-block" type="submit"><i class="icon ion-plus"></i></button>        
+        </form>
+    </ion-item>
+    <ion-item class="item item-text-wrap" ng-repeat="comment in comments">
+        <h2>{{comment.comment_author}}</h2>
+        <p>{{comment.comment_content}}</p>
+        <p class="time">{{comment.comment_date}}</p>
+    </ion-item>
+    
+  </ion-list>
+  </ion-content>
+</ion-view>

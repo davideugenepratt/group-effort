@@ -1,0 +1,26 @@
+<ion-view view-title="Register">    
+  <ion-content>
+    <form ng-submit="register()">
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" placeholder="Full Name" ng-model="registerData.fullname">
+        </label>
+        <label class="item item-input">
+          <input type="text" placeholder="Email Address" ng-model="registerData.email">
+        </label>
+        <label class="item item-input">
+          <input type="text" placeholder="Userame" ng-model="registerData.username">
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="Password" ng-model="registerData.password">
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="Re-Type Password" ng-model="registerData.passwordRetype">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Continue</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

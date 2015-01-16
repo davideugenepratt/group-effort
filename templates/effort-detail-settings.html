@@ -1,0 +1,25 @@
+<!--
+  This template loads for the 'tab.friend-detail' state (app.js)
+  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
+  The FriendsCtrl pulls data from the Friends service (service.js)
+  The Friends service returns an array of friend data
+-->
+<ion-view view-title="{{effort.title}} - Settings">
+   <ion-content >
+  <div ng-include src="'templates/effort-tabs.html'"></div>
+    <ion-list class=list">
+        <div class="item item-button-right">
+            Edit Group Members
+            <a class="button button-positive" href="#/tab/efforts/{{effort.id}}/contributors" >
+              <i class="icon ion-person"></i>
+            </a>
+        </div>
+   		<div class="item item-button-right">
+            Leave Effort
+            <button class="button button-assertive" ng-click="deleteEffort( effort.id )">
+              <i class="icon ion-close"></i>
+            </button>
+        </div>
+    </ion-list>
+  </ion-content>
+</ion-view>
