@@ -41,9 +41,9 @@ class Group_Effort {
 	private function define_ajax_hooks() {
  
         $ajax = new Group_Effort_Ajax();
-		$this->loader->add_action( 'wp_ajax_nopriv_ge_authenticate', $ajax, 'group_effort_authenticate' );
-		$this->loader->add_action( 'wp_ajax_ge_authenticate', $ajax, 'group_effort_already_logged_in' ); 
-		$this->loader->add_action( 'wp_ajax_ge_login', $ajax, 'group_effort_already_logged_in' ); 
+		$this->loader->add_action( 'wp_ajax_nopriv_ge_authenticate', $ajax, 'group_effort_not_logged_in' );
+		$this->loader->add_action( 'wp_ajax_ge_authenticate', $ajax, 'group_effort_logged_in' ); 
+		$this->loader->add_action( 'wp_ajax_ge_login', $ajax, 'group_effort_logged_in' ); 
 		$this->loader->add_action( 'wp_ajax_nopriv_ge_login', $ajax, 'group_effort_login' );
 		$this->loader->add_action( 'wp_ajax_ge_logout', $ajax, 'group_effort_logout' ); 
 		$this->loader->add_action( 'wp_ajax_nopriv_ge_logout', $ajax, 'group_effort_logout' );
@@ -55,6 +55,7 @@ class Group_Effort {
 		$this->loader->add_action( 'wp_ajax_ge_getEffortTasks', $ajax, 'group_effort_get_effort_tasks' );
 		$this->loader->add_action( 'wp_ajax_ge_addEffortTask', $ajax, 'group_effort_add_effort_task' );
 		$this->loader->add_action( 'wp_ajax_ge_dibs', $ajax, 'group_effort_dibs' );
+		$this->loader->add_action( 'wp_ajax_ge_changeTaskStatus', $ajax, 'group_effort_change_task_status' );
 		$this->loader->add_action( 'wp_ajax_ge_allEfforts', $ajax, 'group_effort_all_efforts' );
 		$this->loader->add_action( 'wp_ajax_ge_leaveEffort', $ajax, 'group_effort_leave_effort' );
 		$this->loader->add_action( 'wp_ajax_ge_allFriends', $ajax, 'group_effort_all_friends' );
