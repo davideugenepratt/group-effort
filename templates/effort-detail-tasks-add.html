@@ -17,7 +17,7 @@
             <ion-item>
             	<textarea placeholder="Description" ng-model="data.description" ng-keyup="autoExpand($event)" data-min-height="50" data-max-height="300" ></textarea>
             </ion-item>
-            <ion-item class="item item-toggle">
+            <ion-item class="item item-toggle" ng-show="self.role == 'admin'" >
                  Assigned
                  <label class="toggle toggle-positive">
                    <input type="checkbox"  ng-model="data.assigned.switch">
@@ -150,10 +150,10 @@
                  </label>
                  <input type="date" placeholder="Deadline"  ng-model="data.deadline.date" ng-show="data.deadline.switch" focus="data.deadline.switch">
               </ion-item>                
-            <ion-item>
+            <div class="button-bar">
                 <a class="button" href="#/tab/efforts/{{effort.id}}/tasks">Cancel</a>
                 <button class="button button-positive" type="submit" ng-disabled="addTaskForm.submitted || addTaskForm.$invalid " >Ok</button>
-            </ion-item>  
+            </div>  
   </ion-list>
   </ion-content>
 </ion-view>

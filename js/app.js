@@ -148,7 +148,23 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
                 return Efforts.getEffort( $stateParams.effortId );
         	}
 	  }
-    })	
+    })
+	
+	.state('tab.effort-detail-notes-add', {
+		cache : false,
+      url: '/efforts/:effortId/notes/add',
+      views: {
+        'tab-efforts': {
+          templateUrl: 'templates/effort-detail-notes-add.html',
+          controller: 'EffortsDetailNotesCtrl'
+        }
+      },
+	  resolve: {
+			effort : function( $stateParams, Efforts ) {
+                return Efforts.getEffort( $stateParams.effortId );
+        	}
+	  }
+    })		
 	
 	.state('tab.effort-detail-comments', {
 		cache : false,
@@ -156,6 +172,25 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-comments.html',
+          controller: 'EffortsDetailCommentsCtrl'
+        }
+      },
+	  resolve: {
+            comments : function( $stateParams, Efforts ) {
+                return Efforts.getEffortComments( $stateParams.effortId );
+        	},
+			effort : function( $stateParams, Efforts ) {
+                return Efforts.getEffort( $stateParams.effortId );
+        	}
+	  }
+    })
+	
+	.state('tab.effort-detail-comments-add', {
+		cache : false,
+      url: '/efforts/:effortId/comments/add',
+      views: {
+        'tab-efforts': {
+          templateUrl: 'templates/effort-detail-comments-add.html',
           controller: 'EffortsDetailCommentsCtrl'
         }
       },
@@ -297,6 +332,31 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       //});
 	  
     }
+	
+  };
+  
+}).directive( 'autoexpand' , function( $window ) {
+	
+  return {
+	  
+        link: function ( scope, element, attrs, ctrl) {
+			
+            element.bind('keyup', function( event ) {
+				
+				event.preventDefault();
+				
+				var textarea = element[0];
+				
+				// console.log( event );
+				
+				//window.scrollTo( 0 , textarea.getBoundingClientRect().bottom );
+				
+				textarea.style.height =  "0px";
+												
+				textarea.style.height = textarea.scrollHeight + "px";	// Sets the element's new height to it's scroll height.
+								
+            });
+        }
 	
   };
   

@@ -671,25 +671,27 @@ angular.module('GroupEffort.services', [])
 	* @return JSON Object - the response from the server
 	*/	
 	
-	var editContributors = function( id , contributors ) {		
+	var editContributors = function( id , data ) {		
 		
-		list = [];
-		for ( var key in contributors ) {
-			if ( contributors[key] == true ) {
-				list.push( key );
-			}
-		}
+		data = JSON.stringify( data );
 		
 		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_editContributors"+
-												"&id="+ id +
-												"&contributors="+ list 
-												 )		
+												"&id="+ encodeURIComponent( id ) +
+												"&contributors="+ encodeURIComponent( data )
+												 )	
+												 	
 		.then( function( response ) {
+						
 			return response.data;
+			
 		},
+		
 		function( result ) {
+			
 			$rootScope.error = 'Could Not Connect';
+			
 			return false;	
+			
 		});
 		
 	};

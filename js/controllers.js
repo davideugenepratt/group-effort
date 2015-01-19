@@ -133,6 +133,16 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 })
 
 .controller('EffortsDetailTasksCtrl', function( $rootScope, $scope, $state, Popup, Efforts, effort  ) {
+	
+	for ( var i = 0; i < effort.contributors.length; i++ ) {
+		
+		if ( effort.contributors[i]["id"] == $rootScope.user.id ) {						
+			
+			$scope.self = effort.contributors[i];
+		
+		}
+		
+	}
 		
 	effort.activity.reverse();	
 	
@@ -177,24 +187,48 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		}
 		
 	}	
-	
-	$scope.editFriends = function( id ) {
 		
-		Efforts.editContributors( $scope.data, id ).then( function( response ) {
+	$scope.editFriends = function( id ) {
+				
+		Efforts.editContributors( id , $scope.data ).then( function( response ) {
+			
+			console.log( response );
 			
 		});
 		
-	};
-			
-	effort.activity.reverse();
+	};				
 	
 	for ( var i = 0; i < effort.contributors.length; i++ ) {
-		for ( var a = 0; a < friends.length; a++ ) {
-			if ( friends[a].ID == effort.contributors[i].id ) {
-				$scope.data[effort.contributors[i].username] = true;
-			}
+		
+		if ( effort.contributors[i]["id"] == $rootScope.user.id ) {						
+			
+			$scope.self = effort.contributors[i];
+		
 		}
-	}
+		
+		for ( var a = 0; a < friends.length; a++ ) {
+			
+			if ( friends[a].ID == effort.contributors[i].id ) {
+				
+				$scope.data[effort.contributors[i].username] = {};
+				
+				$scope.data[effort.contributors[i].username].contributor = true;
+				
+				if ( effort.contributors[i].role == "admin" ) {
+				
+					$scope.data[effort.contributors[i].username].admin = true;
+				
+				} 
+				
+			}
+			
+		}
+		
+	}	
+	
+	console.log( friends , effort , $scope.data );
+	
+	effort.activity.reverse();
 	
 	$scope.effort = effort;	
 	
@@ -228,7 +262,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.addEffortComment = function() {
 		
 		Efforts.addEffortComment( effort.id , $scope.addCommentData.comment ).then( function( response ) {
-			
+						
 			$state.go( 'tab.effort-detail-comments' , { effortId : effort.id } , { reload : true } );
 			
 		});
@@ -305,9 +339,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.dibs = function( id , task ) {
 		
 		Efforts.dibs( id , task ).then( function( result ) {
-			
-			console.log( result );
-			
+						
 			if ( !result.success ) {
 				
 				for ( var a = 0; a < effort.contributors.length; a++) {
@@ -337,11 +369,19 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		Efforts.changeTaskStatus( effortId , index , finished ).then( function( result ) {
 			
 			$scope.tasks[ index ] = result.data;
-			
-			console.log( result.data );
-			
+						
 		});
 			
+	}
+	
+	for ( var i = 0; i < effort.contributors.length; i++ ) {
+		
+		if ( effort.contributors[i]["id"] == $rootScope.user.id ) {						
+			
+			$scope.self = effort.contributors[i];
+		
+		}
+		
 	}
 	
 	$scope.data.tasks = Efforts.assignTasks( tasks , effort );
@@ -349,9 +389,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.tasks = tasks;
 	
 	$scope.effort = effort;	
-	
-	console.log( effort.contributors );
-	
+		
 })
 
 .controller('FriendsCtrl', function( $rootScope, $scope, $state, Popup, Friends, friends) {

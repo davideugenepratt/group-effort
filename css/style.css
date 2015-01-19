@@ -9,6 +9,14 @@ body {
 }
 */
 
+.align-center {
+	text-align:Center;
+}
+
+.align-right {
+	text-align:right;
+}
+
 p.time {
 	font-size:11px;
 	color:#aaa;
@@ -83,5 +91,29 @@ img.avatar {
 
 .task .item-avatar > img:first-child {
 	top:5px;
+}
+
+.add-note {
+	background:#aaa;
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	
+}
+	
+.notes-container {
+	height:100%;
+	width:100%;
+	background:#aaa;
+	border:3px solid #000;
+}
+
+
+.notes {
+	background:#ddd;
+	margin-top:50px;
+	display:block;
 }
 

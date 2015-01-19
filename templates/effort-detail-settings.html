@@ -8,7 +8,7 @@
    <ion-content >
   <div ng-include src="'templates/effort-tabs.html'"></div>
     <ion-list class=list">
-        <div class="item item-button-right">
+        <div class="item item-button-right" ng-show="self.role == 'admin'" >
             Edit Group Members
             <a class="button button-positive" href="#/tab/efforts/{{effort.id}}/contributors" >
               <i class="icon ion-person"></i>
