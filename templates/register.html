@@ -1,24 +1,39 @@
 <ion-view view-title="Register">    
   <ion-content>
-    <form ng-submit="register()">
+    <form name="registerForm" ng-submit="register()" novalidate>
       <div class="list">
         <label class="item item-input">
-          <input type="text" placeholder="Full Name" ng-model="registerData.fullname">
+          <span class="input-label">Full Name</span>
+          <input name="fullname" type="text" placeholder="John Doe" ng-model="data.fullname" required >
+          <i class="icon positive ion-checkmark-circled padding-horizontal" ng-show="registerForm.fullname.$dirty && registerForm.fullname.$valid" ></i>
+          <i class="icon assertive ion-close-circled padding-horizontal" ng-show="registerForm.fullname.$dirty && registerForm.fullname.$invalid" ></i>
         </label>
         <label class="item item-input">
-          <input type="text" placeholder="Email Address" ng-model="registerData.email">
+          <span class="input-label">Email</span>
+          <input type="email" name="email" placeholder="email@address.com" ng-model="data.email" required >
+          <i class="icon positive ion-checkmark-circled padding-horizontal" ng-show="registerForm.email.$dirty && registerForm.email.$valid" ></i>
+          <i class="icon assertive ion-close-circled padding-horizontal" ng-show="registerForm.email.$dirty && registerForm.email.$invalid" ></i>
         </label>
         <label class="item item-input">
-          <input type="text" placeholder="Userame" ng-model="registerData.username">
+          <span class="input-label">User Name</span>
+          <input type="text" name="username" placeholder="JohnDoe" ng-model="data.username" required >
+          <i class="icon positive ion-checkmark-circled padding-horizontal" ng-show="registerForm.username.$dirty && registerForm.username.$valid" ></i>
+          <i class="icon assertive ion-close-circled padding-horizontal" ng-show="registerForm.username.$dirty && registerForm.username.$invalid" ></i>
+        </label>
+        <label class="item item-input regiser-password">
+        <span class="input-label">Password</span>
+          <input type="password" name="password" placeholder="********" ng-model="data.password" ng-minlength=8 required >          
+          <i class="icon positive ion-checkmark-circled padding-horizontal" ng-show="registerForm.password.$dirty && registerForm.password.$valid" ></i>
+          <i class="icon assertive ion-close-circled padding-horizontal" ng-show="registerForm.password.$dirty && registerForm.password.$invalid" ></i>
         </label>
         <label class="item item-input">
-          <input type="password" placeholder="Password" ng-model="registerData.password">
-        </label>
-        <label class="item item-input">
-          <input type="password" placeholder="Re-Type Password" ng-model="registerData.passwordRetype">
-        </label>
+        <span class="input-label">Retype Password</span>
+          <input type="password" name="passwordRetype" placeholder="********" ng-model="data.passwordRetype" required >
+          <i class="icon positive ion-checkmark-circled padding-horizontal" ng-show="( registerForm.passwordRetype.$dirty && registerForm.password.$valid && ( data.password == data.passwordRetype ) )" ></i>
+          <i class="icon assertive ion-close-circled padding-horizontal" ng-show="( registerForm.passwordRetype.$dirty && ( data.password != data.passwordRetype ) )" ></i>
+        </label>       
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Continue</button>
+          <button class="button button-block button-positive" type="submit" ng-disabled="data.submitted || registerForm.$invalid || ( data.password != data.passwordRetype )" ng-click="data.submitted = true" >Continue</button>
         </label>
       </div>
     </form>

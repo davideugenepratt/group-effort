@@ -7,15 +7,34 @@
 <ion-view view-title="{{effort.title}} - Add Task">
 	
   <ion-content >
+  <form name="addTaskForm" ng-submit="addTask()" novalidate >
   <ion-list>
             <ion-item class="item">
                 <b>Task Title</b>
                 <br>
-                <input type="text" placeholder="Title" ng-model="data.title">
+                <input type="text" placeholder="Title" ng-model="data.title" required >
             </ion-item>
             <ion-item>
             	<textarea placeholder="Description" ng-model="data.description" ng-keyup="autoExpand($event)" data-min-height="50" data-max-height="300" ></textarea>
             </ion-item>
+            <ion-item class="item item-toggle">
+                 Assigned
+                 <label class="toggle toggle-positive">
+                   <input type="checkbox"  ng-model="data.assigned.switch">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                 </label>
+              </ion-item>
+              <div class="list" ng-show="data.assigned.switch">
+                 <label class="item item-radio"   ng-repeat="contributor in effort.contributors" >
+                 	<input type="radio" name="contributors" ng-model="data.dibs" value="{{ contributor.id }}">
+                    <div class="item-content">
+                      {{ contributor.username }}
+                    </div>
+                    <i class="radio-icon ion-checkmark" ></i>
+                 </label>              
+              </div>             
               <ion-item class="item">
               <div class="item-toggle">
                  Scheduled
@@ -133,7 +152,7 @@
               </ion-item>                
             <ion-item>
                 <a class="button" href="#/tab/efforts/{{effort.id}}/tasks">Cancel</a>
-                <button class="button button-positive" ng-click="addTask()">Ok</button>
+                <button class="button button-positive" type="submit" ng-disabled="addTaskForm.submitted || addTaskForm.$invalid " >Ok</button>
             </ion-item>  
   </ion-list>
   </ion-content>

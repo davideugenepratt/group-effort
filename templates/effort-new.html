@@ -6,11 +6,11 @@
 -->
 <ion-view view-title="New Effort">
   <ion-content >
-    <form ng-submit="addEffort()">
+    <form name="newEffortForm" ng-submit="addEffort()" novalidate >
     	<ion-item class="item">
         	<b>Effort Title</b>
             <br>
-            <input type="text" placeholder="Title" ng-model="data.title">
+            <input type="text" placeholder="Title" ng-model="data.title" required >
         </ion-item>
         <ion-item class="item item-avatar item-icon-left" ng-repeat="friend in friends" >
         	<img  class="avatar" ng-bind-html="friend.face"></img>
@@ -23,7 +23,7 @@
         </ion-item>
         <ion-item>
         	<a class="button" href="#/tab/efforts">Cancel</a>
-            <button class="button button-positive" type="submit">Ok</button>
+            <button class="button button-positive" type="submit" ng-disabled="newEffortForm.submitted || newEffortForm.$invalid " >Ok</button>
         </ion-item>
     </form>
   </ion-content>

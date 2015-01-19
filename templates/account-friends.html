@@ -1,12 +1,12 @@
-<ion-view view-title="Account - Friends">
+<ion-view view-title="Account - Collaborators">
   <ion-content>
 	<div class="button-bar">
-      <span class="button button-positive" >Friends</span>
+      <span class="button button-positive" >Collaborators</span>
       <a class="button button-calm" href="#/tab/account/friends/requests">Requests <span class="badge badge-assertive" ng-hide="friends.requestReceived.length == 0">{{friends.requestReceived.length}}</span></a>
     </div>
     <ion-list>
       <ion-item class="item item-divider" >
-        Friends
+        Collaborators
       </ion-item>
       <ion-item ng-show="friends.requestAccepted.length == 0">No Friends</ion-item>
       <ion-item class="item"   ng-repeat="friend in friends.requestAccepted">

@@ -1,408 +1,677 @@
 angular.module('GroupEffort.services', [])
 
+/**  
+  * @desc this factory holds functions for error alerts, alert dialogues, and confirmation dialogues
+  * Popup.error(); Popup.alert(); Popup.confirm();
+  * @author David Eugene Pratt - david@davideugenepratt.com
+*/  
+
 .factory( 'Popup' , function( $rootScope, $ionicPopup ) {
+	
+	/** 
+	  * @desc opens a modal window to display the error message stored in $rootScope.error
+	  * @return bool - returns false to prevent error'd action from continuing 
+	*/ 	
+	
 	var error = function() {
+		
 		$rootScope.$watch( function(scope) { return scope.error } , function() {
+			
 			if ( $rootScope.error ) {
+				
 				var errorPopup = $ionicPopup.show({
 					template: $rootScope.error,
-					title: 'Uh Oh',
+					title: 'Uh Oh!',
 					scope: $rootScope,
-					buttons: [
-					  { text: 'OK' }				  
-					]
+					buttons: [ { text: 'OK' } ]					  				  					
 				  });
+				  
 				errorPopup.then( function(res) {
+					
 					$rootScope.error = undefined;
-				  });  		  			  
+					
+					return false;
+					
+				  }); 
+				   		  			  
 			}
+			
 		});
+		
 	};
 	
+	/** 
+	  * @desc opens a modal window to display the message provided by @var message.
+	  * @params tile, message
+	  * @return bool - returns false to prevent error'd action from continuing 
+	*/		
+	
 	var alert = function( title, message ) {
+		
 		var alertPopup = $ionicPopup.show({
 			template: message,
 			title: title,
 			scope: $rootScope,
-			buttons: [
-			  { text: 'OK' }				  
-			]
-		  });
-		alertPopup.then( function(res) {
-			
-		  });  		  			  
-
+			buttons: [ { text: 'OK' } ]
+		});
+		
+		alertPopup.then( function(res) { } );  		
+		  			  
 	};
 	
-	var confirm = function( message ) {
+	/** 
+	  * @desc opens a modal window to display a confirmation dialogue
+	  * @params title, message
+	  * @return bool - returns false to prevent error'd action from continuing 
+	*/	
+	
+	var confirm = function( title , message ) {
+		
 		   var confirmPopup = $ionicPopup.confirm({
-			 title: 'Please Confirm',
+			 title: title,
 			 template: message
 		   });
 		   
 		   return confirmPopup.then( function(res) {
+			   
 			 return res;
-		   });
-	 };
-	 
-	 var addEffort = function( friends ) {
-		 	$rootScope.data = {};
-			$rootScope.data.friends = {};
-		 	list = '<ion-item class="item"><b>Effort Title</b><br><input type="text" placeholder="Title" ng-model="data.title"></ion-item>';			
-			for( var i = 0; i < friends.length; i++ ) {
-				list += '<ion-item  class="item-avatar" >'+friends[i].face+'<h2>'+friends[i].username+'</h2>'+'<p>'+friends[i].email+'</p><label class="toggle"><input type="checkbox" ng-model="data.friends.'+friends[i].username+'" ><div class="track"><div class="handle"></div></div></label></ion-item>';
-			}
-					 
-	   var addEffortPopup = $ionicPopup.show({
-		   title : 'Add New Effort',
-			 template: list,
-			 scope: $rootScope,
-			buttons: [
-			  { text: 'Cancel',
-				onTap: function(e) {
-					return false;
-				}
-			  },
-			  {
-				text: '<b>OK</b>',
-				type: 'button-positive',
-				onTap: function(e) {
-					if ( null != $rootScope.data.title ) {
-						return $rootScope.data;
-					} else {						
-						$rootScope.error = "Title can't be blank";
-						return false;
-					}
-				}
-			  }
-			]
+			 
 		   });
 		   
-		   return addEffortPopup.then( function(res) {
-			 return res;
-		   });
-	 };  
-	 
-	 var friendsList = function( friends, current ) {
-		 	 		  
-			list = '';
-			$rootScope.data = {};
-			$rootScope.data.friends = {};
-			for( var i = 0; i < friends.length; i++ ) {
-				friend = {};
-				var selected = 'ng-checked="false"';
-				for( var a = 0; a < current.length; a++ ) {
-					if ( friends[i].ID == current[a].id ) {
-						selected = 'ng-checked="true"';
-						$rootScope.data.friends[friends[i].username] = true;
-					}
-				}
-				if ( friends[i].status == "Request Accepted" ) {
-					list += '<ion-item  class="item-avatar" >'+friends[i].face+'<h2>'+friends[i].username+'</h2>'+'<p>'+friends[i].email+'</p><label class="toggle"><input type="checkbox" '+selected+' ng-model="data.friends.'+friends[i].username+'" ><div class="track"><div class="handle"></div></div></label></ion-item>';
-				}
-			}
-					 
-		   var friendsListPopup = $ionicPopup.show({
-			 title: 'Add Friend',
-			 template: list,
-			 scope: $rootScope,
-			buttons: [
-			  { text: 'Cancel',
-				onTap: function(e) {
-					return false;
-				}
-			  },
-			  {
-				text: '<b>OK</b>',
-				type: 'button-positive',
-				onTap: function(e) {
-					return $rootScope.data.friends;
-				}
-			  }
-			]
-		   });
-		   
-		   return friendsListPopup.then( function(res) {
-			 return res;
-		   });
-	 };  			  
-	
+	 };	 	 
 	
 	return {
 		error : error,
 		confirm : confirm,
-		alert : alert,
-		addEffort : addEffort,
-		friendsList : friendsList
+		alert : alert
 	}
 	
 })
 
-.factory( 'Authenticate' , function( $rootScope , $http, $location, $state ) {
+/**  
+  * @desc this factory holds functions for the authentication of users
+  * Authenticate.authenticate(); 
+  * Authenticate.authenticate.check(); 
+  * Authenticate.authenticate();
+  * @author David Eugene Pratt - david@davideugenepratt.com
+*/  
+
+.factory( 'Authenticate' , function( $rootScope , $http, $location, $state ) {		
+	
+	/** 
+	  * @desc determines whether or not the current user is logged in or not.
+	  * @params No params.
+	  * @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user.
+	*/	
 	
 	var authenticate = function() {
+				
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_authenticate" )
 		
-		var check = function() {
-			return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_authenticate" )
-			.then( function( response ) {
-				if ( "FALSE" == response.data ) {						
-					return false;
-				} else {
-					$rootScope.user = response.data;
-					return true;
-				}										
-			},
-			function( result ) {
-				$rootScope.error = 'Could Not Connect';
-				return result.data;	
-			});							
-		};
-		
-		if ( null == $rootScope.loggedIn ) {
-			return check().then( function( loggedIn ) {
-				if ( !loggedIn ) {
-					// not going to #login, we should redirect now
-					if ( '/login' == $location.path() )  {
-						// Do Nothing
-					} else if ( '/register' == $location.path() )  {
-						$state.go('register');
-					} else if ( '/login' != $location.path() ) {
-						$state.go('login');
+		.then( function( response ) {
+			
+			if ( false == response.data.success ) {
+				
+				if ( !$rootScope.loggedIn ) {
+					
+					if ( "/login" == $location.path() ) {
+								
+						return false;
+				
 					}
-					return false;
-				} else {				
-					$rootScope.loggedIn = true;					
-					if ( '/login' == $location.path() || '/register' == $location.path()  )  {
-						$state.go('tab.dash');
-					}
+					
 				}
-			});
-			} else if ( true == $rootScope.loggedIn ) {
-				  if ( '/login' == $location.path() || '/register' == $location.path()  )  {
-					$state.go('tab.dash');
-				  }
-			  }
-			  
+													
+				$rootScope.loggedIn = false;
+				
+				console.log( 'Not logged in. Going from ' + $location.path() + ' to login screen' );
+				
+				// "Not logged in. Going from /tab/account to login screen"
+				
+				if ( "/login" != $location.path() ) {
+								
+					$state.go( 'login' );
+				
+				}
+				
+				return false;
+				
+			} else {
+									
+				$rootScope.loggedIn = true;
+				
+				$rootScope.user = response.data.data;
+				
+				return true;
+				
+			}	
+												
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});						
+							  
 	};
-	
-	var validateRegister = function( fullname, email, username , password, passwordRetype ) {
-	
-		var validateEmail = function( email ) {
-			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return re.test( email );
-		};
-		
-		if ( null == fullname ) {
-			$rootScope.error = "Full Name can not be empty";			
-			return false;
-		} else if ( !validateEmail( email ) ) {			
-			$rootScope.error = "Invalid Email Address";			
-			return false;
-		} else if ( null == username ) {			
-			$rootScope.error = "Username can not be empty";			
-			return false;
-		} else if ( 7 >= password.length ) {
-			$rootScope.error = "Passwords must be 8 characters or more";			
-			return false;
-		} else if ( password != passwordRetype ) {
-			$rootScope.error = "Passwords must match";			
-			return false;
-		} else {
-			return true;
-		}		
-		
-	};			
+						
+	/** 
+	* @desc Logs the user into the WordPress System.
+	* @params var username (string) - the username
+	* @params var password (string) - the password
+	* @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user
+	*/	
 	
 	var login = function( username , password ) {
+		
 		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_login&username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password) )
+		
 		.then( function( response ) {
-			if ( "FALSE" == response.data ) {						
-				return false;
-			} else {				
-				$rootScope.loggedIn = true;
-				$rootScope.user = response.data;
-				return true;
-			}										
-		},
-		function( result ) {
-			$rootScope.loggedIn = false;
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
-	
-	var logout = function() {		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_logout" )
-		.then( function( response ) {
-			$rootScope.loggedIn = false;
-			return true;								
-		},
-		function( result ) {
-			$rootScope.loggedIn = true;
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
-	
-	var register = function( fullname, email, username , password, passwordRetype ) {
+									
+			if ( false == response.data.success ) {	
+				
+				$rootScope.error = response.data.reason;
 								
+				return false;
+				
+			} else {		
+					
+				$rootScope.loggedIn = true;
+				
+				$rootScope.user = response.data.data;
+				
+				return true;
+				
+			}					
+								
+		},
+		
+		function( result ) {
+			
+			$rootScope.loggedIn = false;
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+		
+	};
+	
+	/** 
+	* @desc Logs the current user out.
+	* @params
+	* @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user
+	*/
+	
+	var logout = function() {
+				
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_logout" )
+		
+		.then( function( response ) {
+			
+			$rootScope.loggedIn = false;
+			
+			return true;
+											
+		},
+		
+		function( result ) {
+						
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+		
+	};
+	
+	/** 
+	* @desc registers user as a new user.
+	* @params var fullname (string) - Users full name
+	* @params var email (string) - Users email address
+	* @params var password (string) - Users password
+	* @params var username (string) - Users desired username
+	* @return var response.data - array( "success" => (string) "true" or "false", "reason" => the reason [success] is false, "user" => the user array if true. )
+	*/
+	
+	var register = function( fullname, email, username , password ) {
+		
 		return $http.get( 	$rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_register" +
 						"&fullname=" + encodeURIComponent(fullname) + 
 						"&email=" + encodeURIComponent(email) + 
 						"&username=" + encodeURIComponent(username) + 
 						"&password=" + encodeURIComponent(password) 						
 						)
-		.then( function( response ) {
-			if ( "TRUE" == response.data ) {						
-				$rootScope.loggedIn = true;				
-				return true;
-			} else {
-				$rootScope.error = response.data;
-				return false;
-			}										
-		},		
-		function( result ) {
-			$rootScope.loggedIn = false;
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-		
+						
+			.then( function( response ) {
+				
+				if ( "false" != response.data.success ) {	
+				
+					$rootScope.loggedIn = true;	
+								
+					return response.data.data;
+					
+				} else {
+					
+					$rootScope.error = response.data.reason;
+					
+					return false;
+					
+				}		
+												
+			},
+					
+			function( result ) {
+				
+				$rootScope.error = 'Could Not Connect';
+				
+				return false;	
+				
+			});
+			
 	};
 	
 	return {
 		authenticate : authenticate,
 		login : login,
-		validateRegister : validateRegister,
 		register : register,
 		logout : logout
 	}
 })
 
-.factory('Efforts', function( $rootScope, $http ) {
-  // Might use a resource here that returns a JSON array
-	var addEffort = function( title , contributors ) {		
-		return $http.get( $rootScope.baseURL + 	"wp-admin/admin-ajax.php?action=ge_addEffort" + 
-												"&title=" + title +
-												"&contributors=" + JSON.stringify( contributors ) 
-												)
-		.then( function( response ) {
-			return response.data;
-		},
-		function( result ) {
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
-	
-	var leaveEffort = function( id ) {	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_leaveEffort&" +
-												"id="+id )
-		.then( function( response ) {
-			return response.data;
-		},
-		function( result ) {
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
-	
-	var getEffort = function( id ) {
-		console.log( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffort&" +
-												"id="+id );	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffort&" +
-												"id="+id )
-		.then( function( response ) {
-			return response.data;
-		},
-		function( result ) {
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
-	
-	var getEffortTasks = function( id ) {
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffortTasks&" +
-												"id="+id )
-		.then( function( response ) {
-			return response.data;
-		},
-		function( result ) {
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
-	
-	var addEffortTask = function( id , task ) {
+/**  
+  * @desc this factory holds functions for all the function dealing with the efforts
+  * Efforts.allEfforts();
+  * Efforts.addEffort(); 
+  * Efforts.leaveEffort(); 
+  * Efforts.getEffort();
+  * Efforts.getEffortTasks();
+  * Efforts.addEffortTask();
+  * Efforts.dibs();
+  * Efforts.getEffortComments();
+  * Efforts.addEffortComment();
+  * Efforts.editContributors();
+  * @author David Eugene Pratt - david@davideugenepratt.com
+*/
 
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addEffortTask" +
-												"&id=" + id +
-												"&task=" + encodeURIComponent( JSON.stringify( task ) ) )
+.factory('Efforts', function( $rootScope, $http, $state ) {
+ 	
+	/** 
+	* @desc determines whether or not the current user is logged in or not.
+	* @params no params
+	* @return (array) - Returns an object of all tasks - array( array( 'ID' => Effort ID, 'activity' => Current user's last checked activity of effort, 'title' => The title of the effort.
+	*/
+	
+ 	var allEfforts = function() {	
+	
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_allEfforts" )
+		
 		.then( function( response ) {
-			return response.data;
+			
+			return response.data.data;
+			
 		},
+		
 		function( result ) {
+			
 			$rootScope.error = 'Could Not Connect';
-			return false;	
+			
+			return false;
+				
 		});
 		
 	};
+	
+ 	/** 
+	* @desc Adds an effort to the current user's account.
+	* @params var title (string) = The title of the effort to be added.
+	* @params var contributors (array) = An indexed array of the contributors to be added.
+	* @return (string) - returns the id of the created effort.
+	*/
+	
+	var addEffort = function( title , contributors ) {	
+		
+		return $http.get( $rootScope.baseURL + 	"wp-admin/admin-ajax.php?action=ge_addEffort" + 
+												"&title=" + encodeURIComponent( title ) +
+												"&contributors=" + encodeURIComponent( JSON.stringify( contributors ) ) 
+												)
+												
+		.then( function( response ) {
+			
+			return response.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+		
+	};
+
+	/** 
+	* @desc Removes the effort from the current user's list. If current user is the only one the effort will be lost.
+	* @params var id (int) = The ID of the effort to be removed.
+	* @return (string) - returns "TRUE" if connection was made and the effort was removed and "FALSE" if not. 
+	*/	
+	
+	var leaveEffort = function( id ) {	
+	
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_leaveEffort&" +
+												"id=" + encodeURIComponent( id ) )
+												
+		.then( function( response ) {
+			
+			return response.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+		
+	};
+
+	/** 
+	* @desc Gets the specified effort.
+	* @params var id (int) = The ID of the effort to be removed.
+	* @return (string) - returns "TRUE" if connection was made and the effort was removed and "FALSE" if not. 
+	*/	
+	
+	var getEffort = function( id ) {
+		
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffort&" +
+												"id="+id )
+												
+		.then( function( response ) {
+			
+			if ( response.data.success ) {
+			
+				return response.data.data;
+			
+			} else {
+				
+				$rootScope.error = response.data.reason;
+				
+				$state.go( 'tab.efforts' );
+				
+				return false;
+				
+			}
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+		
+	};
+			
+	/** 
+	* @desc Gets all the tasks assigned to current effort.
+	* @params var id (int) = The id of the effort to get tasks from.
+	* @return (object) - returns an array of all task objects attached to the effort.
+	* @return bool - returns false if there is an error connecting.
+	*/
+	
+	var getEffortTasks = function( id ) {
+		
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffortTasks&" +
+												"id=" + encodeURIComponent( id ) )
+												
+		.then( function( response ) {
+			
+			return response.data.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;
+				
+		});
+		
+	};
+	
+	/** 
+	* @desc Adds a task to specified effort.
+	* @params var id (int) = The id of the effort to get tasks from.
+	* @params var task (array) = array( "title" => The task title, "deadline" => The deadline date if task has one, "schedule" => The task's scehdule data if scheduled.
+	* @return bool - returns false if there is an error connecting.
+	*/	
+	
+	var addEffortTask = function( id , task ) {
+		
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addEffortTask" +
+												"&id=" + encodeURIComponent( id ) +
+												"&task=" + encodeURIComponent( JSON.stringify( task ) ) )
+												
+		.then( function( response ) {
+			
+			return response.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+		
+	};
+	
+	/** 
+	* @desc Allows current user to call dibs on a task.
+	* @params var id (int) = The id of the effort the task belongs to
+	* @params var task (int) = The index of the task the user is trying to call dibs on.
+	* @return (string) - returns "TRUE" if the user was able to call dibs on it or the id of the user who already has dibs on it.
+	*/
 	
 	var dibs = function( id , task ) {
 
 		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_dibs" +
-												"&id=" + id +
-												"&task=" + task )
+												"&id=" + encodeURIComponent( id ) +
+												"&task=" + encodeURIComponent( task ) 
+												)
+												
 		.then( function( response ) {
+			
 			return response.data;
+			
 		},
+		
 		function( result ) {
+			
 			$rootScope.error = 'Could Not Connect';
+			
 			return false;	
+			
 		});
 		
 	};
 	
-	var getEffortComments = function( id ) {
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffortComments&" +
-												"id="+id )
-		.then( function( response ) {
-			return response.data;
-		},
-		function( result ) {
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
+	/** 
+	* @desc Assigns the correct users to each task in the effort.
+	* @params var tasks (array) = the list of tasks to assign the contributors to.
+	* @params var effort (object) = the effort which has the tasks to be assigned.
+	* @return (array) - returns a new array of all the tasks with the right users assigned.
+	*/
+	
+	var assignTasks = function( tasks , effort ) {
+		
+		var assignedTasks = {};
+		
+		for ( var i = 0; i < tasks.length; i++ ) {
+		
+			assignedTasks[ i ] = {};
+			
+			if ( ( tasks[i].dibs == $rootScope.user.id ) ) {	
+					
+				assignedTasks[i].dibs = true;
+				
+				assignedTasks[i].available = true;
+				
+			} else if ( ( tasks[i].dibs == '' ) || ( tasks[i].dibs == null ) ) {
+				
+				assignedTasks[ i ].dibs = false;
+				
+				assignedTasks[i].available = true;
+				
+			} else {
+				
+				assignedTasks[i].available = false;
+				
+				for ( var a = 0; a < effort.contributors.length; a++) {
+					
+					if ( tasks[i].dibs == effort.contributors[a].id ) {
+						
+						assignedTasks[ i ].face = effort.contributors[a].face;
+						
+					}
+					
+				}
+				
+			}
+				
+		}	
+		
+		tasks.finished = {};
+		
+		tasks.unfinished = {};
+		
+		for ( var i = 0; i < assignedTasks.length; i++ ) {
+			
+			if ( 'finished' == assignedTasks[i].status ) {
+				
+				tasks.finished[i] = assignedTasks[i];
+				
+			} else {
+				
+				tasks.unfinished[i] = assignedTasks[i];
+			
+			}
+				
+		}
+		
+		return assignedTasks;
+		
 	};
+	
+	/** 
+	* @desc Changes the status of the specified task for the specified effort.
+	* @params var id (int) = the id of the effort that the task belongs to.
+	* @params var task (int) = the index of the task that is to be changed.
+	* @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user
+	*/
+	
+	var changeTaskStatus = function( id, task , finished ) {
+		
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_changeTaskStatus&" +
+												"id=" + encodeURIComponent( id )  +
+												"&task=" + encodeURIComponent( task ) +
+												"&finished=" + encodeURIComponent( finished )
+												)
+												
+		.then( function( response ) {
+			
+			return response.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+				
+	};	
+
+	/** 
+	* @desc Gets all the comments of the specified effort.
+	* @params var id (int) = the id of the effort that the task belongs to.
+	* @return JSON Object - the response from the server
+	*/
+		
+	var getEffortComments = function( id ) {
+		
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffortComments&" +
+												"id=" + encodeURIComponent( id )
+												)
+												
+		.then( function( response ) {
+							
+			return response.data;
+										
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+		
+	};
+	
+	/** 
+	* @desc Adds a comment to the specified effort.
+	* @params var id (int) = the id of the effort that the task belongs to.
+	* @params var comment (string) = the id of the effort that the task belongs to.
+	* @return JSON Object - the response from the server
+	*/	
 	
 	var addEffortComment = function( id , comment ) {
 
 		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addEffortComment" +
-												"&id=" + id +
-												"&comment=" + encodeURIComponent(comment) )
+												"&id=" + encodeURIComponent( id ) +
+												"&comment=" + encodeURIComponent( comment ) )
+												
 		.then( function( response ) {
-			return response.data;
+			
+			return response;
+			
 		},
+		
 		function( result ) {
+			
 			$rootScope.error = 'Could Not Connect';
+			
 			return false;	
+			
 		});
 		
 	};
 	
+	/** 
+	* @desc Edits the contributors.
+	* @params var id (int) = the id of the effort that the task belongs to.
+	* @params var comment (string) = the id of the effort that the task belongs to.
+	* @return JSON Object - the response from the server
+	*/	
 	
-	
-	var allEfforts = function() {	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_allEfforts" )
-		.then( function( response ) {
-			return response.data;
-		},
-		function( result ) {
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
-	
-	var editContributors = function( contributors, id ) {		
+	var editContributors = function( id , contributors ) {		
 		
 		list = [];
 		for ( var key in contributors ) {
@@ -431,106 +700,129 @@ angular.module('GroupEffort.services', [])
 	getEffort : getEffort,
 	allEfforts : allEfforts,
 	editContributors : editContributors,
-	getEffortComments : getEffortComments,
-	addEffortComment : addEffortComment,
 	getEffortTasks : getEffortTasks,
 	addEffortTask : addEffortTask,
-	dibs : dibs
+	assignTasks : assignTasks,
+	dibs : dibs,
+	changeTaskStatus : changeTaskStatus,
+	getEffortComments : getEffortComments,
+	addEffortComment : addEffortComment
+
   }
 })
 
-/**
- * A simple example service that returns some data.
- */
+/**  
+  * @desc this factory holds functions for adding and manipulating friends
+  * Authenticate.authenticate(); Authenticate.authenticate.check(); Authenticate.authenticate();
+  * @author David Eugene Pratt - david@davideugenepratt.com
+*/  
+
 .factory('Friends', function( $rootScope, $http, $state, Popup ) {
-  // Might use a resource here that returns a JSON array
-	var allFriends = function() {	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_allFriends" )
-		.then( function( response ) {
-			return response.data;
-		},
-		function( result ) {
-			$rootScope.error = 'Could Not Connect';
-			return false;	
-		});
-	};
 	
-	var validateFriend = function( email, friends ) {
+  /** 
+  * @desc Sends a friend request to the specified email address
+  * @params var email (string) - The email of the eprson to send to.
+  * @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user
+  */
 	
-		var validateEmail = function( email ) {
-			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return re.test( email );
-		};
-		
-		if ( null == email ) {
-			$rootScope.error = "Email can not be empty";			
-			return false;
-		} else if ( !validateEmail( email ) ) {			
-			$rootScope.error = "Invalid Email Address";			
-			return false;
-		} else if ( $rootScope.user.email == email ) {			
-			$rootScope.error = "This is your own email address";			
-			return false;
-		} else {
-			for ( var i = 0; i < friends.length; i++ ) {
-				if ( friends[i]["email"] == email ) {
-					if ( friends[i]["status"] == "Request Sent" ) {
-						$rootScope.error = "You've already sent a request to that email.";						
-					} else if ( friends[i]["status"] == "Request Received" ) {
-						$rootScope.error = "You've already sent a request to that email.";						
-					} else if ( friends[i]["status"] == "Request Accepted" ) {
-						$rootScope.error = "You're already friends with that person.";						
-					}
-					return false;	
-				}
-			}
-		}
-		
-		return true;		
-		
-	};
-  
-  var addFriend = function( email, friends ) {
+  var addFriend = function( email ) {
 	  
-	  //!! Need to make sure they are not already friends !!!!!//
-	  if ( validateFriend( email, friends ) ) {
-		  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addFriend&" +
-													"email="+ email )
-			.then( function( response ) {
-				return response.data;			
-			},
-			function( result ) {
-				$rootScope.error = 'Could Not Connect';
-				return false;	
-			});
-	  }
+	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addFriend&" +
+												"email=" + encodeURIComponent( email ) )
+												
+		.then( function( response ) {
+			
+			return response.data;		
+				
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;	
+			
+		});
+			
   };
+  
+  /** 
+  * @desc Accepts an awaiting request from a user
+  * @params var email (string) - The email of the person of whos request to accept.
+  */  
   
   var acceptRequest = function( email ) {
+	  
 	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_acceptRequest&" +
-													"email="+ email )
+													"email=" + encodeURIComponent( email ) )
+													
 		.then( function( response ) {
-			return response.data;			
+			
+			return response.data;		
+				
 		},
+		
 		function( result ) {
+			
 			$rootScope.error = 'Could Not Connect';
-			return false;	
+			
+			return false;
+				
 		});
 	  
   };
   
+  /** 
+  * @desc Denys an awaiting request from a user or removes them from the existing list.
+  * @params var email (string) - The email of the person to remove.
+  * @return bool - returns the response from the server.
+  */ 
+  
   var denyRequest = function( email ) {
+	  
 	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_removeFriend&" +
-													"email="+ email )
+													"email=" + encodeURIComponent( email ) )
+													
 		.then( function( response ) {
-			return response.data;			
+			
+			return response.data;	
+					
 		},
+		
 		function( result ) {
+			
 			$rootScope.error = 'Could Not Connect';
+			
 			return false;	
+			
 		});
 	  
   };
+	
+  /** 
+  * @desc Provides a list of all the current users friends.
+  * @return (object) of all the current users friends.
+  */ 	
+	
+	var allFriends = function() {	
+	
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_allFriends" )
+		
+		.then( function( response ) {
+			
+			return response.data.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;
+				
+		});
+		
+	};
 
   return {
     allFriends : allFriends,

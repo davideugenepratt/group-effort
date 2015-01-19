@@ -15,14 +15,16 @@
           <i class="icon ion-plus"></i>
         </a>
       </div>
-    <div class="item item-icon-left item-icon-right task"  ng-repeat="task in tasks track by $index"  >
+      <div class="item item-divider item-icon-right" >
+    	Un-Finished Tasks
+        <span class="icon"><span class="item-note padding-horizontal">Dibs</span></span>
+    </div>
+    <div class="item item-icon-left item-icon-right task"  ng-repeat="task in tasks track by $index" ng-hide="task.finished" >
             <div class="icon" ng-show="data.tasks[ $index ].available">
-            	<button class="button button-light button-small" ng-show="!data.tasks[ $index ].finished" ng-click="data.tasks[ $index ].finished = true" >
-                
-                </button>
-                <button class="button button-light button-small ion-checkmark" ng-show="data.tasks[ $index ].finished" ng-click="data.tasks[ $index ].finished = false" >
-                </button>
+            	<button class="button button-light button-small" ng-show="!task.finished" ng-click="changeStatus( effort.id , $index , !task.finished );" >
+                </button>                
             </div>
+            
             <div class="item-toggle">
             {{task.title}}
             <label class="toggle toggle-calm task" ng-show="data.tasks[ $index ].available" >
@@ -33,6 +35,19 @@
             </label>
             
             
+            </div>
+            <div class="item-avatar icon" ng-bind-html="data.tasks[ $index  ].face" ng-hide="data.tasks[ $index ].available"></div>                
+    </div>
+    <div class="item item-divider" >
+    	Finished Tasks
+    </div>
+    <div class="item item-icon-left item-icon-right task"  ng-repeat="task in tasks track by $index"  ng-show="task.finished" >
+            <div class="icon" ng-show="data.tasks[ $index ].available">
+            	<button class="button button-light button-small ion-close" ng-show="task.finished" ng-click="changeStatus( effort.id , $index , !task.finished );" >                
+                </button>                
+            </div>
+            <div class="item-toggle">
+            	{{task.title}}                     
             </div>
             <div class="item-avatar icon" ng-bind-html="data.tasks[ $index  ].face" ng-hide="data.tasks[ $index ].available"></div>                
     </div>

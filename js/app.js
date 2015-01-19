@@ -11,11 +11,11 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
     
 	$rootScope.baseURL = "http://127.0.0.1:8080/Local%20Web/group-effort/";  
 	 
-  	Popup.error();
+  	Popup.error(); 								// This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.
 	
-    $ionicPlatform.ready(function() {	  
-		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-		// for form inputs)
+    $ionicPlatform.ready(function() {				  		
+			  
+		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs)
 		if (window.cordova && window.cordova.plugins.Keyboard) {
 		  cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 		}
@@ -28,10 +28,11 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 
 .config( function( $stateProvider, $urlRouterProvider, $ionicConfigProvider ) {
     
-  $ionicConfigProvider.backButton.text( '' ).icon('').previousTitleText(false);
-  $ionicConfigProvider.tabs.position( 'bottom' );
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
+  $ionicConfigProvider.backButton.text( '' ).icon('ion-arrow-left-b').previousTitleText(false);				// Removes the back button text and icon. 
+  																							// Need to remove the back button all together.
+  
+  $ionicConfigProvider.tabs.position( 'bottom' );											// Ensures the tabs stay on the
+  
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
@@ -42,36 +43,27 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
     abstract: true,
 	controller: 'TabCtrl',
     templateUrl: "templates/tabs.html",
-	  resolve: {
-			loggedeIn : function( Authenticate ) {
+	  resolve: {		  
+			loggedIn : function( $rootScope, Authenticate ) {								
 				return Authenticate.authenticate();
 			}
 	  }
   })
 
   .state('login', {
+	cache : false,
     url: "/login",
     templateUrl: "templates/login.html",
     controller: 'LoginCtrl'
   })
   
   .state('register', {
+	  cache : false,
     url: "/register",
     templateUrl: "templates/register.html",
     controller: 'RegisterCtrl'
   })
-  // Each tab has its own nav history stack:
-
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
-
+  
   .state('tab.efforts', {
 	  cache : false,
       url: '/efforts',
@@ -89,12 +81,12 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
     })
 	
     .state('tab.effort-new', {
-		cache : false,
+	  cache : false,
       url: '/efforts/new',
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-new.html',
-          controller: 'EffortsNewCtrl'
+          controller: 'EffortsDetailNewCtrl'
         }
       },
 	  resolve: {
@@ -105,7 +97,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
     })
 	
 	.state('tab.effort-detail-tasks', {
-		cache : false,
+	  cache : false,
       url: '/efforts/:effortId/tasks',
       views: {
         'tab-efforts': {
@@ -148,7 +140,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-notes.html',
-          controller: 'EffortsDetailCtrl'
+          controller: 'EffortsDetailNotesCtrl'
         }
       },
 	  resolve: {
@@ -183,7 +175,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-activity.html',
-          controller: 'EffortsDetailCtrl'
+          controller: 'EffortsDetailActivityCtrl'
         }
       },
 	  resolve: {
@@ -261,7 +253,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         	}
 	  }
     })
-
+  
   .state('tab.account', {
     url: '/account',
     views: {
@@ -273,28 +265,40 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/efforts');
 
 }).directive('focus', function($timeout, $parse) {
+	
   return {
-    //scope: true,   // optionally create a child scope
+	  
     link: function(scope, element, attrs) {
+		
       var model = $parse( attrs.focus );
+	  
       scope.$watch( model, function(value) {
-        console.log('value=',value);
+		  
         if(value === true) { 
+		
           $timeout(function() {
+			  
             element[0].focus(); 
+			
           });
+		  
         }
+		
       });
+	  
       // to address @blesh's comment, set attribute value to 'false'
       // on blur event:
       //element.bind('blur', function() {
          //console.log('blur');
          //scope.$apply(model.assign(scope, false));
       //});
+	  
     }
+	
   };
+  
 });
 
