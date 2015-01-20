@@ -9,6 +9,8 @@ body {
 }
 */
 
+*{-webkit-backface-visibility: hidden;}
+
 .align-center {
 	text-align:Center;
 }
