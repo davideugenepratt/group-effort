@@ -33,7 +33,7 @@
           <i class="icon assertive ion-close-circled padding-horizontal" ng-show="( registerForm.passwordRetype.$dirty && ( data.password != data.passwordRetype ) )" ></i>
         </label>       
         <label class="item">
-          <button class="button button-block button-positive" type="submit" ng-disabled="data.submitted || registerForm.$invalid || ( data.password != data.passwordRetype )" ng-click="data.submitted = true" >Continue</button>
+          <button class="button button-block button-positive" type="submit" ng-disabled="registerForm.$invalid || ( data.password != data.passwordRetype )" >Continue</button>
         </label>
       </div>
     </form>
