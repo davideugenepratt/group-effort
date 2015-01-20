@@ -10,7 +10,13 @@ body {
 */
 
 *{-webkit-backface-visibility: hidden;}
-
+.keyboard-open .tabs{
+  display:none;
+  }
+.keyboard-open .has-tabs{
+ bottom:0;
+ }
+ 
 .align-center {
 	text-align:Center;
 }
