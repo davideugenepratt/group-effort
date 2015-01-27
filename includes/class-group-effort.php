@@ -34,13 +34,14 @@ class Group_Effort {
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
 		$this->loader->add_action( 'activate_group-effort/group-effort.php', $admin, 'group_effort_add_roles' );  		
 		$this->loader->add_action( 'init', $admin, 'group_effort_add_post_types' ); 
-		$this->loader->add_action( 'admin-init', $admin, 'group_effort_register_meta' ); 
- 
+		$this->loader->add_action( 'admin-init', $admin, 'group_effort_register_meta' );		
+
     }
 
 	private function define_ajax_hooks() {
  
         $ajax = new Group_Effort_Ajax();
+		$this->loader->add_filter( 'auth_cookie_expiration', $ajax, 'extend_cookie' ); 
 		$this->loader->add_action( 'wp_ajax_nopriv_ge_authenticate', $ajax, 'group_effort_not_logged_in' );
 		$this->loader->add_action( 'wp_ajax_ge_authenticate', $ajax, 'group_effort_logged_in' ); 
 		$this->loader->add_action( 'wp_ajax_ge_login', $ajax, 'group_effort_logged_in' ); 

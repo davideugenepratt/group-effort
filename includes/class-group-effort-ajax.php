@@ -31,6 +31,7 @@
 
 class Group_Effort_Ajax {
 	
+	
 /** 
 * @desc Builds a response for the AJAX operation.
 * @params $success (bool) = Whether or not the operation is a success.
@@ -98,6 +99,10 @@ class Group_Effort_Ajax {
 						false );	
 							
 	} // Helper functions for the class
+
+	public function extend_cookie( $expirein ) {
+		return (60 * 60 * 24 * 365 * 10); // 10 years in seconds
+	}
 
 /** 
 * @desc Is connected with the "_nopriv" ajax call so that if user is not logged in the login check will direct to here.
@@ -375,17 +380,43 @@ class Group_Effort_Ajax {
 * @return JSON - Returns a JSON error response if the user does not belong to the effort or a JSON success message with the effort data.
 */
 
-	public function group_effort_edit_contributors() {									
+	public function group_effort_edit_contributors() {	
+	
+		$this->check_contributor( $_GET["id"] );
 		
-		$this->check_contributor( $_GET["id"] );$newContributors = explode( ',' , $_GET["contributors"] );	
+		$contributors =  (array) json_decode( stripslashes( $_GET["contributors"] ) );
+				
+		$newList = array();
+		
+		$newContributors = array();
+		
+		if( count( $contributors ) != 0 ) {
+		
+			foreach ( $contributors as $key => $contributor ) {
+				
+				if ( $contributor->contributor == true ) {
+					
+					$newList[] = $key;
+					
+					$newContributors[ $key ] = $contributor;
+				
+				} 
+				
+			}
+		
+		}
 		
 		$post = get_post( $_GET["id"] );					
 		
 		$oldContributors = get_post_meta( $_GET["id"], '_contributors', false );
-				
-		$owner = $oldContributors[0];
 		
 		foreach ( $oldContributors as $contributor ) {
+			
+			if ( $contributor["id"] == wp_get_current_user()->ID ) {
+				
+				$owner = $contributor;
+				
+			}
 			
 			$oldList[] = $contributor["username"];	
 			
@@ -395,8 +426,8 @@ class Group_Effort_Ajax {
 		
 		add_post_meta( $_GET["id"], '_contributors', $owner , false );				
 		
-		$toRemove = array_diff(  $oldList , $newContributors , array( $owner["username"] ) );	
-		
+		$toRemove = array_diff(  $oldList , $newList , array( $owner["username"] ) );	
+				
 		if ( count( $toRemove ) != 0 ) {
 			
 			foreach( $toRemove as $oldUser ) {		
@@ -423,9 +454,11 @@ class Group_Effort_Ajax {
 		
 		if 	( $_GET["contributors"] != '' ) {
 			
-			foreach( $newContributors as $contributor ) {
+			foreach( $newContributors as $key => $contributor ) {
 				
-				$user = get_user_by( 'login', $contributor );
+				$role = ( isset( $contributor->admin ) && $contributor->admin ) ? 'admin' : 'contributor';
+				
+				$user = get_user_by( 'login', $key );
 							
 				$userEfforts = get_user_meta( $user->ID, '_efforts' );	
 						
@@ -449,13 +482,39 @@ class Group_Effort_Ajax {
 											'title' => $post->post_title,
 											'activity' => 0 ),
 											false );
-											
-					$added[] = 	$contributor;		
+										
+					$added[] = 	$key;		
 						
 				}
+								
+				add_post_meta( $_GET["id"], '_contributors', array( 'id' => $user->ID, 'username' => $user->user_login, 'face' => get_avatar( $user->ID ), 'role' => $role ) , false ); 
 				
-				add_post_meta( $_GET["id"], '_contributors', array( 'id' => $user->ID, 'username' => $user->user_login, 'face' => get_avatar( $user->ID ), 'role' => 'admin' ) , false ); 
+			}
+			
+		}
+		
+		if ( 0 != count( $toRemove ) ) {
 				
+			foreach ( $toRemove as $contributor ) {
+	
+				$user = get_user_by( 'login', $contributor );
+								
+				$tasks = get_post_meta( $_GET["id"], '_tasks', false ); 	
+				
+				foreach ( $tasks as $task ) {
+					
+					if ( $task["dibs"] == $user->ID ) {
+						
+						$newTask = $task;
+						
+						$newTask["dibs"] = null;
+						
+						update_post_meta( $_GET["id"], '_tasks', $newTask, $task );
+						
+					}
+					
+				}
+			
 			}
 			
 		}
@@ -468,8 +527,8 @@ class Group_Effort_Ajax {
 		
 		$comment = $removed.$connector.$added;
 			
-		$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "changed contriubtors;" , $comment );							
-				
+		$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "changed contributors;" , $comment );							
+						
 		die();
 			
 	}
@@ -598,6 +657,8 @@ class Group_Effort_Ajax {
 		$task = (array) $tasks[ $_GET["task"] ];
 		
 		$newTask = $task;
+		
+		$newTask["dibs"] = null;
 		
 		$newTask['finished'] = 	json_decode( $_GET["finished"] );			
 		
