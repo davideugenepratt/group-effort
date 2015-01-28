@@ -10,7 +10,7 @@
   <div ng-include src="'templates/effort-tabs.html'"></div>
   <ion-list>    
     <ion-item class="item item-avatar item-icon-left" ng-repeat="friend in friends" >
-        <img  class="avatar" ng-bind-html="friend.face"></img>
+        <span class="avatar" ng-bind-html="friend.face"></span>
         <h2>{{friend.username}}</h2>
         <p>{{friend.email}}</p>
         <div class="row row-top">

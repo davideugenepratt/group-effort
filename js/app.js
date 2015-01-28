@@ -9,7 +9,8 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
     
-	$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/";  
+	$rootScope.baseURL = "http://127.0.0.1:8080/Local Web/group-effort/";  
+	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/";  
 	 
   	Popup.error(); 								// This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.
 	

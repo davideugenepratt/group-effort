@@ -7,6 +7,13 @@
               <i class="icon ion-person-stalker"></i>
             </a>
         </div>
+      <ion-item class="item item-avatar item-button-right">
+      <img class="avatar" ng-bind-html="self.face"></img>
+      		Change Avatar
+            <button class="button button-positive" ng-click="changePicture()" >
+              <i class="icon ion-image"></i>
+            </button>
+      </ion-item>
       <ion-item class="item">
       <form ng-submit="logout()" >
           <button class="button button-block button-assertive" type="submit">Log out</button>

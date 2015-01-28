@@ -106,7 +106,7 @@ angular.module('GroupEffort.services', [])
 	
 	var authenticate = function() {
 				
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_authenticate" )
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=authenticate" )
 		
 		.then( function( response ) {
 			
@@ -167,11 +167,13 @@ angular.module('GroupEffort.services', [])
 	
 	var login = function( username , password ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_login&username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password) )
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=login&username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password) )
 		
 		.then( function( response ) {
 									
 			if ( false == response.data.success ) {	
+				
+				console.log( response.data.reason );
 				
 				$rootScope.error = response.data.reason;
 								
@@ -209,7 +211,7 @@ angular.module('GroupEffort.services', [])
 	
 	var logout = function() {
 				
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_logout" )
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=logout" )
 		
 		.then( function( response ) {
 			
@@ -240,7 +242,7 @@ angular.module('GroupEffort.services', [])
 	
 	var register = function( fullname, email, username , password ) {
 		
-		return $http.get( 	$rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_register" +
+		return $http.get( 	$rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=register" +
 						"&fullname=" + encodeURIComponent(fullname) + 
 						"&email=" + encodeURIComponent(email) + 
 						"&username=" + encodeURIComponent(username) + 
@@ -308,7 +310,7 @@ angular.module('GroupEffort.services', [])
 	
  	var allEfforts = function() {	
 	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_allEfforts" )
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=all_efforts" )
 		
 		.then( function( response ) {
 			
@@ -335,7 +337,7 @@ angular.module('GroupEffort.services', [])
 	
 	var addEffort = function( title , contributors ) {	
 		
-		return $http.get( $rootScope.baseURL + 	"wp-admin/admin-ajax.php?action=ge_addEffort" + 
+		return $http.get( $rootScope.baseURL + 	"wp-admin/admin-ajax.php?action=group_effort&task=add_effort" + 
 												"&title=" + encodeURIComponent( title ) +
 												"&contributors=" + encodeURIComponent( JSON.stringify( contributors ) ) 
 												)
@@ -364,7 +366,7 @@ angular.module('GroupEffort.services', [])
 	
 	var leaveEffort = function( id ) {	
 	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_leaveEffort&" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=leave_effort&" +
 												"id=" + encodeURIComponent( id ) )
 												
 		.then( function( response ) {
@@ -391,7 +393,7 @@ angular.module('GroupEffort.services', [])
 	
 	var getEffort = function( id ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffort&" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_effort&" +
 												"id="+id )
 												
 		.then( function( response ) {
@@ -431,7 +433,7 @@ angular.module('GroupEffort.services', [])
 	
 	var getEffortTasks = function( id ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffortTasks&" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_effort_tasks&" +
 												"id=" + encodeURIComponent( id ) )
 												
 		.then( function( response ) {
@@ -459,9 +461,9 @@ angular.module('GroupEffort.services', [])
 	
 	var addEffortTask = function( id , task ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addEffortTask" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=add_effort_task" +
 												"&id=" + encodeURIComponent( id ) +
-												"&task=" + encodeURIComponent( JSON.stringify( task ) ) )
+												"&effort_task=" + encodeURIComponent( JSON.stringify( task ) ) )
 												
 		.then( function( response ) {
 			
@@ -488,9 +490,9 @@ angular.module('GroupEffort.services', [])
 	
 	var dibs = function( id , task ) {
 
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_dibs" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=dibs" +
 												"&id=" + encodeURIComponent( id ) +
-												"&task=" + encodeURIComponent( task ) 
+												"&effort_task=" + encodeURIComponent( task ) 
 												)
 												
 		.then( function( response ) {
@@ -585,9 +587,9 @@ angular.module('GroupEffort.services', [])
 	
 	var changeTaskStatus = function( id, task , finished ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_changeTaskStatus&" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=change_task_status&" +
 												"id=" + encodeURIComponent( id )  +
-												"&task=" + encodeURIComponent( task ) +
+												"&effort_task=" + encodeURIComponent( task ) +
 												"&finished=" + encodeURIComponent( finished )
 												)
 												
@@ -615,7 +617,7 @@ angular.module('GroupEffort.services', [])
 		
 	var getEffortComments = function( id ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_getEffortComments&" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_effort_comments&" +
 												"id=" + encodeURIComponent( id )
 												)
 												
@@ -644,7 +646,7 @@ angular.module('GroupEffort.services', [])
 	
 	var addEffortComment = function( id , comment ) {
 
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addEffortComment" +
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=add_effort_comment" +
 												"&id=" + encodeURIComponent( id ) +
 												"&comment=" + encodeURIComponent( comment ) )
 												
@@ -675,7 +677,7 @@ angular.module('GroupEffort.services', [])
 		
 		data = JSON.stringify( data );
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_editContributors"+
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=edit_contributors"+
 												"&id="+ encodeURIComponent( id ) +
 												"&contributors="+ encodeURIComponent( data )
 												 )	
@@ -729,7 +731,7 @@ angular.module('GroupEffort.services', [])
 	
   var addFriend = function( email ) {
 	  
-	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_addFriend&" +
+	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=add_friend&" +
 												"email=" + encodeURIComponent( email ) )
 												
 		.then( function( response ) {
@@ -755,7 +757,7 @@ angular.module('GroupEffort.services', [])
   
   var acceptRequest = function( email ) {
 	  
-	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_acceptRequest&" +
+	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=accept_request&" +
 													"email=" + encodeURIComponent( email ) )
 													
 		.then( function( response ) {
@@ -782,7 +784,7 @@ angular.module('GroupEffort.services', [])
   
   var denyRequest = function( email ) {
 	  
-	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_removeFriend&" +
+	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=remove_friend&" +
 													"email=" + encodeURIComponent( email ) )
 													
 		.then( function( response ) {
@@ -808,7 +810,7 @@ angular.module('GroupEffort.services', [])
 	
 	var allFriends = function() {	
 	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=ge_allFriends" )
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=all_friends" )
 		
 		.then( function( response ) {
 			

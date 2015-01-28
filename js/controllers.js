@@ -127,9 +127,11 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 })
 
 .controller('EffortsDetailActivityCtrl', function( $rootScope, $scope, $state, Popup, Efforts, effort  ) {
-	console.log( effort );
+
 	effort.activity.reverse();
+
 	$scope.effort = effort;	
+
 })
 
 .controller('EffortsDetailTasksCtrl', function( $rootScope, $scope, $state, Popup, Efforts, effort  ) {
@@ -225,9 +227,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		}
 		
 	}	
-	
-	console.log( friends , effort , $scope.data );
-	
+		
 	effort.activity.reverse();
 	
 	$scope.effort = effort;	
@@ -460,10 +460,6 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	
 	$scope.friends.requestAccepted = [];
 	
-	console.log( friends );
-	
-	console.log( $rootScope.user );
-	
 	for( var i = 0; i < friends.length; i++ ) {
 		
     	if ( friends[i].status == "Request Sent" ) {
@@ -495,6 +491,52 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 })
 
 .controller('AccountCtrl', function( $rootScope, $scope, $state, Authenticate ) {
+  
+  $scope.changePicture = function() {
+	    
+		console.log( "changing picture" );
+		
+        var options =   {			
+            quality: 50,
+            destinationType: Camera.DestinationType.FILE_URI,
+            sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+            encodingType: 0     // 0=JPG 1=PNG
+        }
+		
+        navigator.camera.getPicture(onSuccess,onFail,options);
+		
+    };
+	
+    var onSuccess = function(FILE_URI) {
+		
+        console.log(FILE_URI);
+		
+        //$scope.picData = FILE_URI;
+		
+        //$scope.$apply();
+		
+    };
+	
+    var onFail = function(e) {
+		
+        console.log("On fail " + e);
+		
+    };
+	
+	/*
+    $scope.send = function() {   
+        var myImg = $scope.picData;
+        var options = new FileUploadOptions();
+        options.fileKey="post";
+        options.chunkedMode = false;
+        var params = {};
+        params.user_token = localStorage.getItem('auth_token');
+        params.user_email = localStorage.getItem('email');
+        options.params = params;
+        var ft = new FileTransfer();
+        ft.upload(myImg, encodeURI("https://example.com/posts/"), onUploadSuccess, onUploadFail, options);
+    };
+	*/
     
   $scope.logout = function() {
 	  
@@ -515,5 +557,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		});
 		
   };
+    
+  $scope.self = $rootScope.user;
   
 });
