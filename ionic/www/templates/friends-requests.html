@@ -1,0 +1,26 @@
+<ion-view view-title="Add Someone">
+  <ion-content>
+    <ion-list>
+    <ion-item class="item item-divider" >
+        Send Request
+      </ion-item>
+    <form ng-submit="addFriend()">
+        <ion-item class="item item-input-inset">
+                <label class="item-input-wrapper">
+                  <input type="text" placeholder="Email Address" ng-model="newFriendData.email">
+                </label>        
+                <button class="button button-positive button-small" type="submit"><i class="icon ion-paper-airplane"></i></button>
+        </ion-item>
+    </form>   
+      <ion-item class="item item-divider"  >
+        Pending Requests
+      </ion-item>
+      <ion-item ng-show="friends.requestSent.length == 0">No Pending Requests</ion-item>
+      <ion-item class="item item-avatar" ng-repeat="friend in friends.requestSent" type="item-text-wrap"  >
+        <img ng-src="{{friend.face}}" class="avatar">
+        <h2>{{friend.username}}</h2>
+        <p>{{friend.email}}</p>
+      </ion-item>            
+    </ion-list>
+  </ion-content>
+</ion-view>

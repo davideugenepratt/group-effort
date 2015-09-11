@@ -1,0 +1,40 @@
+<ion-view view-title="Settings - Profile">
+  <ion-content>
+    <form name="profileForm" ng-submit="updateProfile()" novalidate >
+      <ion-list>
+      <ion-item >
+      	<h2>{{data.username}}</h2>
+      </ion-item> 
+      <!--         
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Username</span>
+          <input name="username" type="text" ng-model="data.username" required >
+        </label>
+        -->
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Email Address</span>
+          <input name="email" type="text" ng-model="data.email" required >
+        </label>
+        <ion-item class="item item-avatar item-button-right">
+          <img class="avatar" ng-src="{{self.face}}" />
+                Change Picture
+                <a class="button button-positive" ng-click="changePicture()" >
+                  <i class="icon ion-camera"></i>
+                </a>
+        </ion-item>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Phone Number</span>
+          <input name="phone" type="text" ng-model="data.phone" >
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Location</span>
+          <input name="location" type="text" ng-model="data.location" >
+        </label>
+        <div class="item button-bar">
+        	<a class="button" href="#/tab/account" ng-disabled="data.submitted" >Cancel</a>
+            <button class="button button-positive" type="submit" ng-disabled="data.submitted || profileForm.$invalid " >Save</button>
+        </div>
+    </ion-list>
+    </form>
+  </ion-content>
+</ion-view>

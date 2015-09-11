@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget id="com.ionicframework.groupeffort212372" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap   = "http://phonegap.com/ns/1.0" >
+  <name>
+  	GroupEffort
+  </name>
+  <description>
+        Some things are just better as a group effort.
+  </description>
+  <author email="david@davideugenepratt.com" href="http://www.davideugenepratt.com">
+      David Eugene Pratt
+  </author>
+  <content src="index.html"/>
+  <access origin="*"/>
+  <icon src="icon.png" />
+  <gap:splash src="splash.png" />
+
+  <preference name="webviewbounce" value="false"/>
+  <preference name="UIWebViewBounce" value="false"/>
+  <preference name="DisallowOverscroll" value="true"/>
+  <preference name="BackupWebStorage" value="none"/>
+  <feature name="StatusBar">
+    <param name="ios-package" value="CDVStatusBar" onload="true"/>
+  </feature>
+  <gap:plugin name="org.apache.cordova.core.camera" version="0.3.2" />
+
+<gap:plugin name="org.apache.cordova.file" version="1.3.1" />
+
+<gap:plugin name="org.apache.cordova.file-transfer" version="0.4.6" />
+
+  <feature name="Camera">
+    <param name="ios-package" value="CDVCamera" />
+    <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+</feature>
+</widget>

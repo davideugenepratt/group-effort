@@ -1,0 +1,51 @@
+<ion-view view-title="People">
+  <ion-content>
+  	<form name="findFriendForm" ng-submit="findFriend()" novalidate >
+    <div class="item item-button-right">
+        <input type="text" placeholder="Find Friend"  ng-model="data.term" required >
+        <button class="button button-positive button-circle" type="submit" ng-disabled="data.submitted || findFriendForm.$invalid" >
+            <i class="icon ion-search"></i>
+        </button>
+    </div>
+    </form>
+        <ion-item class="item item-avatar"  ng-repeat="friend in searchResults"  >
+            <img ng-src="{{friend.face}}" class="avatar">
+            <div class="item-note">
+                <button class="button button-positive button-small" ng-click="addFriend( friend.email )"  ng-disabled="friend.status == 'Request Sent'" ng-hide="friend.status == 'Request Accepted'" ><i class="ion-paper-airplane"></i></button>                
+            </div>      	        
+            <h2>{{friend.username}}</h2>
+            <p>{{friend.email}}</p>     
+          </ion-item>
+    <ion-list>
+    <!--
+      <ion-item class="item item-divider" >
+        Collaborators
+      </ion-item>
+      <ion-item class="item-text-wrap" ng-show="friends.requestAccepted.length == 0">You don't have anyone in your network yet.</ion-item>
+      -->
+      
+      <ion-item class="item item-avatar"  ng-repeat="friend in friends.requestReceived" >
+        <img ng-src="{{friend.face}}" class="avatar">
+        <div class="item-note">
+            <button class="button button-positive button-small" ng-click="acceptRequest( friend.email )"  ng-disabled="data.submitted" ><i class="ion-plus"></i></button>
+            <button class="button button-outline button-positive button-small" ng-click="denyRequest( friend.email )"  ng-disabled="data.submitted"><i class="ion-minus"></i></button>
+        </div>      	        
+        <h2>{{friend.username}}</h2>
+        <p>{{friend.email}}</p>     
+      </ion-item>
+      <ion-item class="item item-avatar item-text-wrap"   ng-repeat="friend in friends.requestAccepted" ng-click="goToFriend( friend.ID )" >
+            <img ng-src="{{friend.face}}" class="avatar">
+            <h2>{{friend.username}}</h2>
+            <p>{{friend.email}}</p>         
+      </ion-item>
+      <ion-item class="item item-avatar"  ng-repeat="friend in friends.requestSent"  >
+        <img ng-src="{{friend.face}}" class="avatar">
+        <div class="item-note">
+            <button class="button button-positive button-small" ng-click="addFriend( friend.email )"  ng-disabled="friend.status == 'Request Sent'" ng-hide="friend.status == 'Request Accepted'" ><i class="ion-paper-airplane"></i></button>                
+        </div>      	        
+        <h2>{{friend.username}}</h2>
+        <p>{{friend.email}}</p>     
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,159 @@
+<!--
+  This template loads for the 'tab.friend-detail' state (app.js)
+  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
+  The FriendsCtrl pulls data from the Friends service (service.js)
+  The Friends service returns an array of friend data
+-->
+<ion-view view-title="{{effort.title}} - Add Task">
+	
+  <ion-content >
+  <form name="addTaskForm" ng-submit="addTask()" novalidate >
+  <ion-list>
+            <ion-item class="item">
+                <b>Task Title</b>
+                <br>
+                <input type="text" placeholder="Title" ng-model="data.title" required >
+            </ion-item>
+            <ion-item>
+            	<textarea placeholder="Description" ng-model="data.description" ng-keyup="autoExpand($event)" data-min-height="50" data-max-height="300" ></textarea>
+            </ion-item>
+            <ion-item class="item item-toggle" ng-show="self.role == 'admin'" >
+                 Assigned
+                 <label class="toggle toggle-positive">
+                   <input type="checkbox"  ng-model="data.assigned.switch">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                 </label>
+              </ion-item>
+              <div class="list" ng-show="data.assigned.switch">
+                 <label class="item item-radio"   ng-repeat="contributor in effort.contributors" >
+                 	<input type="radio" name="contributors" ng-model="data.dibs" value="{{ contributor.id }}">
+                    <div class="item-content">
+                      {{ contributor.username }}
+                    </div>
+                    <i class="radio-icon ion-checkmark" ></i>
+                 </label>              
+              </div>             
+              <ion-item class="item" ng-hide="true" >
+              <div class="item-toggle">
+                 Scheduled
+                 <label class="toggle toggle-positive">
+                   <input type="checkbox"  ng-model="data.schedule.switch"  ng-disabled="data.deadline.switch">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                 </label>
+              </div>  
+              
+              <div ng-show="data.schedule.switch" class="padding-vertical">
+					
+                    <!--
+                 	<div class="button-bar padding-vertical">
+                      <button class="button button-calm" ng-click="data.schedule.type = 'daily'" >Daily</button>
+                      <button class="button button-calm" ng-click="data.schedule.type = 'weekly'">Weekly</button>
+                      <button class="button button-calm" ng-click="data.schedule.type = 'monthly'">Monthly</button>
+                    </div>
+                    -->
+                    <!--
+                    <div class="" ng-show="data.schedule.type == 'daily'">
+                    	<div class="row row-top">
+                            <div class="col col-33">
+                                <b class="input-label">Daily @</b>
+                            </div>
+                            <div class="col col-66">
+                                <input type="time" placeholder="Time"  ng-model="data.schedule.data" focus="data.schedule.type == 'daily'">
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                    <!-- <div class="" ng-show="data.schedule.type == 'weekly'"> -->
+                    	<div class="padding-vertical">
+                            <!--
+                            <div class="">
+                             <div class="col col-33 padding-vertical"> 
+                                <b class="input-label padding-vertical">Weekly On:</b>
+                            </div>
+                            -->
+                            <div class="list">
+                            <!-- <div class="col col-66"> -->
+                                <div class="item item-checkbox"><label class="checkbox"><input type="checkbox" ng-model="data.schedule.weekly.sunday"></label> Sunday</div>
+                                <div class="item item-checkbox"><label class="checkbox"><input type="checkbox" ng-model="data.schedule.weekly.monday"></label> Monday</div>
+                                <div class="item item-checkbox"><label class="checkbox"><input type="checkbox" ng-model="data.schedule.weekly.tuesday"></label> Tuesday</div>
+                                <div class="item item-checkbox"><label class="checkbox"><input type="checkbox" ng-model="data.schedule.weekly.wednesday"></label> Wednesday</div>
+                                <div class="item item-checkbox"><label class="checkbox"><input type="checkbox" ng-model="data.schedule.weekly.thursday"></label> Thursday</div>
+                                <div class="item item-checkbox"><label class="checkbox"><input type="checkbox" ng-model="data.schedule.weekly.friday"></label> Friday</div>
+                                <div class="item item-checkbox"><label class="checkbox"><input type="checkbox" ng-model="data.schedule.weekly.saturday"></label> Saturday</div>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                    <div class="" ng-show="data.schedule.type == 'monthly'">
+                    	<div class="">
+                            <div class="row padding-vertical">
+                                <b class="input-label padding-vertical">Monthly On The:</b>
+                            </div>
+                            <div>
+                            	<div class="monthly-week">
+                                	<label><input type="checkbox" ng-model="data.schedule.monthly[1]"><div><span>1st</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[2]"><div><span>2nd</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[3]"><div><span>3rd</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[4]"><div><span>4th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[5]"><div><span>5th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[6]"><div><span>6th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[7]"><div><span>7th</span></div></label>
+                                </div>
+                                <div class="monthly-week">
+                                	<label><input type="checkbox" ng-model="data.schedule.monthly[8]"><div><span>8th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[9]"><div><span>9th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[10]"><div><span>10th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[11]"><div><span>11th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[12]"><div><span>12th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[13]"><div><span>13th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[14]"><div><span>14th</span></div></label>
+                                </div>
+                                <div class="monthly-week">
+                                	<label><input type="checkbox" ng-model="data.schedule.monthly[15]"><div><span>15th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[16]"><div><span>16th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[17]"><div><span>17th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[18]"><div><span>18th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[19]"><div><span>19th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[20]"><div><span>20th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[21]"><div><span>21st</span></div></label>
+                                </div>
+                                <div class="monthly-week">
+                                	<label><input type="checkbox" ng-model="data.schedule.monthly[22]"><div><span>22nd</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[23]"><div><span>23rd</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[24]"><div><span>24th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[25]"><div><span>25th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[26]"><div><span>26th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[27]"><div><span>27th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[28]"><div><span>28th</span></div></label>
+                                </div>
+                                <div class="monthly-week">
+                                	<label><input type="checkbox" ng-model="data.schedule.monthly[29]"><div><span>29th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[30]"><div><span>30th</span></div></label>
+                                    <label><input type="checkbox" ng-model="data.schedule.monthly[31]"><div><span>31st</span></div></label>                                    
+                                </div>
+                            </div> 
+                        </div>                    	
+                    </div>
+               </div>                  
+              </ion-item> 
+              
+              <ion-item class="item item-toggle">
+                 Deadline
+                 <label class="toggle toggle-positive">
+                   <input type="checkbox"  ng-model="data.deadline.switch"  ng-disabled="data.schedule.switch">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                 </label>
+                 <input type="date" placeholder="Deadline"  ng-model="data.deadline.date" ng-show="data.deadline.switch" focus="data.deadline.switch">
+              </ion-item>                
+            <div class="button-bar">
+                <a class="button" href="#/tab/efforts/{{effort.id}}/tasks">Cancel</a>
+                <button class="button button-positive" type="submit" ng-disabled="addTaskForm.submitted || addTaskForm.$invalid " >Ok</button>
+            </div>  
+  </ion-list>
+  </ion-content>
+</ion-view>
