@@ -13,6 +13,7 @@
   * group_effort_all_efforts();
   * group_effort_add_effort();
   * group_effort_get_effort();
+  * group_effort_edit_contributors();
   * group_effort_get_effort_comments();
   * group_effort_add_effort_comment();
   * group_effort_get_effort_tasks();
@@ -25,29 +26,33 @@
   * group_effort_add_friend();
   * group_effort_accept_request();
   * group_effort_remove_friend();
-  * group_effort_edit_contributors();
+
   * @author David Eugene Pratt - david@davideugenepratt.com
 */  
 
-class Group_Effort_Ajax {
-	
-	
-/** 
-* @desc Builds a response for the AJAX operation.
-* @params $success (bool) = Whether or not the operation is a success.
-* @params $reason (string) = If unsuccessful, the reason why it was not a success.
-* @return If not a member of the effort it returns an error response and exits the script.
-*/	
+// require_once('../../FirePHPCore/fb.php');
 
-	public function response() {
+class Group_Effort_Ajax {
+		
+	public function ajax_controller( ) {
+					
+		$formData = $_GET;
+		
+		$task = $formData['task'];
+		
+		$result = $this->$task( $formData );
+		
+		echo( json_encode( $result ) );
+		
+		die();
 		
 	}
 	
-/** 
-* @desc Ensures the current user is listed in the list of an efforts contributors.
-* @params $effort (int) = The id number of the effort to check.
-* @return JSON - If not a member of the effort it returns a JSON error response and exits the script.
-*/	
+	/** 
+	* @desc Ensures the current user is listed in the list of an efforts contributors.
+	* @params $effort (int) = The id number of the effort to check.
+	* @return JSON - If not a member of the effort it returns a JSON error response and exits the script.
+	*/	
 	
 	public function check_contributor( $effort ) {
 		
@@ -57,40 +62,43 @@ class Group_Effort_Ajax {
 		
 		$exists = false;
 		
+		// Probably a better way to check to see if user is in the contributors meta
+		
 		foreach ( $contributors as $contributor ) {		
 		
 			if( $contributor["id"] == $user->ID ) {
 				
 				$exists = true;
 				
+				return true;
+				
 			}
 			
 		}				
 		
-		if ( !$exists ) {
-			
-			echo json_encode( array( "success" => false, "reason" => "You are not a part of this effort." ) );	
-			
-			die();
-			
-		}
+		if ( !exists ) {			
 		
+			echo json_encode( array( "success" => false, "reason" => "You are not a part of this effort." ) );
+		
+			die();	
+		
+		}
 	}
 	
-/** 
-* @desc Adds the provided activity to an effort's log.
-* @params $effort {int) = The ID of the effort to which the activity is to be added.
-* @params $username (string) = The username of the user who is doing the activity.
-* @params $activity (string) = The activity that is to be added.
-* @params $comment (string) = Additional information regarding the activity.
-*/	
+	/** 
+	* @desc Adds the provided activity to an effort's log.
+	* @params $effort {int) = The ID of the effort to which the activity is to be added.
+	* @params $username (string) = The username of the user who is doing the activity.
+	* @params $activity (string) = The activity that is to be added.
+	* @params $comment (string) = Additional information regarding the activity.
+	*/	
 	
 	public function add_activity( $effort , $username , $activity , $comment ) {
 		
 		$activity = array( 	'username' => $username,
-								'activity' => $activity,
-								'comment' => $comment,
-								'time' => current_time( 'l, F jS, Y \a\t g:i A' )
+							'activity' => $activity,
+							'comment' => $comment,
+							'time' => current_time( 'l, F jS, Y \a\t g:i A' )
 						);
 		
 		add_post_meta( 	$effort, 
@@ -98,18 +106,64 @@ class Group_Effort_Ajax {
 						$activity,
 						false );	
 							
+	} 
+	
+	public function current_user() {
+		
+		$current_user = wp_get_current_user();
+		
+		$profile = get_user_meta( $current_user->ID , "profile", true );
+		
+		$user = array(	
+						'id' => $current_user->ID,
+						'username' => $current_user->data->user_login,
+						'email' => $current_user->data->user_email,
+						'face' => get_user_meta( $current_user->ID, "avatar", true ),
+						'phone' => $profile["phone"],
+						'location' => $profile["location"]
+						);
+								
+		return $user;
+		
 	} // Helper functions for the class
+
+	/** 
+	* @desc Extends the users login cookie so that they don't have to keep logging in on their phone.
+	* @return JSON - Returns a JSON error response and exits the script.
+	*/
 
 	public function extend_cookie( $expirein ) {
 		return (60 * 60 * 24 * 365 * 10); // 10 years in seconds
 	}
 
-/** 
-* @desc Is connected with the "_nopriv" ajax call so that if user is not logged in the login check will direct to here.
-* @return JSON - Returns a JSON error response and exits the script.
-*/
+	/** 
+	* @desc Is connected with the "_nopriv" ajax call so that if user is not logged in the login check will direct to here.
+	* @return JSON - Returns a JSON error response and exits the script.
+	*/
 	
-	public function group_effort_not_logged_in() {	
+	public function not_logged_in() {	
+		
+		$formData = $_GET;
+		
+		$task = $formData['task'];
+		
+		if ( $task == "login" ) {
+						
+			$result = $this->$task( $formData );
+			
+			echo( json_encode( $result ) );
+			
+			die();
+		
+		} else if ( $task == "register" ) {
+						
+			$result = $this->$task( $formData );
+			
+			echo( json_encode( $result ) );
+			
+			die();
+		
+		}
 		
 		echo json_encode( array( "success" => false, "reason" => "The user is not logged in." ) );
 		
@@ -117,161 +171,151 @@ class Group_Effort_Ajax {
 		
 	}
 
-/** 
-* @desc Is connected to the "authenticate" ajax action.
-* @return JSON - Returns a JSON success response with the current user's information.
-*/
+	/** 
+	* @desc Is connected to the "authenticate" ajax action.
+	* @return JSON - Returns a JSON success response with the current user's information.
+	*/
 	
-	public function group_effort_logged_in() {
+	public function authenticate( $formData ) {
 		
-		$current_user = wp_get_current_user()->data;
+		$current_user = wp_get_current_user();
 		
-		$user = array(	
-						'id' => $current_user->ID,
-						'username' => $current_user->user_login,
-						'email' => $current_user->user_email,
-						'face' => get_avatar( $current_user->ID )
-						);
+		$profile = get_user_meta( $current_user->ID , "profile", true );
 		
-		echo json_encode( array( "success" => true, "data" => $user ) );
-			
-		die();
+		if ( !$profile != '' ) {
 		
+			add_user_meta( $current_user->ID , "profile" , array( "location" => "" , "phone" => "" , "avatar" => plugins_url( 'group-effort/img/avatar.jpg' ) ), true );
+	
+		}
+								
+		return array( "success" => true, "data" => $this->current_user() );
+					
 	}
 
-/** 
-* @desc Logs in user using information from login screen in Ionic App.
-* @params $_GET["username"] (string) = The username.
-* @params $_GET["password"] (string) = The password.
-* @return JSON - Returns a JSON error message if it could not log in or a JSON success message with the user data attached.
-*/
+	/** 
+	* @desc Logs in user using information from login screen in Ionic App.
+	* @params $formData["username"] (string) = The username.
+	* @params $formData["password"] (string) = The password.
+	* @return JSON - Returns a JSON error message if it could not log in or a JSON success message with the user data attached.
+	*/
 	
- 	public function group_effort_login() {
+ 	public function login( $formData ) {
 		
 		$creds = array();		
-		$creds['user_login'] = $_GET["username"];
-		$creds['user_password'] = $_GET["password"];
+		$creds['user_login'] = $formData["username"];
+		$creds['user_password'] = $formData["password"];
 	 
 		$user = wp_signon($creds, false);
 		
 		if ( is_wp_error( $user ) ) {
 			
-			echo json_encode( array( "success" => false, "reason" => "Incorrect username/password combination." ) );
-			
-			die();
-			
+			return array( "success" => false, "reason" => "Incorrect username/password combination." );
+						
 		}
-		 
-		$current_user = array(	
-						'id' => $user->ID,
-						'username' => $user->data->user_login,
-						'email' => $user->data->user_email,
-						'face' => get_avatar( $user->ID )
-						);
 		
-		echo json_encode( array( "success" => true, "data" => $current_user ) );
+		$current_user = wp_get_current_user();
 		
-		die();
+		var_dump( $current_user );
+		
+		$profile = get_user_meta( $current_user->ID , "profile", true );
+		
+		if ( !$profile != '' ) {
+		
+			add_user_meta( $current_user->ID  , "profile" , array( "location" => "" , "phone" => "" , "avatar" => plugins_url( 'group-effort/img/avatar.jpg' ) ), true );
+	
+		}		
+		
+		return array( "success" => true, "data" => $this->current_user() );
+		
 	}
 	
-/** 
-* @desc Logs the current user out of the system.
-* @return JSON - returns a JSON success message.
-*/
+	/** 
+	* @desc Logs the current user out of the system.
+	* @return JSON - returns a JSON success message.
+	*/
 	
-	public function group_effort_logout() {
+	public function logout() {
 		
 		wp_clear_auth_cookie();
 		
 		wp_logout();
 		
-		echo json_encode( array( "success" => true ) );
-		
-		die();
-		
+		return array( "success" => true );
+				
 	}
 
-/** 
-* @desc Registers a new user.
-* @params $_GET["fullname"] (string) = The username.
-* @params $_GET["email"] (string) = The username.
-* @params $_GET["username"] (string) = The username.
-* @params $_GET["password"] (string) = The password.
-* @return JSON - Returns a JSON error response if the username or email exists or a JSON success message with the created user data attached.
-*/
+	/** 
+	* @desc Registers a new user.
+	* @params $formData["fullname"] (string) = The username.
+	* @params $formData["email"] (string) = The username.
+	* @params $formData["username"] (string) = The username.
+	* @params $formData["password"] (string) = The password.
+	* @return JSON - Returns a JSON error response if the username or email exists or a JSON success message with the created user data attached.
+	*/
 	
-	public function group_effort_register() {
-		
-		$creds = array(	'fullname' => $_GET["fullname"],
-						'email' => $_GET["email"],
-						'username' => $_GET["username"],
-						'password' => $_GET["password"]
-						
+	public function register( $formData ) {
+				
+		$creds = array(	'email' => $formData["email"],
+						'user_login' => $formData["username"],
+						'user_password' => $formData["password"]
 						);
 		
-		$user_id = username_exists( $creds['username'] );
+		$user_id = username_exists( $creds['user_login'] );
 		
 		if ( $user_id ) {
 			
-			echo json_encode( array( 'success' => 'false', 'reason' => "User already exists." ) );
+			return array( 'success' => false, 'reason' => "User already exists." );
 			
 		} elseif ( email_exists( $creds['email'] ) == true ) {
 			
-			echo json_encode( array( 'success' => 'false', 'reason' => "Email already exists." ) );
+			return array( 'success' => false, 'reason' => "Email already exists." );
 			
 		} else {
 			
-			$user_id = wp_create_user( $creds['username'], $creds['password'], $creds['email'] );
+			$user_id = wp_create_user( $creds['user_login'], $creds['user_password'], $creds['email'] );
 			
-			wp_update_user( array( 'ID' => $user_id, 'first_name' => $creds['fullname'], 'role' => 'group_effort' ) );	
+			wp_update_user( array( 'ID' => $user_id, 'show_admin_bar_front' => false, 'role' => 'group_effort' ) );	
 			
-			$this->group_effort_login();
-					
-			$current_user = wp_get_current_user()->data;
+			add_user_meta( $user_id , "avatar" , plugins_url( 'group-effort/img/avatar.jpg' ), true );
 			
-			$user = array(	
-							'id' => $current_user->ID,
-							'username' => $current_user->user_login,
-							'email' => $current_user->user_email,
-							'face' => get_avatar( $current_user->ID )
-							);
-							
-			echo json_encode( array( 'success' => true, 'data' => $user ) );
+			add_user_meta( $user_id , "profile" , array( "location" => "" , "phone" => "" , "avatar" => plugins_url( 'group-effort/img/avatar.jpg' ) ), true );				
+				 
+			$user = wp_signon( $creds, false);
+			
+			wp_set_current_user( $user->ID );
+														
+			return array( 'success' => true, 'data' => $this->current_user() );
 			
 		}
-		
-		die();
-		
+				
 	} // All the authentification functions
 
-/** 
-* @desc Returns all the efforts attached to the current user.
-* @return JSON - Returns a JSON success message with the current user's efforts attached.
-*/
+	/** 
+	* @desc Returns all the efforts attached to the current user.
+	* @return JSON - Returns a JSON success message with the current user's efforts attached.
+	*/
 
-	public function group_effort_all_efforts() {
+	public function all_efforts( $formData ) {
 		
 		$current_user = wp_get_current_user(); // $current_user->ID
 				
-		echo json_encode( array( "success" => true, "data" => get_user_meta( $current_user->ID , '_efforts' , false) ) );
-		
-		die();
-		
+		return array( "success" => true, "data" => get_user_meta( $current_user->ID , '_efforts' , false) );
+				
 	}
 	
-/** 
-* @desc Adds a new effort and attaches it to the current user.
-* @params $_GET["contributors"] (string) = A comma seperated list of contributors to attach to effort.
-* @params $_GET["title"] (string) = The title of the effort to be created.
-* @return JSON - Returns a JSON error response if the username or email exists or a JSON success message with the created user data attached.
-*/
+	/** 
+	* @desc Adds a new effort and attaches it to the current user.
+	* @params $formData["contributors"] (string) = A comma seperated list of contributors to attach to effort.
+	* @params $formData["title"] (string) = The title of the effort to be created.
+	* @return JSON - Returns a JSON error response if the username or email exists or a JSON success message with the created user data attached.
+	*/
 	
-	public function group_effort_add_effort() {
+	public function add_effort( $formData ) {
 		
-		$contributors = json_decode( stripslashes( $_GET["contributors"] ) );
-
+		$contributors = (array) json_decode( stripslashes( $formData["contributors"] ) );
+		
 		$post = array(
-			'post_title' => $_GET["title"],
+			'post_title' => $formData["title"],
 			'post_status' => 'publish',
 		  	'post_type'      => 'group-effort'  // Default 'post'.
 		);						 		
@@ -280,25 +324,24 @@ class Group_Effort_Ajax {
 		
 		$current_user = wp_get_current_user();
 				
-		add_post_meta( $effort, '_contributors', array( 'id' => $current_user->ID, 'username' => $current_user->user_login, 'face' => get_avatar( $current_user->ID ), 'role' => 'admin' ), false ); 
+		add_post_meta( $effort, '_contributors', array( 'id' => $current_user->ID, 'username' => $current_user->user_login, 'face' => get_user_meta( $current_user->ID, "avatar", true ), 'role' => 'admin' ), false ); 
 		
-		$this->add_activity( $effort , wp_get_current_user()->data->user_login , "created effort" , $_GET["title"] );
+		$this->add_activity( $effort , wp_get_current_user()->data->user_login , "created effort" , $formData["title"] );
 			
 		add_user_meta( $current_user->ID, '_efforts', array(	'ID' => $effort,
 																'title' => $post['post_title'],
 																'activity' => 0 ),
 																false ); 
-		
-		
-		if ( is_array(  $contributors ) ) {
+						
+		if ( is_array( $contributors ) ) {
 			
 			foreach( $contributors as $contributor => $status ) {
-				
+								
 				if ( $status ) {
 					
 					$user = get_user_by( 'login', $contributor );		
 							
-					add_post_meta( $effort, '_contributors', array( 'id' => $user->ID, 'username' => $user->data->user_login, 'face' => get_avatar( $user->ID ), 'role' => 'contributor' ), false ); 
+					add_post_meta( $effort, '_contributors', array( 'id' => $user->ID, 'username' => $user->data->user_login, 'face' => get_user_meta( $user->ID, "avatar", true ), 'role' => 'contributor' ), false ); 
 					
 					add_user_meta( $user->ID, '_efforts', array(	'ID' => $effort,
 																	'title' => $post['post_title'],
@@ -311,19 +354,17 @@ class Group_Effort_Ajax {
 			
 		}
 		
-		echo json_encode( array( "success" => true, "data" => $effort ) );
-		
-		die();
-		
+		return array( "success" => true, "data" => $effort );
+				
 	}
 	
-/** 
-* @desc Removes current user from the specified effort.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @return No response.
-*/	
+	/** 
+	* @desc Removes current user from the specified effort.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @return No response.
+	*/	
 	
-	public function group_effort_leave_effort() {
+	public function leave_effort( $formData ) {
 				
 		$current_user = wp_get_current_user();
 		
@@ -331,11 +372,11 @@ class Group_Effort_Ajax {
 						
 		foreach ( $efforts as $key => $effort ) {
 			
-			if ( $effort["ID"] == $_GET["id"] ) {
+			if ( $effort["ID"] == $formData["id"] ) {
 				
 				delete_user_meta( $current_user->ID, '_efforts', $effort );	
 				
-				$tasks = get_post_meta( $_GET["id"], '_tasks', false );
+				$tasks = get_post_meta( $formData["id"], '_tasks', false );
 				
 				foreach ( $tasks as $task ) {
 					
@@ -345,46 +386,67 @@ class Group_Effort_Ajax {
 						
 						$newTask["dibs"] = null;
 						
-						update_post_meta( $_GET["id"], '_tasks', $newTask, $task );
+						update_post_meta( $formData["id"], '_tasks', $newTask, $task );
 						
 					}
 					
 				}
 				
-				$contributors = get_post_meta( $_GET["id"], '_contributors', false );
+				$contributors = get_post_meta( $formData["id"], '_contributors', false );
 				
 				foreach ( $contributors as $contributor ) {
 					
 					if ( $contributor["id"] == $current_user->ID ) {
 						
-						delete_post_meta( $_GET["id"], '_contributors', $contributor );
+						delete_post_meta( $formData["id"], '_contributors', $contributor );
 						
 					}
 					
 				}		
 						
-				$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "left effort" , '' );
+				$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "left effort" , '' );
 								
 			} 
 			
 		}
-								
-		die();
-		
+										
 	}	
 
-/** 
-* @desc Edits the contributors of a specific effort.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @params $_GET["contributors"] (string) = A comma seperated list of all the contributors to be assigned to the effort.
-* @return JSON - Returns a JSON error response if the user does not belong to the effort or a JSON success message with the effort data.
-*/
-
-	public function group_effort_edit_contributors() {	
+	/** 
+	* @desc Gets the specified effort.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @return JSON - Returns a JSON error response if the user does not belong to the effort or a JSON success message with the effort data.
+	*/
 	
-		$this->check_contributor( $_GET["id"] );
+	public function get_effort( $formData ) {
+				
+		$this->check_contributor( $formData["id"] );
 		
-		$contributors =  (array) json_decode( stripslashes( $_GET["contributors"] ) );
+		$post = get_post( $formData["id"] );
+		
+		$effort = array(
+						'id' => $post->ID,
+						'title' => $post->post_title,
+						'contributors' => get_post_meta( $post->ID, '_contributors', false ),
+						'activity' => get_post_meta( $post->ID, '_activity' )
+						);
+		
+		return array( "success" => true, "data" => $effort );
+				
+	}
+
+	/** 
+	* @desc Edits the contributors of a specific effort.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @params $formData["contributors"] (string) = A comma seperated list of all the contributors to be assigned to the effort.
+	* @return JSON - Returns a JSON error response if the user does not belong to the effort or a JSON success message with the effort data.
+	*/
+
+	public function edit_contributors( $formData ) {	
+	
+		$this->check_contributor( $formData["id"] );
+		
+		$contributors =  (array) json_decode( stripslashes( $formData["contributors"] ) );
 				
 		$newList = array();
 		
@@ -406,9 +468,9 @@ class Group_Effort_Ajax {
 		
 		}
 		
-		$post = get_post( $_GET["id"] );					
+		$post = get_post( $formData["id"] );					
 		
-		$oldContributors = get_post_meta( $_GET["id"], '_contributors', false );
+		$oldContributors = get_post_meta( $formData["id"], '_contributors', false );
 		
 		foreach ( $oldContributors as $contributor ) {
 			
@@ -422,9 +484,9 @@ class Group_Effort_Ajax {
 			
 		}
 				
-		delete_post_meta( $_GET["id"], '_contributors' );
+		delete_post_meta( $formData["id"], '_contributors' );
 		
-		add_post_meta( $_GET["id"], '_contributors', $owner , false );				
+		add_post_meta( $formData["id"], '_contributors', $owner , false );				
 		
 		$toRemove = array_diff(  $oldList , $newList , array( $owner["username"] ) );	
 				
@@ -438,7 +500,7 @@ class Group_Effort_Ajax {
 						
 				foreach( $userEfforts as $effort ) { 
 				
-					if ( $effort["ID"] == $_GET["id"] ) {
+					if ( $effort["ID"] == $formData["id"] ) {
 						
 						delete_user_meta( $user->ID, '_efforts', $effort );
 												
@@ -452,7 +514,7 @@ class Group_Effort_Ajax {
 		
 		$added = array();
 		
-		if 	( $_GET["contributors"] != '' ) {
+		if 	( $formData["contributors"] != '' ) {
 			
 			foreach( $newContributors as $key => $contributor ) {
 				
@@ -466,7 +528,7 @@ class Group_Effort_Ajax {
 				
 				foreach( $userEfforts as $effort ) { 
 				
-					if ( $effort["ID"] == $_GET["id"] ) {
+					if ( $effort["ID"] == $formData["id"] ) {
 						
 						$hasEffort = true;
 						
@@ -478,7 +540,7 @@ class Group_Effort_Ajax {
 					
 					add_user_meta( 	$user->ID,
 									'_efforts', 
-									array(	'ID' => $_GET["id"],
+									array(	'ID' => $formData["id"],
 											'title' => $post->post_title,
 											'activity' => 0 ),
 											false );
@@ -487,7 +549,7 @@ class Group_Effort_Ajax {
 						
 				}
 								
-				add_post_meta( $_GET["id"], '_contributors', array( 'id' => $user->ID, 'username' => $user->user_login, 'face' => get_avatar( $user->ID ), 'role' => $role ) , false ); 
+				add_post_meta( $formData["id"], '_contributors', array( 'id' => $user->ID, 'username' => $user->user_login, 'face' => get_user_meta( $user->ID, "avatar", true ), 'role' => $role ) , false ); 
 				
 			}
 			
@@ -499,7 +561,7 @@ class Group_Effort_Ajax {
 	
 				$user = get_user_by( 'login', $contributor );
 								
-				$tasks = get_post_meta( $_GET["id"], '_tasks', false ); 	
+				$tasks = get_post_meta( $formData["id"], '_tasks', false ); 	
 				
 				foreach ( $tasks as $task ) {
 					
@@ -509,7 +571,7 @@ class Group_Effort_Ajax {
 						
 						$newTask["dibs"] = null;
 						
-						update_post_meta( $_GET["id"], '_tasks', $newTask, $task );
+						update_post_meta( $formData["id"], '_tasks', $newTask, $task );
 						
 					}
 					
@@ -527,164 +589,129 @@ class Group_Effort_Ajax {
 		
 		$comment = $removed.$connector.$added;
 			
-		$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "changed contributors;" , $comment );							
-						
-		die();
-			
-	}
-
-/** 
-* @desc Gets the specified effort.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @return JSON - Returns a JSON error response if the user does not belong to the effort or a JSON success message with the effort data.
-*/
+		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "changed contributors;" , $comment );							
+									
+	}	
 	
-	public function group_effort_get_effort() {
+	/** 
+	* @desc Gets the specified effort's tasks.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @return JSON - Returns a JSON error response if the user does not belong to the effort or a JSON success message with the effort's tasks.
+	*/	
+	
+	public function get_effort_tasks( $formData ) {
+		
+		$this->check_contributor( $formData["id"] );
+		
+		$tasks = get_post_meta( $formData["id"], '_tasks', false );
+		
+		return array( "success" => true, "data" => $tasks );
 				
-		$this->check_contributor( $_GET["id"] );
-		
-		$post = get_post( $_GET["id"] );
-		
-		$effort = array(
-						'id' => $post->ID,
-						'title' => $post->post_title,
-						'contributors' => get_post_meta( $post->ID, '_contributors', false ),
-						'activity' => get_post_meta( $post->ID, '_activity' )
-						);
-		
-		echo json_encode( array( "success" => true, "data" => $effort ) );
-		
-		die();
-		
 	}
 	
-/** 
-* @desc Gets the specified effort's tasks.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @return JSON - Returns a JSON error response if the user does not belong to the effort or a JSON success message with the effort's tasks.
-*/	
+	/** 
+	* @desc Adds a task to the specified effort.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @return No response..
+	*/	
 	
-	public function group_effort_get_effort_tasks() {
+	public function add_effort_task( $formData ) {
 		
-		$this->check_contributor( $_GET["id"] );
+		$this->check_contributor( $formData["id"] );
 		
-		$tasks = get_post_meta( $_GET["id"], '_tasks', false );
-		
-		echo json_encode( array( "success" => true, "data" => $tasks ) );
-		
-		die();
-		
-	}
-	
-/** 
-* @desc Adds a task to the specified effort.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @return No response..
-*/	
-	
-	public function group_effort_add_effort_task() {
-		
-		$this->check_contributor( $_GET["id"] );
-		
-		$task = (array) json_decode( stripslashes( $_GET["task"] ) );			
+		$task = (array) json_decode( stripslashes( $formData["effort_task"] ) );			
 						
-		add_post_meta( $_GET["id"], '_tasks', $task, false );
+		add_post_meta( $formData["id"], '_tasks', $task, false );
 		
-		$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "added a task:" , $task["title"] );
-					
-		die();
-		
+		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "added a task:" , $task["title"] );
+							
 	}
 	
-/** 
-* @desc Let's a user call "dibs" on the specified task.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @params $_GET["task"] (int) = The index of the task that the user wants to call dibs on.
-* @return No response..
-*/		
+	/** 
+	* @desc Let's a user call "dibs" on the specified task.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @params $formData["effort_task"] (int) = The index of the task that the user wants to call dibs on.
+	* @return No response..
+	*/		
 	
-	public function group_effort_dibs() {
+	public function dibs( $formData ) {
 		
-		$this->check_contributor( $_GET["id"] );
+		$this->check_contributor( $formData["id"] );
 		
-		$tasks = (array) get_post_meta( $_GET["id"], '_tasks', false );
+		$tasks = (array) get_post_meta( $formData["id"], '_tasks', false );
 		
-		$task = (array) $tasks[ $_GET["task"] ];
+		$task = (array) $tasks[ $formData["effort_task"] ];
 		
 		if ( ( !isset( $task['dibs'] ) || '' == $task['dibs'] ) ) {
 			
 			$task['dibs'] = wp_get_current_user()->ID;		
 				
-			update_post_meta( $_GET["id"] , '_tasks' , $task, $tasks[ $_GET["task"] ] );
+			update_post_meta( $formData["id"] , '_tasks' , $task, $tasks[ $formData["effort_task"] ] );
 			
-			$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "called dibs on" , $task["title"] );
+			$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "called dibs on" , $task["title"] );
 			
-			echo json_encode( array( "success" => true ) );
+			return array( "success" => true );
 			
 		} elseif ( $task['dibs'] == wp_get_current_user()->ID ) {
 			
 			$task['dibs'] = '';
 			
-			update_post_meta( $_GET["id"] , '_tasks' , $task, $tasks[ $_GET["task"] ] );
+			update_post_meta( $formData["id"] , '_tasks' , $task, $tasks[ $formData["effort_task"] ] );
 			
-			$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "no longer has dibs on" , $task["title"] );
+			$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "no longer has dibs on" , $task["title"] );
 			
-			echo json_encode( array( "success" => true ) );
+			return array( "success" => true );
 			
 		} else {
 			
-			echo json_encode( array( "success" => false, "data" => $task['dibs'] ) );
+			return array( "success" => false, "data" => $task['dibs'] );
 				
 		} 
-							
-		die();
-		
+									
 	}
 
-/** 
-* @desc Let's a user change the finished status of the task.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @params $_GET["task"] (int) = The index of the task that the user wants to call dibs on.
-* @return JSON - A JSON success message with the task attached as data.
-*/
+	/** 
+	* @desc Let's a user change the finished status of the task.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @params $formData["effort_task"] (int) = The index of the task that the user wants to call dibs on.
+	* @return JSON - A JSON success message with the task attached as data.
+	*/
 	
-	public function group_effort_change_task_status() {
+	public function change_task_status( $formData ) {
 		
-		$this->check_contributor( $_GET["id"] );
+		$this->check_contributor( $formData["id"] );
 		
-		$tasks = get_post_meta( $_GET["id"], '_tasks', false );
+		$tasks = get_post_meta( $formData["id"], '_tasks', false );
 		
-		$task = (array) $tasks[ $_GET["task"] ];
+		$task = (array) $tasks[ $formData["effort_task"] ];
 		
 		$newTask = $task;
 		
 		$newTask["dibs"] = null;
 		
-		$newTask['finished'] = 	json_decode( $_GET["finished"] );			
+		$newTask['finished'] = 	json_decode( $formData["finished"] );			
 		
 		$action = ( $newTask['finished'] ) ? 'finished' : 'removed finished status of';
 		
-		$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , $action.' the task' , $task["title"] );
+		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , $action.' the task' , $task["title"] );
 		
-		update_post_meta( $_GET["id"] , '_tasks' , $newTask, $task );
+		update_post_meta( $formData["id"] , '_tasks' , $newTask, $task );
 		
-		echo json_encode( array( "success" => true, "data" => $newTask ) );
-					
-		die();
-		
+		return array( "success" => true, "data" => $newTask );
+							
 	}
 	
-/** 
-* @desc Gets all the comments for the specified effort.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @return JSON - A JSON success message with the task attached as data.
-*/
+	/** 
+	* @desc Gets all the comments for the specified effort.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @return JSON - A JSON success message with the task attached as data.
+	*/
 	
-	public function group_effort_get_effort_comments() {
+	public function get_effort_comments( $formData ) {
 		
-		$this->check_contributor( $_GET["id"] );
+		$this->check_contributor( $formData["id"] );
 		
-		$comments = get_comments( 'post_id='.$_GET["id"] );
+		$comments = get_comments( 'post_id='.$formData["id"] );
 		
 		foreach ( $comments as $comment ) {
 			
@@ -692,56 +719,101 @@ class Group_Effort_Ajax {
 			
 		}				
 				
-		echo json_encode( array( "success" => true , "data" => $comments ) );
-		
-		die();
-		
+		return array( "success" => true , "data" => $comments );
+				
 	}
 
-/** 
-* @desc Gets all the comments for the specified effort.
-* @params $_GET["id"] (int) = The id of the requested effort.
-* @params $_GET["comment"] (string) = The comment to be added.
-* @return No response.
-*/
+	/** 
+	* @desc Gets all the comments for the specified effort.
+	* @params $formData["id"] (int) = The id of the requested effort.
+	* @params $formData["comment"] (string) = The comment to be added.
+	* @return No response.
+	*/
 	
-	public function group_effort_add_effort_comment() {
+	public function add_effort_comment( $formData ) {
 		
-		$this->check_contributor( $_GET["id"] );
+		$this->check_contributor( $formData["id"] );
 		
 		$current_user = wp_get_current_user();		
 		
 		$commentdata = array(
-								'comment_post_ID' => $_GET["id"],
+								'comment_post_ID' => $formData["id"],
 								'comment_author' => $current_user->data->user_login, 
 								'comment_author_email' => $current_user->data->user_email, 
-								'comment_author_url' => $current_user->data->user_url,  
-								'comment_content' => $_GET["comment"],
+								'comment_author_url' => get_user_meta( $current_user->ID, "avatar", true ),  
+								'comment_content' => $formData["comment"],
 								'comment_type' => '',
 								'comment_parent' => '',
 								'user_id' => $current_user->data->ID,
 								'comment_author_IP' => ''
 							);
 		
-		$this->add_activity( $_GET["id"] , wp_get_current_user()->data->user_login , "commented" , ' on '.get_post( $_GET["id"] )->post_title );
+		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "commented" , ' on '.get_post( $formData["id"] )->post_title );
 		
 		$comment_id = wp_new_comment($commentdata);
-						
-		die();
-		
+								
 	} // All effort functions
 	
-/** 
-* @desc Sends a new request to the specified user.
-* @params $_GET["email"] (string) = The username.
-* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
-*/
+	/**
+	*
+	*
+	*
+	*
+	**/
 	
-	public function group_effort_add_friend() {					
+	public function search( $formData ) {
+		
+		$users = get_users( array( "role" => "group_effort" ) );
+		$term = $formData["term"];
+		$result = array();
+		
+		$current_user = wp_get_current_user();
+		$friends = get_user_meta( $current_user->ID , '_friends' , false );
+		
+		foreach ( $users as $key => $user ) {
+						
+			if ( strpos( $user->data->user_login , $term ) || strpos( $user->data->user_email , $term ) ) {
+				
+				$status = '';
+				
+				foreach ( $friends as $friend ) {
+										
+					if ( $friend['ID'] == $user->data->ID ) {
+						
+						$status = $friend['status'];
+											
+					} 
+					
+				}									
+				
+				if ( $status == "" ) {
+					$result[] = array(	'ID' => $user->data->ID,
+										'email' => $user->data->user_email,
+										'username' => $user->data->user_login,
+										'face' => get_user_meta( $user->ID, "avatar", true ),
+										'status' => $status
+										 );	
+				}
+									 
+			}			
+		
+		}
+								
+		return array( "success" => true, "data" => array_slice( $result, 0, 6 ) );
+		
+	}
+	
+	/** 
+	* @desc Sends a new request to the specified user.
+	* @params $formData["email"] (string) = The username.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/
+	
+	public function add_friend( $formData ) {					
 		
 		$current_user = wp_get_current_user();
 		
-		$user = get_user_by( 'email', $_GET["email"] );
+		$user = get_user_by( 'email', $formData["email"] );
 		
 		$friends = get_user_meta( $current_user->ID, '_friends', false );
 		
@@ -749,7 +821,7 @@ class Group_Effort_Ajax {
 		
 		foreach ( $friends as $friend ) {
 			
-			if ( $friend['email'] == $_GET["email"] ) {
+			if ( $friend['email'] == $formData["email"] ) {
 				
 				$is_friend = true;
 				
@@ -759,113 +831,104 @@ class Group_Effort_Ajax {
 		
 		if ( !$user ) {
 			
-			echo json_encode( array( "success" => false, "reason" => "There is not a GroupEffort user with the email address ".$_GET["email"] ) );
-			
+			return array( "success" => false, "reason" => "There is not a GroupEffort user with the email address ".$formData["email"] );
+						
 		} else if ( $is_friend ) {
 			
-			echo json_encode( array( "success" => false, "reason" => "You have already sent a request to ".$_GET["email"] ) );
+			return array( "success" => false, "reason" => "You have already sent a request to ".$formData["email"] );
 			
 		} elseif ( $user && in_array( 'group_effort' , $user->roles ) ) {	
 				
 			add_user_meta( $current_user->ID, '_friends', array(	'ID' => $user->ID,
 														'email' => $user->user_email,
 														'username' => $user->user_login,
-														'face' => get_avatar( $user->ID ),
+														'face' => get_user_meta( $user->ID, "avatar", true ),
 														'status' => 'Request Sent' ),
 														false ); 
 														
 			add_user_meta( $user->ID, '_friends', array(	'ID' => $current_user->ID,
 														'email' => $current_user->user_email,
 														'username' => $current_user->user_login,
-														'face' => get_avatar( $current_user->ID ),
+														'face' => get_user_meta( $current_user->ID, "avatar", true ),
 														'status' => 'Request Received' ),
 														false );
 																									
-			echo json_encode( array( "success" => true ) );
+			return array( "success" => true );
 			
 		} 
-		
-		die();
-		
-	}
-
-/** 
-* @desc Accepts a request from the specified user.
-* @params $_GET["email"] (string) = The email of the user whos request is to be accepted.
-* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
-*/
-	
-	public function group_effort_accept_request() {		
-	
-		$current_user = wp_get_current_user();
-		
-		$user = get_user_by( 'email', $_GET["email"] );
 				
-		if ( $user && in_array( 'group_effort' , $user->roles ) ) {				
-					
-			update_user_meta( $current_user->ID, '_friends', array(	'ID' => $user->ID,
-														'email' => $user->data->user_email,
-														'username' => $user->data->user_login,
-														'face' => get_avatar( $user->ID ),
-														'status' => 'Request Accepted' ),
-														
-														array(	'ID' => $user->ID,
-														'email' => $user->data->user_email,
-														'username' => $user->data->user_login,
-														'face' => get_avatar( $user->ID ),
-														'status' => 'Request Received' ) ); 
-														
-			update_user_meta( $user->ID, '_friends', array(	'ID' => $current_user->data->ID,
-														'email' => $current_user->data->user_email,
-														'username' => $current_user->data->user_login,
-														'face' => get_avatar( $current_user->ID ),
-														'status' => 'Request Accepted' ),
-														
-														array(	'ID' => $current_user->ID,
-														'email' => $current_user->data->user_email,
-														'username' => $current_user->data->user_login,
-														'face' => get_avatar( $current_user->ID ),
-														'status' => 'Request Sent' ) );		
-																							
-			echo json_encode( array( "success" => true ) );
-			
-		} 
-		
-		die();
-		
 	}
 
-/** 
-* @desc Removes a friend from the list of friends.
-* @params $_GET["email"] (string) = The email of the user whos request is to be removed.
-* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
-*/
-
-	public function group_effort_remove_friend() {
-		
-		echo 'test';
-		
+	/** 
+	* @desc Accepts a request from the specified user.
+	* @params $formData["email"] (string) = The email of the user whos request is to be accepted.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/
+	
+	public function accept_request( $formData ) {		
+	
 		$current_user = wp_get_current_user();
 		
-		$user = get_user_by( 'email', $_GET["email"] );
+		$user = get_user_by( 'email', $formData["email"] );
+			
+		$debug = array();	
+				
+		foreach( get_user_meta( $current_user->ID, '_friends', false ) as $friend ) { // $friend will be the old meta info				
+			
+			if ( $friend["ID"] == $user->ID ) {
+			
+				$debug[] = update_user_meta( 	$current_user->ID, 
+												'_friends', 
+												array(	'ID' => $user->ID,
+														'email' => $user->data->user_email,
+														'username' => $user->data->user_login,
+														'face' => get_user_meta( $user->ID, "avatar", true ),
+														'status' => 'Request Accepted' ),
+												$friend 
+												); 		
+														
+			}
+			
+		}
+		
+		foreach( get_user_meta( $user->ID, '_friends', false ) as $friend ) { // $friend will be the old meta info				
+			
+			if ( $friend["ID"] == $current_user->ID ) {
+			
+				$debug[] = update_user_meta( $user->ID, '_friends', array(	'ID' => $current_user->data->ID,
+														'email' => $current_user->data->user_email,
+														'username' => $current_user->data->user_login,
+														'face' => get_user_meta( $current_user->ID, "avatar", true ),
+														'status' => 'Request Accepted' ),
+														$friend);		
+														
+			}
+			
+		}			
+																															
+		return array( "success" => true , "debug" => $debug );	
+			
+	}
+
+	/** 
+	* @desc Removes a friend from the list of friends.
+	* @params $formData["email"] (string) = The email of the user whos request is to be removed.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/
+
+	public function remove_friend( $formData ) {
+				
+		$current_user = wp_get_current_user();
+		
+		$user = get_user_by( 'email', $formData["email"] );
 		
 		$friends = get_user_meta( $current_user->ID , '_friends' , false);	
 					
 		foreach ( $friends as $key => $friend ) {
 			
-			if ( $friend["email"] == $_GET["email"] ) {
+			if ( $friend["email"] == $formData["email"] ) {
 				
-				delete_user_meta( $current_user->ID, '_friends', $friend );	
-				
-				if ( "Request Received" == $friend["status"] ) {
-					
-					echo json_encode( array( "success" => true, "data" => "Request has been removed." ) );
-					
-				} else {
-					
-					echo json_encode( array( "success" => true, "data" => "User has been removed from your network." ) );	
-					
-				}
+				delete_user_meta( $current_user->ID, '_friends', $friend );									
 				
 			}
 			
@@ -874,48 +937,108 @@ class Group_Effort_Ajax {
 		$friends = get_user_meta( $user->ID , '_friends' , false);			
 		
 		foreach ( $friends as $key => $friend ) {
-			
-			var_dump( $friend );
-			
+						
 			if ( $friend["email"] == $current_user->data->user_email ) {
 				
 				delete_user_meta( $user->ID, '_friends', $friend );	
 				
 				if ( "Request Sent" == $friend["status"] ) {
 					
-					echo json_encode( array( "success" => true, "data" => "Request has been removed." ) );
+					return array( "success" => true, "data" => "Request has been removed." );
 					
 				} else {
 					
-					echo json_encode( array( "success" => true, "data" => "User has been removed from your network." ) );	
+					return array( "success" => true, "data" => "User has been removed from your network." );	
 					
 				}
 				
 			}
 			
 		}		
-		
-		die();
-		
+				
 	}
 	
-/** 
-* @desc Retrieves all the friends for the current user.
-* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
-*/	
+	/** 
+	* @desc Retrieves all the friends for the current user.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/	
 	
-	public function group_effort_all_friends() {	
+	public function all_friends( $formData ) {	
 		
 		$current_user = wp_get_current_user();
 				
-		echo json_encode( array( "success" => true, "data" => get_user_meta( $current_user->ID , '_friends' , false ) ) );
-				
-		die();
-	
+		return array( "success" => true, "data" => get_user_meta( $current_user->ID , '_friends' , false ) );
+					
 	}
 	
-
+	/** 
+	* @desc Retrieves all the friends for the current user.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/	
 	
-
+	public function get_friend( $formData ) {	
+				
+		$current_user = get_user_by( 'id' , $formData["friendId"] );
+				  
+		$profile = get_user_meta( $current_user->ID , "profile", true );
+		
+		$user = array(	
+						'id' => $current_user->ID,
+						'username' => $current_user->data->user_login,
+						'email' => $current_user->data->user_email,
+						'face' => get_user_meta( $current_user->ID, "avatar", true ),
+						'phone' => $profile["phone"],
+						'location' => $profile["location"]
+						);
+				
+		return array( "success" => true, "data" => $user );
+					
+	}
+	
+	/** 
+	* @desc Retrieves all the friends for the current user.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/	
+	
+	public function upload_photo( $formData ) {	
+				
+		$new_image_name = wp_get_current_user()->ID.".jpg";
+		
+		$test = move_uploaded_file( $_FILES["file"]["tmp_name"] , plugin_dir_path( dirname( __FILE__ ) ) . 'img/users/' . $new_image_name ); 
+		
+		error_log( json_encode( $test ) , 3, plugin_dir_path( dirname( __FILE__ ) ) . "class-group-effort-ajax-errors.log");	
+		
+		update_user_meta( wp_get_current_user()->ID, "avatar", plugins_url( 'group-effort/img/users/' ).$new_image_name );
+		
+		return array( "success" => $test , "data" => plugins_url( 'group-effort/img/users/' ).$new_image_name );
+					
+	}
+	
+	/** 
+	* @desc Retrieves all the friends for the current user.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/	
+	
+	public function update_profile( $formData ) {			
+		
+		$current_user = wp_get_current_user();
+						
+		$formData = (array) json_decode( stripslashes( $formData["data"] ) );
+						
+		if ( ( $formData["email"] != $current_user->user_email ) && email_exists( $formData['email'] ) ) {
+				
+			return array( 'success' => false, 'reason' => "That Email is already being used." );
+				
+		}
+		
+		$user = array( 'ID' => $current_user->ID, 'user_email' => $formData["email"] );
+		
+		wp_update_user( $current_user->ID , $user );
+		
+		update_user_meta( $current_user->ID , "profile" , array( "location" => $formData["location"] , "phone" => $formData["phone"] ) );
+		
+		return array( "success" => true , "data" => $this->current_user() );
+					
+	}	
 	
 }

@@ -42,6 +42,10 @@ class Group_Effort {
  
         $ajax = new Group_Effort_Ajax();
 		$this->loader->add_filter( 'auth_cookie_expiration', $ajax, 'extend_cookie' ); 
+		$this->loader->add_action( 'wp_ajax_nopriv_group_effort', $ajax, 'not_logged_in' );
+		$this->loader->add_action( 'wp_ajax_group_effort', $ajax, 'ajax_controller' ); 
+		
+		/*
 		$this->loader->add_action( 'wp_ajax_nopriv_ge_authenticate', $ajax, 'group_effort_not_logged_in' );
 		$this->loader->add_action( 'wp_ajax_ge_authenticate', $ajax, 'group_effort_logged_in' ); 
 		$this->loader->add_action( 'wp_ajax_ge_login', $ajax, 'group_effort_logged_in' ); 
@@ -64,6 +68,7 @@ class Group_Effort {
 		$this->loader->add_action( 'wp_ajax_ge_acceptRequest', $ajax, 'group_effort_accept_request' );
 		$this->loader->add_action( 'wp_ajax_ge_removeFriend', $ajax, 'group_effort_remove_friend' );
 		$this->loader->add_action( 'wp_ajax_ge_editContributors', $ajax, 'group_effort_edit_contributors' );
+		*/
 		
 	}
 
