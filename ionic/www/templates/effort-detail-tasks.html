@@ -19,7 +19,7 @@
     	Un-Finished Tasks
         <span class="icon"><span class="item-note padding-horizontal">Dibs</span></span>
     </div>
-    <div class="item item-icon-left item-icon-right task"  ng-repeat="task in tasks track by $index" ng-hide="task.finished" >
+    <div class="item item-icon-left item-icon-right task item-text-wrap"  ng-repeat="task in tasks track by $index" ng-hide="task.finished" >
             <div class="icon" ng-show="data.tasks[ $index ].available">
             	<button class="button button-light button-small" ng-show="!task.finished" ng-click="changeStatus( effort.id , $index , !task.finished );" >
                 </button>                
@@ -41,7 +41,7 @@
     <div class="item item-divider" >
     	Finished Tasks
     </div>
-    <div class="item item-icon-left item-icon-right task"  ng-repeat="task in tasks track by $index"  ng-show="task.finished" >
+    <div class="item item-icon-left item-icon-right task item-text-wrap"  ng-repeat="task in tasks track by $index"  ng-show="task.finished" >
             <div class="icon" ng-show="data.tasks[ $index ].available">
             	<button class="button button-light button-small ion-close" ng-show="task.finished && self.role == 'admin'" ng-click="changeStatus( effort.id , $index , !task.finished );" >                
                 </button>                

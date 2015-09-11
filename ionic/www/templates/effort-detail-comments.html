@@ -14,7 +14,8 @@
           <i class="icon ion-plus"></i>
         </a>
       </div>
-    <ion-item class="item item-text-wrap" ng-repeat="comment in comments">
+    <ion-item class="item item-text-wrap item-avatar" ng-repeat="comment in comments">
+    	<img ng-src="{{comment.comment_author_url}}" class="avatar" />
         <h2>{{comment.comment_author}}</h2>
         <p>{{comment.comment_content}}</p>
         <p class="time">{{comment.comment_date}}</p>

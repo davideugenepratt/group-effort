@@ -13,17 +13,17 @@
             <input type="text" placeholder="Title" ng-model="data.title" required >
         </ion-item>
         <ion-item class="item item-avatar item-icon-left" ng-repeat="friend in friends" >
-        	<img  class="avatar" ng-bind-html="friend.face"></img>
+        	<img  class="avatar" src="{{friend.face}}"/>
             <h2>{{friend.username}}</h2>
             <p>{{friend.email}}</p>
-            <label class="toggle">
+            <label class="toggle">            
             	<input type="checkbox" ng-model="data.friends[friend.username]" >
                 <div class="track"><div class="handle"></div></div>
             </label>
         </ion-item>
         <ion-item class="button-bar" >
-        	<a class="button" href="#/tab/efforts">Cancel</a>
-            <button class="button button-positive" type="submit" ng-disabled="newEffortForm.submitted || newEffortForm.$invalid " >Ok</button>
+        	<a class="button" href="#/tab/efforts" ng-disabled="data.submitted" >Cancel</a>
+            <button class="button button-positive" type="submit" ng-disabled="data.submitted || newEffortForm.$invalid " >Ok</button>
         </ion-item>
     </form>
   </ion-content>

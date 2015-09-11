@@ -14,6 +14,24 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	
 	};
 	
+	$scope.goToFriends = function() {
+	
+		$state.go( 'tab.friends' );	
+	
+	};
+	
+	$scope.goToFriend = function( id ) {
+	
+		$state.go( 'tab.friends-detail' , { 'friendID' : id } );	
+	
+	};
+	
+	$scope.goToAccount = function() {
+	
+		$state.go( 'tab.account' );	
+	
+	};
+	
 	$rootScope.tabs = true;
 	
 	console.log( $rootScope.user );
@@ -37,6 +55,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.data.submitted = false;
 	
 	$scope.login = function() {
+		
+		$scope.data.submitted = true;
 		
 		console.log( 'logging in');
 		
@@ -70,23 +90,32 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 
 .controller('RegisterCtrl', function( $rootScope, $scope, $state, Authenticate ) {
 	
+	$scope.goToLogin = function() {
+
+		$state.go( 'login' );	
+	
+	};
+	
 	$rootScope.tabs = false;
 	
 	$scope.data = {};
+	
+	$scope.data.submitted = false;
+	
 	$scope.register = function() {
-		var fullname = $scope.data.fullname;
+		$scope.data.submitted = true;
 		var email = $scope.data.email;
 		var phone = $scope.data.phone;
 		var username = $scope.data.username;
     	var password = $scope.data.password;
-		Authenticate.register( fullname, email, username , password ).then( function( result ) {			
-			if ( false != result ) {
+		Authenticate.register( email, username , password ).then( function( result ) {			
+			if ( result ) {
 				$rootScope.loggedIn = true;
 				$rootScope.user = result;
-				$scope.data.submitted = false;
 				console.log( $rootScope.user );
 				$state.go('tab.account');	
 			} else {
+				console.log( result );
 				$rootScope.loggedIn = false;
 				$scope.data.submitted = false;
 			}
@@ -105,6 +134,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.data = {};
 	
 	$scope.addEffort = function() {
+		
+		$scope.data.submitted = true;
 		
 		Efforts.addEffort( $scope.data.title , $scope.data.friends ).then( function( result ) {
 			
@@ -160,13 +191,13 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 		if ( effort.contributors.length == 1 ) {
 			
-			Popup.confirm( "Real quick before you leave ..." , "You're the only one involved in this effort, if you leave this effort it will be deleted." ).then( function( confirm ) {
+			Popup.confirmPrompt( "Real quick before you leave ..." , "You're the only one involved in this effort, if you leave this effort it will be deleted." ).then( function( confirm ) {
 				
 				if ( confirm ) {
 					
 					Efforts.leaveEffort( id ).then( function( result ) {
 												
-						Popup.alert( "Ok, you did it," , "You have left the effort" );
+						Popup.alertPrompt( "Ok, you did it," , "You have left the effort" );
 						
 						$state.go( 'tab.efforts' );
 						
@@ -180,7 +211,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 			
 			Efforts.leaveEffort( id ).then( function( result ) {
 				
-				Popup.alert( "Ok, you did it," , "You have left the effort" );
+				Popup.alertPrompt( "Ok, you did it," , "You have left the effort" );
 
 				$state.go( 'tab.efforts' );	
 									
@@ -257,11 +288,13 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 	};
 	
-	$scope.addCommentData = {};	
+	$scope.data = {};	
 	
 	$scope.addEffortComment = function() {
 		
-		Efforts.addEffortComment( effort.id , $scope.addCommentData.comment ).then( function( response ) {
+		$scope.data.submitted = true;
+		
+		Efforts.addEffortComment( effort.id , $scope.data.comment ).then( function( response ) {
 						
 			$state.go( 'tab.effort-detail-comments' , { effortId : effort.id } , { reload : true } );
 			
@@ -270,13 +303,12 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	};	
 	
 	console.log( comments );
-	
-	comments.data.reverse();
-	
+		
 	$scope.comments = comments.data;
 	
 	$scope.effort = effort;	
 	
+	$scope.self = $rootScope.user;
 
 })
 
@@ -311,6 +343,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	};
 	
 	$scope.addTask = function() {
+		
+		$scope.data.submitted = true;
 				
 		var task = {};
 		
@@ -346,7 +380,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 					
 					if ( result.data == effort.contributors[a].id ) {
 						
-						Popup.alert( "Sorry" , "Looks like " + effort.contributors[a].username + " already called dibs on this one." );
+						Popup.alertPrompt( "Sorry" , "Looks like " + effort.contributors[a].username + " already called dibs on this one." );
 						
 						$scope.data.tasks[ task ].face = effort.contributors[a].face;
 						
@@ -385,6 +419,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	}
 	
 	$scope.data.tasks = Efforts.assignTasks( tasks , effort );
+	
+	console.log( $scope.data.tasks , effort );
 		
 	$scope.tasks = tasks;
 	
@@ -404,9 +440,9 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 			
 			if ( result.success) {
 				
-				$state.go('tab.account-friends-requests' , {}, { reload: true } );
+				$state.go('tab.friends-requests' , {}, { reload: true } );
 				
-				Popup.alert( "It's on its way!", "Your request has been sent.");
+				Popup.alertPrompt( "It's on its way!", "Your request has been sent.");
 				
 			} else {
 				
@@ -420,11 +456,17 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	
 	$scope.acceptRequest = function( email ) {
 		
-		Friends.acceptRequest( email ).then( function( result ) {
+		//$scope.data = { submitted: true };
+		
+		Friends.acceptRequest( email ).then( function( result ) {						
 			
-			$state.go('tab.account-friends' , {}, { reload: true } );
+			Popup.alertPrompt( "Congratulations", "You just added another collaborator to your network.").then( function() {
+				
+				console.log( result );
 			
-			Popup.alert( "Congratulations", "You just added another collaborator to your network.");
+				$state.go('tab.friends' , {}, { reload: true } );
+				
+			});
 						
 		});
 		
@@ -432,23 +474,29 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	
 	$scope.denyRequest = function( email ) {
 		
-		Popup.confirm( "Are you sure?" , "This person could be reallllllly valuable to one of your efforts." ).then( function( result ) {
-			
+		$scope.data = { submitted: true };
+				
+		Popup.confirmPrompt( "Are you sure?" , "This person could be reallllllly valuable to one of your efforts." ).then( function( result ) {
+						
 			if( result ) {
 				
 				Friends.denyRequest( email ).then( function( result ) {
-					
-					console.log( result );
-					
-					$state.go('tab.account-friends' , {}, { reload: true } );
+										
+					$state.go( 'tab.friends' , {}, { reload: true } );
 					
 				});
+				
+			} else {
+								
+				$scope.data.submitted = false;
 				
 			}
 			
 		});
 		
 	};
+	
+	console.log( friends );
 	
 	$scope.friends = {};
 	
@@ -459,8 +507,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.friends.invitationSent = [];
 	
 	$scope.friends.requestAccepted = [];
-	
-	for( var i = 0; i < friends.length; i++ ) {
+		
+	for( var i = 0, x = friends.length; i < x; i++ ) {
 		
     	if ( friends[i].status == "Request Sent" ) {
 			
@@ -482,61 +530,69 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 	}	
 	
+	
+		
 })
 
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
+.controller('FriendsDetailCtrl', function($scope, $state, $stateParams, Friends, Popup, friend ) {
 	
-  // $scope.friend = Friends.get($stateParams.friendId);
-  
+	$scope.removeFriend = function( email ) {
+		
+		$scope.data = { submitted: true };
+				
+		Popup.confirmPrompt( "Are you sure?" , "This person could be reallllllly valuable to one of your efforts." ).then( function( result ) {
+			
+			if( result ) {
+				
+				Friends.denyRequest( email ).then( function( result ) {
+										
+					$state.go('tab.friends' , {}, { reload: true } );
+					
+				});
+				
+			} else {
+				
+				$scope.data.submitted = false;
+				
+			}
+			
+		});
+		
+	};
+	
+	$scope.friend = friend;
+	  
 })
 
-.controller('AccountCtrl', function( $rootScope, $scope, $state, Authenticate ) {
-  
-  $scope.changePicture = function() {
-	    
-		console.log( "changing picture" );
-		
-        var options =   {			
-            quality: 50,
-            destinationType: Camera.DestinationType.FILE_URI,
-            sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-            encodingType: 0     // 0=JPG 1=PNG
-        }
-		
-        navigator.camera.getPicture(onSuccess,onFail,options);
+.controller('AccountCtrl', function( $rootScope, $scope, $state, Popup, Authenticate, Account ) {
+    
+	$scope.changePicture = function() {
+	    		
+        Account.changePhoto();
 		
     };
 	
-    var onSuccess = function(FILE_URI) {
+    $scope.updateProfile = function() {
+				
+		$scope.data.submitted = true;
 		
-        console.log(FILE_URI);
+		Account.updateProfile( $scope.data ).then( function( result ) {
+						
+			if ( result.success ) {
+				
+				$scope.data.submitted = false;
+				
+				$state.go( 'tab.account' );
+				
+			} else {
+				
+				$rootScope.error = result.data
+				
+			}
+			
+		});
 		
-        //$scope.picData = FILE_URI;
-		
-        //$scope.$apply();
-		
-    };
-	
-    var onFail = function(e) {
-		
-        console.log("On fail " + e);
-		
-    };
-	
-	/*
-    $scope.send = function() {   
-        var myImg = $scope.picData;
-        var options = new FileUploadOptions();
-        options.fileKey="post";
-        options.chunkedMode = false;
-        var params = {};
-        params.user_token = localStorage.getItem('auth_token');
-        params.user_email = localStorage.getItem('email');
-        options.params = params;
-        var ft = new FileTransfer();
-        ft.upload(myImg, encodeURI("https://example.com/posts/"), onUploadSuccess, onUploadFail, options);
-    };
-	*/
+	};
     
   $scope.logout = function() {
 	  
@@ -557,7 +613,9 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		});
 		
   };
-    
+      
   $scope.self = $rootScope.user;
+  $scope.self.face += "?" + new Date().getTime();
+  $scope.data = $scope.self;
   
 });

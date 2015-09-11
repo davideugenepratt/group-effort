@@ -9,10 +9,10 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
     
-	$rootScope.baseURL = "http://127.0.0.1:8080/Local Web/group-effort/";  
-	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/";  
+	$rootScope.baseURL = "http://127.0.0.1:8080/Local Web/group-effort/wordpress/";  
+	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";  
 	 
-  	Popup.error(); 								// This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.
+  	Popup.errorWindow(); 								// This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.
 	
     $ionicPlatform.ready(function() {				  		
 			  
@@ -30,9 +30,8 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 .config( function( $stateProvider, $urlRouterProvider, $ionicConfigProvider ) {
     
   $ionicConfigProvider.backButton.text( '' ).icon('ion-arrow-left-b').previousTitleText(false);				// Removes the back button text and icon. 
-  																							// Need to remove the back button all together.
   
-  $ionicConfigProvider.tabs.position( 'bottom' );											// Ensures the tabs stay on the
+  $ionicConfigProvider.tabs.position( 'bottom' );															// Ensures the tabs stay on the bottom
   
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
@@ -259,12 +258,12 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 	  }
     })
 
-  .state('tab.account-friends', {
+  .state('tab.friends', {
 	  cache : false,
-      url: '/account/friends',
+      url: '/friends',
       views: {
-        'tab-account': {
-          templateUrl: 'templates/account-friends.html',
+        'tab-friends': {
+          templateUrl: 'templates/tab-friends.html',
           controller: 'FriendsCtrl'
         }
       },
@@ -274,12 +273,12 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         	}
 	  }
     })
-   .state('tab.account-friends-requests', {
+   .state('tab.friends-requests', {
 	  cache : false,
-      url: '/account/friends/requests',
+      url: '/friends/requests',
       views: {
-        'tab-account': {
-          templateUrl: 'templates/account-friends-requests.html',
+        'tab-friends': {
+          templateUrl: 'templates/friends-requests.html',
           controller: 'FriendsCtrl'
         }
       },
@@ -289,12 +288,36 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         	}
 	  }
     })
-  
+  .state('tab.friends-detail', {
+	  cache : false,
+      url: '/friends/:friendID',
+      views: {
+        'tab-friends': {
+          templateUrl: 'templates/friends-detail.html',
+          controller: 'FriendsDetailCtrl'
+        }
+      },
+	  resolve: {
+            friend : function( $stateParams, Friends ) {
+                return Friends.getFriend( $stateParams.friendID );
+        	}
+	  }
+    })
   .state('tab.account', {
+	cache : false,
     url: '/account',
     views: {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
+        controller: 'AccountCtrl'
+      }
+    }
+  }).state('tab.account-profile', {
+	cache : false,
+    url: '/account/profile',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/account-profile.html',
         controller: 'AccountCtrl'
       }
     }

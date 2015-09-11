@@ -1,21 +1,11 @@
 <ion-view view-title="People">
   <ion-content>
-  	<form name="findFriendForm" ng-submit="findFriend()" novalidate >
     <div class="item item-button-right">
-        <input type="text" placeholder="Find Friend"  ng-model="data.term" required >
-        <button class="button button-positive button-circle" type="submit" ng-disabled="data.submitted || findFriendForm.$invalid" >
-            <i class="icon ion-search"></i>
-        </button>
-    </div>
-    </form>
-        <ion-item class="item item-avatar"  ng-repeat="friend in searchResults"  >
-            <img ng-src="{{friend.face}}" class="avatar">
-            <div class="item-note">
-                <button class="button button-positive button-small" ng-click="addFriend( friend.email )"  ng-disabled="friend.status == 'Request Sent'" ng-hide="friend.status == 'Request Accepted'" ><i class="ion-paper-airplane"></i></button>                
-            </div>      	        
-            <h2>{{friend.username}}</h2>
-            <p>{{friend.email}}</p>     
-          </ion-item>
+        Add Someone
+        <a href="#/tab/friends/requests" class="button button-positive">
+          <i class="icon ion-person-add"></i>
+        </a>
+      </div>
     <ion-list>
     <!--
       <ion-item class="item item-divider" >
@@ -38,14 +28,7 @@
             <h2>{{friend.username}}</h2>
             <p>{{friend.email}}</p>         
       </ion-item>
-      <ion-item class="item item-avatar"  ng-repeat="friend in friends.requestSent"  >
-        <img ng-src="{{friend.face}}" class="avatar">
-        <div class="item-note">
-            <button class="button button-positive button-small" ng-click="addFriend( friend.email )"  ng-disabled="friend.status == 'Request Sent'" ng-hide="friend.status == 'Request Accepted'" ><i class="ion-paper-airplane"></i></button>                
-        </div>      	        
-        <h2>{{friend.username}}</h2>
-        <p>{{friend.email}}</p>     
-      </ion-item>
+      
     </ion-list>
   </ion-content>
 </ion-view>

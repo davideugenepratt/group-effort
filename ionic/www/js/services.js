@@ -2,7 +2,7 @@ angular.module('GroupEffort.services', [])
 
 /**  
   * @desc this factory holds functions for error alerts, alert dialogues, and confirmation dialogues
-  * Popup.error(); Popup.alert(); Popup.confirm();
+  * Popup.errorWindow(); Popup.alertPrompt(); Popup.confirmPrompt();
   * @author David Eugene Pratt - david@davideugenepratt.com
 */  
 
@@ -13,7 +13,7 @@ angular.module('GroupEffort.services', [])
 	  * @return bool - returns false to prevent error'd action from continuing 
 	*/ 	
 	
-	var error = function() {
+	var errorWindow = function() {
 		
 		$rootScope.$watch( function(scope) { return scope.error } , function() {
 			
@@ -46,7 +46,7 @@ angular.module('GroupEffort.services', [])
 	  * @return bool - returns false to prevent error'd action from continuing 
 	*/		
 	
-	var alert = function( title, message ) {
+	var alertPrompt = function( title, message ) {
 		
 		var alertPopup = $ionicPopup.show({
 			template: message,
@@ -55,7 +55,7 @@ angular.module('GroupEffort.services', [])
 			buttons: [ { text: 'OK' } ]
 		});
 		
-		alertPopup.then( function(res) { } );  		
+		return alertPopup;  		
 		  			  
 	};
 	
@@ -65,7 +65,7 @@ angular.module('GroupEffort.services', [])
 	  * @return bool - returns false to prevent error'd action from continuing 
 	*/	
 	
-	var confirm = function( title , message ) {
+	var confirmPrompt = function( title , message ) {
 		
 		   var confirmPopup = $ionicPopup.confirm({
 			 title: title,
@@ -81,9 +81,9 @@ angular.module('GroupEffort.services', [])
 	 };	 	 
 	
 	return {
-		error : error,
-		confirm : confirm,
-		alert : alert
+		errorWindow : errorWindow,
+		confirmPrompt : confirmPrompt,
+		alertPrompt : alertPrompt
 	}
 	
 })
@@ -141,7 +141,7 @@ angular.module('GroupEffort.services', [])
 				$rootScope.loggedIn = true;
 				
 				$rootScope.user = response.data.data;
-				
+								
 				return true;
 				
 			}	
@@ -240,18 +240,17 @@ angular.module('GroupEffort.services', [])
 	* @return var response.data - array( "success" => (string) "true" or "false", "reason" => the reason [success] is false, "user" => the user array if true. )
 	*/
 	
-	var register = function( fullname, email, username , password ) {
+	var register = function( email, username , password ) {
 		
 		return $http.get( 	$rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=register" +
-						"&fullname=" + encodeURIComponent(fullname) + 
 						"&email=" + encodeURIComponent(email) + 
 						"&username=" + encodeURIComponent(username) + 
 						"&password=" + encodeURIComponent(password) 						
 						)
 						
 			.then( function( response ) {
-				
-				if ( "false" != response.data.success ) {	
+								
+				if ( response.data.success ) {	
 				
 					$rootScope.loggedIn = true;	
 								
@@ -344,6 +343,8 @@ angular.module('GroupEffort.services', [])
 												
 		.then( function( response ) {
 			
+			console.log( response.data );
+			
 			return response.data;
 			
 		},
@@ -355,7 +356,7 @@ angular.module('GroupEffort.services', [])
 			return false;	
 			
 		});
-		
+
 	};
 
 	/** 
@@ -827,11 +828,130 @@ angular.module('GroupEffort.services', [])
 		});
 		
 	};
+	
+	var getFriend = function( id ) {
+		
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_friend&" + 
+											   "friendId=" + encodeURIComponent( id )
+												 )
+		
+		.then( function( response ) {
+			
+			return response.data.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;
+				
+		});
+		
+	};
 
   return {
     allFriends : allFriends,
     addFriend : addFriend,
 	acceptRequest : acceptRequest,
-	denyRequest : denyRequest
+	denyRequest : denyRequest,
+	getFriend : getFriend
   }
+}).factory( 'Account' , function( $rootScope, $http, Popup ) {
+  
+  var changePhoto = function() {
+		
+		var options =   {			
+            quality: 100,
+            destinationType: 1,
+            sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+            encodingType: 0,    // 0=JPG 1=PNG
+			cameraDirection: 1,
+			targetWidth: 100,
+			targetHeight: 100,
+			allowEdit: true,
+			saveToPhotoAlbum: true
+        }
+				
+		var onSuccess = function( FILE_URI ) {				
+			
+			var myImg = FILE_URI;
+			
+			var options = new FileUploadOptions();
+			
+			options.fileKey="file";
+			
+			options.chunkedMode = false;
+			
+			var ft = new FileTransfer();			
+					
+			ft.upload( 
+				
+				myImg, 
+				
+				encodeURI( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=upload_photo" ), 
+				
+				function( response ) {
+					
+					var x = JSON.parse( response.response );	
+										
+					$rootScope.user.face = x.data + "?" + new Date().getTime();
+																			
+				},
+				
+				function() {
+							
+					$rootScope.error = "Sorry, looks like there was a problem uploading your photo";
+								
+				}, 
+				
+				options
+				
+			);
+						
+		};
+		
+		var onFail = function(e) {
+			
+			$rootScope.error = "Sorry, looks like there was a problem using your photo";
+			
+		};
+		
+		navigator.camera.getPicture( onSuccess , onFail , options );  
+	  
+  };
+  
+  var updateProfile = function( data ) {
+	  	  
+	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=update_profile" +
+	  				  
+					  "&data=" + encodeURI( JSON.stringify( data ) )			  	
+					  
+					  )
+		
+		.then( function( response ) {
+			
+			return response.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;
+				
+		});
+	  
+  };
+  	
+  return {
+    
+	changePhoto : changePhoto,
+	
+	updateProfile : updateProfile
+	
+  }
+	
 });

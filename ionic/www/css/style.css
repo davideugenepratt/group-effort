@@ -25,6 +25,10 @@ body {
 	text-align:right;
 }
 
+.align-left {
+	text-align:left;
+}
+
 p.time {
 	font-size:11px;
 	color:#aaa;
@@ -34,10 +38,20 @@ p.time {
 	padding:0 10px;
 }
 
+.effort-list-item {
+	padding:0;
+}
+
+.item-content.activated,
+.effort-list-item a:active {
+	background:#387ef5;
+	color:#FFF;
+}
+
 .effort-list-item a {
 	color:#387EF5;
 	display:block;
-	padding:15px 0px;
+	padding:15px;
 	text-decoration:none;
 }
 
@@ -125,3 +139,17 @@ img.avatar {
 	display:block;
 }
 
+.backdrop + input,
+video,
+video ~ button {
+	position:relative;
+	z-index:999;
+}
+
+label.newComment {
+	padding:0;
+}
+
+.item-radio .avatar {
+	z-index:999;
+}

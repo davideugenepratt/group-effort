@@ -1,24 +1,72 @@
-<ion-view view-title="Account">
+<ion-view view-title="Settings">
   <ion-content>
-    <ion-list>
-      <div class="item item-button-right">
-            Manage Collaborators
-            <a class="button button-positive" href="#/tab/account/friends" >
-              <i class="icon ion-person-stalker"></i>
-            </a>
+  
+      <ion-list>
+      <form name="profileForm" ng-submit="updateProfile()" novalidate >
+      <ion-item >
+      	<h1>{{data.username}}</h1>
+      </ion-item> 
+      <!--         
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Username</span>
+          <input name="username" type="text" ng-model="data.username" required >
+        </label>
+        -->
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Email Address</span>
+          <input name="email" type="text" ng-model="data.email" ng-change="updateProfile()" required >
+        </label>
+        <ion-item class="item item-avatar item-button-right">
+          <img class="avatar" ng-src="{{self.face}}" />
+                Change Picture
+                <a class="button button-positive" ng-click="changePicture()" >
+                  <i class="icon ion-camera"></i>
+                </a>
+        </ion-item>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Phone Number</span>
+          <input name="phone" type="text" ng-model="data.phone" ng-change="updateProfile()" >
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Location</span>
+          <input name="location" type="text" ng-model="data.location" ng-change="updateProfile()" >
+        </label>
+        <!--
+        <div class="item button-bar">
+        	<a class="button" href="#/tab/account" ng-disabled="data.submitted" >Cancel</a>
+            <button class="button button-positive" type="submit" ng-disabled="data.submitted || profileForm.$invalid " >Save</button>
         </div>
-      <ion-item class="item item-avatar item-button-right">
-      <img class="avatar" ng-bind-html="self.face"></img>
-      		Change Avatar
-            <button class="button button-positive" ng-click="changePicture()" >
-              <i class="icon ion-image"></i>
-            </button>
-      </ion-item>
-      <ion-item class="item">
-      <form ng-submit="logout()" >
+        -->
+        </form>
+         <form ng-submit="logout()" >
           <button class="button button-block button-assertive" type="submit">Log out</button>
       </form>
       </ion-item>
     </ion-list>
+    
+  <!--
+    <ion-list>
+      <ion-item class="item item-button-right">
+        Edit Profile
+        <a class="button button-positive" href="#/tab/account/profile" >
+          <i class="icon ion-person"></i>
+        </a>
+      </ion-item>
+      <ion-item class="item item-button-right">
+        Synchronization
+        <a class="button button-positive" href="#/tab/account/sync" >
+          <i class="icon ion-loop"></i>
+        </a>
+      </ion-item>
+      <ion-item class="item item-button-right">
+        Help
+        <a class="button button-positive" href="http://www.groupeffortapp.com/" target="_blank" >
+          <i class="icon ion-help"></i>
+        </a>
+      </ion-item>
+      <ion-item class="item">
+     
+    </ion-list>
+    -->
   </ion-content>
 </ion-view>
