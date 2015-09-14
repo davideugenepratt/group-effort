@@ -32,7 +32,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
   $ionicConfigProvider.backButton.text( '' ).icon('ion-arrow-left-b').previousTitleText(false);				// Removes the back button text and icon. 
   
   $ionicConfigProvider.tabs.position( 'bottom' );															// Ensures the tabs stay on the bottom
-  
+    
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
@@ -151,7 +151,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
     })
 	
 	.state('tab.effort-detail-notes-add', {
-		cache : false,
+	  cache : false,
       url: '/efforts/:effortId/notes/add',
       views: {
         'tab-efforts': {
@@ -160,7 +160,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         }
       },
 	  resolve: {
-			effort : function( $stateParams, Efforts ) {
+			effort : function( $stateParams, $ionicLoading, Efforts ) {
                 return Efforts.getEffort( $stateParams.effortId );
         	}
 	  }
@@ -348,19 +348,12 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 		
       });
 	  
-      // to address @blesh's comment, set attribute value to 'false'
-      // on blur event:
-      //element.bind('blur', function() {
-         //console.log('blur');
-         //scope.$apply(model.assign(scope, false));
-      //});
-	  
     }
 	
   };
   
 }).directive( 'autoexpand' , function( $window ) {
-	
+
   return {
 	  
         link: function ( scope, element, attrs, ctrl) {
@@ -371,10 +364,6 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 				
 				var textarea = element[0];
 				
-				// console.log( event );
-				
-				//window.scrollTo( 0 , textarea.getBoundingClientRect().bottom );
-				
 				textarea.style.height =  "0px";
 												
 				textarea.style.height = textarea.scrollHeight + "px";	// Sets the element's new height to it's scroll height.
@@ -383,6 +372,5 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         }
 	
   };
-  
 });
 

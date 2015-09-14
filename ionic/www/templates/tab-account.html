@@ -16,13 +16,15 @@
           <span class="input-label">Email Address</span>
           <input name="email" type="text" ng-model="data.email" ng-change="updateProfile()" required >
         </label>
-        <ion-item class="item item-avatar item-button-right">
+        <!--
+        <ion-item class="item item-avatar item-button-right hidden-fow-now">
           <img class="avatar" ng-src="{{self.face}}" />
                 Change Picture
                 <a class="button button-positive" ng-click="changePicture()" >
                   <i class="icon ion-camera"></i>
                 </a>
         </ion-item>
+        -->
         <label class="item item-input item-stacked-label">
           <span class="input-label">Phone Number</span>
           <input name="phone" type="text" ng-model="data.phone" ng-change="updateProfile()" >
@@ -38,9 +40,9 @@
         </div>
         -->
         </form>
-         <form ng-submit="logout()" >
+        <form ng-submit="logout()"  class="item">
           <button class="button button-block button-assertive" type="submit">Log out</button>
-      </form>
+        </form>
       </ion-item>
     </ion-list>
     
