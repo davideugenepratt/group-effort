@@ -1,16 +1,22 @@
 angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 
-.controller('TabCtrl', function( $rootScope, $scope, $state, $ionicPopup, $ionicHistory, Authenticate, loggedIn ) {		
+.controller('TabCtrl', function( $rootScope, $scope, $state, $ionicPopup, $ionicHistory, $ionicLoading, Authenticate, loggedIn ) {		
 	
 	if ( !loggedIn ) {
 		
 		$state.go( 'login' );
 			
-	}
+	}		
 	
 	$scope.goToEfforts = function() {
 	
-		$state.go( 'tab.efforts' );	
+		$state.go( 'tab.efforts' );
+			
+	};
+	
+	$scope.goToEffort = function( id ) {
+	
+		$state.go( 'tab.effort-detail-tasks' , { 'effortId' : id } );	
 	
 	};
 	
@@ -34,7 +40,25 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	
 	$rootScope.tabs = true;
 	
-	console.log( $rootScope.user );
+	
+	// This will show a loading screen while a request is made
+	$rootScope.$on('loading:show', function () {
+		$ionicLoading.show({
+			delay: 100
+		})
+	});
+
+	$rootScope.$on('loading:hide', function () {
+		$ionicLoading.hide();
+	});
+	
+	$rootScope.$on('$stateChangeStart', function () {
+		$rootScope.$broadcast('loading:show');
+	});
+	
+	$rootScope.$on('$stateChangeSuccess', function () {
+		$rootScope.$broadcast('loading:hide');
+	});
 	
 })
 
@@ -123,9 +147,11 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	};
 })
 
-.controller('EffortsCtrl', function( $rootScope, $scope, $state, Popup, Efforts, Friends, efforts ) {
+.controller('EffortsCtrl', function( $rootScope, $scope, $state, $ionicLoading, Popup, Efforts, Friends, efforts ) {
 		
 	$scope.efforts = efforts;
+	
+	$ionicLoading.hide();
 	
 })
 
@@ -564,7 +590,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	  
 })
 
-.controller('AccountCtrl', function( $rootScope, $scope, $state, Popup, Authenticate, Account ) {
+.controller('AccountCtrl', function( $rootScope, $scope, $state, $ionicLoading, Popup, Authenticate, Account ) {
     
 	$scope.changePicture = function() {
 	    		
@@ -583,6 +609,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 				$scope.data.submitted = false;
 				
 				$state.go( 'tab.account' );
+				
+				$ionicLoading.hide();
 				
 			} else {
 				
@@ -604,6 +632,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 				
 				$state.go('login');	
 				
+				$ionicLoading.hide();
+				
 			} else {
 				
 				console.log( $rootScope.error );
@@ -617,5 +647,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
   $scope.self = $rootScope.user;
   $scope.self.face += "?" + new Date().getTime();
   $scope.data = $scope.self;
+  
+  $ionicLoading.hide();
   
 });

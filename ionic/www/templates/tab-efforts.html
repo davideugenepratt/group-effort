@@ -7,11 +7,11 @@
                   <i class="icon ion-plus"></i>
                 </a>
               </div>
-        <ion-item class="effort-list-item" ng-repeat="effort in efforts">
-        	<a href="#/tab/efforts/{{effort.ID}}/tasks">
+        <ion-item class="item item-text-wrap" ng-repeat="effort in efforts" ng-click="goToEffort( effort.ID )" >
+        	<!-- <a href="#/tab/efforts/{{effort.ID}}/tasks"> -->
             	{{effort.title}}
                 <!-- <p ng-repeat"contributor in effort.contributors">{{contributor}}</p> -->
-            </a>
+            <!-- </a> -->
         </ion-item>
     </ion-list>
   </ion-content>
