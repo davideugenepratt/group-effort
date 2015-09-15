@@ -38,13 +38,13 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	
 	};
 	
-	$rootScope.tabs = true;
-	
+	$rootScope.tabs = true;		
 	
 	// This will show a loading screen while a request is made
 	$rootScope.$on('loading:show', function () {
 		$ionicLoading.show({
-			delay: 100
+			templateUrl: 'templates/loading.html',
+			delay: 300
 		})
 	});
 
@@ -294,6 +294,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 })
 
 .controller('EffortsDetailCommentsCtrl', function( $rootScope, $scope, $state, Popup, Efforts, Friends, effort , comments ) {
+	
+	$scope.current = "test";
 	
 	$scope.autoExpand = function( event ) {
 		

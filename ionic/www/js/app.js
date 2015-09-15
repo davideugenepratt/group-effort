@@ -348,6 +348,11 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 		
       });
 	  
+	  element.bind('blur', function() {
+         console.log('blur');
+         scope.$apply( model.assign(scope, false) );
+      });
+	  
     }
 	
   };

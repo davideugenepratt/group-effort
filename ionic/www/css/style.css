@@ -10,6 +10,7 @@ body {
 */
 
 *{-webkit-backface-visibility: hidden;}
+
 .keyboard-open .tabs{
   display:none;
   }
@@ -24,6 +25,15 @@ body {
  .backdrop {
 	 background:rgba( 255, 255, 255, .5);
  }
+ 
+.loading-container .loading {
+	background:transparent;
+}
+ 
+.loading-container .loading img {
+	max-width:90%;
+	height:auto;
+}
  
 .align-center {
 	text-align:Center;
