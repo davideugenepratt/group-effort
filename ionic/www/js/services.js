@@ -850,13 +850,36 @@ angular.module('GroupEffort.services', [])
 		});
 		
 	};
+	
+	var searchUsers = function( searchTerm ) {
+		
+		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=search_users&" + 
+											   "query=" + encodeURIComponent( searchTerm )
+												 )
+		
+		.then( function( response ) {
+			
+			return response.data;
+			
+		},
+		
+		function( result ) {
+			
+			$rootScope.error = 'Could Not Connect';
+			
+			return false;
+				
+		});
+		
+	};
 
   return {
     allFriends : allFriends,
     addFriend : addFriend,
 	acceptRequest : acceptRequest,
 	denyRequest : denyRequest,
-	getFriend : getFriend
+	getFriend : getFriend,
+	searchUsers : searchUsers
   }
 }).factory( 'Account' , function( $rootScope, $http, Popup ) {
   

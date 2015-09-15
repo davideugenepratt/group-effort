@@ -184,14 +184,18 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 })
 
 .controller('EffortsDetailActivityCtrl', function( $rootScope, $scope, $state, Popup, Efforts, effort  ) {
-
+	
+	$scope.current = "activity";
+	
 	effort.activity.reverse();
 
 	$scope.effort = effort;	
 
 })
-
+/*
 .controller('EffortsDetailTasksCtrl', function( $rootScope, $scope, $state, Popup, Efforts, effort  ) {
+	
+	$scope.current = "tasks";
 	
 	for ( var i = 0; i < effort.contributors.length; i++ ) {
 		
@@ -208,8 +212,11 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.effort = effort;	
 		
 })
+*/
 
 .controller('EffortsDetailSettingsCtrl', function( $rootScope, $scope, $state, Popup, Efforts, Friends, effort, friends  ) {
+	
+	$scope.current = "settings";
 	
 	$scope.data = {};
 			
@@ -295,7 +302,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 
 .controller('EffortsDetailCommentsCtrl', function( $rootScope, $scope, $state, Popup, Efforts, Friends, effort , comments ) {
 	
-	$scope.current = "test";
+	$scope.current = "comments";
 	
 	$scope.autoExpand = function( event ) {
 		
@@ -341,6 +348,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 })
 
 .controller('EffortsDetailTasksCtrl', function( $rootScope, $scope, $state, Popup, Efforts, Friends, effort , tasks ) {
+	
+	$scope.current = "tasks";
 	
 	$scope.data = {};
 	
@@ -456,22 +465,42 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 })
 
-.controller('FriendsCtrl', function( $rootScope, $scope, $state, Popup, Friends, friends) {
+.controller('FriendsCtrl', function( $rootScope, $scope, $state, Popup, Friends, friends ) {
 	
 	$scope.newFriendData = {};	
 	
-	$scope.addFriend = function() {
+	$scope.searchUsers = function() {
 				
-		var email = $scope.newFriendData.email;
+		var searchTerm = $scope.newFriendData.searchTerm;
+		console.log( searchTerm );
 		
-		Friends.addFriend( email ).then( function( result ) {
+		Friends.searchUsers( searchTerm ).then( function( result ) {
 			
 			if ( result.success) {
+				console.log( result.data );
+				$scope.searchResults = result.data;
 				
-				$state.go('tab.friends-requests' , {}, { reload: true } );
+			} else {
 				
-				Popup.alertPrompt( "It's on its way!", "Your request has been sent.");
+				$rootScope.error = result.reason;
 				
+			}
+			
+		});
+		
+	};
+	
+	$scope.addFriend = function( friend ) {
+				
+		//var email = $scope.newFriendData.email;
+		
+		Friends.addFriend( friend.email ).then( function( result ) {
+			
+			if ( result.success) {								
+				
+				$scope.friends.ids.push( friend.id );
+				$scope.friends.requestSent.push( friend )
+								
 			} else {
 				
 				$rootScope.error = result.reason;
@@ -524,23 +553,25 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 	};
 	
-	console.log( friends );
+	
 	
 	$scope.friends = {};
 	
 	$scope.friends.requestSent = [];
 	
 	$scope.friends.requestReceived = [];
-	
-	$scope.friends.invitationSent = [];
-	
+		
 	$scope.friends.requestAccepted = [];
+	
+	$scope.friends.ids = [];
 		
 	for( var i = 0, x = friends.length; i < x; i++ ) {
 		
-    	if ( friends[i].status == "Request Sent" ) {
+		$scope.friends.ids.push( friends[i]["ID"] );
+    	
+		if ( friends[i].status == "Request Sent" ) {
 			
-			$scope.friends.requestSent.push( friends[i] );
+			$scope.friends.requestSent.push( friends[i] );			
 			
 		} else if ( friends[i].status == "Request Received" ) {
 			
@@ -558,7 +589,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 	}	
 	
-	
+	console.log( $scope.friends.requestSentIds );
 		
 })
 
@@ -611,12 +642,10 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 				$scope.data.submitted = false;
 				
 				$state.go( 'tab.account' );
-				
-				$ionicLoading.hide();
-				
+								
 			} else {
 				
-				$rootScope.error = result.data
+				$rootScope.error = result.data;
 				
 			}
 			

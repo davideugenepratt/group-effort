@@ -171,3 +171,7 @@ label.newComment {
 .item-radio .avatar {
 	z-index:999;
 }
+
+.add-user-button {
+	margin-top:10px;
+}

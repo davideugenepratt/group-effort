@@ -972,7 +972,7 @@ class Group_Effort_Ajax {
 	}
 	
 	/** 
-	* @desc Retrieves all the friends for the current user.
+	* @desc Retrieves a specific friend for the current user.
 	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
 	*/	
 	
@@ -992,6 +992,50 @@ class Group_Effort_Ajax {
 						);
 				
 		return array( "success" => true, "data" => $user );
+					
+	}
+	
+	/** 
+	* @desc Retrieves a specific friend for the current user.
+	* @return JSON - Returns a JSON error response if the user does not exist or if a request has already been sent or a JSON success message.
+	*/	
+	
+	public function search_users( $formData ) {	
+		
+		$current_user = wp_get_current_user();
+						
+		$results = get_users( array( 'search' => '*'.$formData["query"].'*' ) );
+		
+		$users = array();
+		
+		if ( count( $results ) < 10 && $formData["query"] != "" ) {	
+					  
+			foreach( $results as $user ) {
+				
+				if ( $user->ID != $current_user->ID ) {
+				
+					$profile = get_user_meta( $user->ID , "profile", true );
+					
+					$profile["phone"] = ( isset( $profile["phone"] ) ) ? $profile["phone"] : "";
+					$profile["location"] = ( isset( $profile["location"] ) ) ? $profile["location"] : "";
+					
+					$users[] = array(	
+								'id' => $user->ID,
+								'username' => $user->data->user_login,
+								'email' => $user->data->user_email,
+								'face' => get_user_meta( $user->ID, "avatar", true ),
+								'phone' => $profile["phone"],
+								'location' => $profile["location"]
+								);
+							
+				}
+				
+			}
+		
+		}
+		
+				
+		return array( "success" => true, "data" => $users );
 					
 	}
 	
