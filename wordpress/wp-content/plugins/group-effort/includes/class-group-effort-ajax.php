@@ -1012,7 +1012,7 @@ class Group_Effort_Ajax {
 					  
 			foreach( $results as $user ) {
 				
-				if ( $user->ID != $current_user->ID ) {
+				if ( $user->ID != $current_user->ID && isset( $user->caps["group_effort"] ) && $user->caps["group_effort"] ) {
 				
 					$profile = get_user_meta( $user->ID , "profile", true );
 					
@@ -1025,7 +1025,8 @@ class Group_Effort_Ajax {
 								'email' => $user->data->user_email,
 								'face' => get_user_meta( $user->ID, "avatar", true ),
 								'phone' => $profile["phone"],
-								'location' => $profile["location"]
+								'location' => $profile["location"],
+								'extra' => $user->data
 								);
 							
 				}

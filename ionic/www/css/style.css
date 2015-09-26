@@ -11,12 +11,9 @@ body {
 
 *{-webkit-backface-visibility: hidden;}
 
-.keyboard-open .tabs{
-  display:none;
-  }
-.keyboard-open .has-tabs{
- bottom:0;
- }
+/* .keyboard-open .tabs{ display:none; } */
+.keyboard-open .tabs{ visibility:hidden; }  
+.keyboard-open .has-tabs{ bottom:0; }
  
  .hidden-for-now {
 	 display:none;
@@ -175,3 +172,20 @@ label.newComment {
 .add-user-button {
 	margin-top:10px;
 }
+
+.item-input-inset .item-input-wrapper input {
+	font-size:18px;
+	height:auto;
+	padding:15px;
+}
+
+.item-input-inset .item-input-wrapper textarea {
+	font-size:14px;
+	padding:20px 15px;
+	background:transparent;
+}
+
+.icon.account-input {
+	font-size:28px;
+}
+	

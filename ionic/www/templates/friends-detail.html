@@ -17,7 +17,7 @@ The Friends service returns an array of friend data
       </ion-item>
     <ion-item class="align-left item-button-right">
       <p>Remove {{friend.username}}</p>
-      <button class="button button-assertive button-small align-center icon" ng-click="removeFriend( friend.email )" ng-disabled="data.submitted" ><i class="icon ion-close align-center"></i></button>
-    </ion-item>
+      <button class="button button-assertive icon ion-close" ng-click="removeFriend( friend.email )" ng-disabled="data.submitted" ></button>
+    </ion-item> 
   </ion-content>
 </ion-view>

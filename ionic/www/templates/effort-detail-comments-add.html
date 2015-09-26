@@ -8,13 +8,10 @@
   <ion-content >
   <ion-list>
   <form name="newCommentForm" ng-submit="addEffortComment()" novalidate>
-    <ion-item class="item">
-        
-            <label class="item-input newComment">                
-            <textarea placeholder="Comment" ng-model="data.comment" ng-keyup="autoExpand($event)" data-min-height="50" data-max-height="300" required ></textarea>
-            </label>
-            
-        
+    <ion-item class="item item-input-inset item-stacked-label ">
+        <div class="item-input-wrapper" >
+          <textarea placeholder="Comment" ng-model="data.comment" ng-keyup="autoExpand($event)" data-min-height="0" data-max-height="" required ></textarea>
+        </div>                    
     </ion-item>
     <ion-item class="button-bar">
         <a class="button" href="#/tab/efforts/{{effort.id}}/comments"  ng-disabled="data.submitted" >Cancel</a>        

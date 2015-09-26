@@ -7,11 +7,11 @@
 <ion-view view-title="New Effort">
   <ion-content >
     <form name="newEffortForm" ng-submit="addEffort()" novalidate >
-    	<ion-item class="item">
-        	<b>Effort Title</b>
-            <br>
-            <input type="text" placeholder="Title" ng-model="data.title" required >
-        </ion-item>
+    	<ion-item class="item item-input-inset item-stacked-label ">
+                <div class="item-input-wrapper" >
+                  <input type="text" placeholder="Title" ng-model="data.title" required >
+                </div>                    
+          </ion-item>
         <ion-item class="item item-avatar item-icon-left" ng-repeat="friend in friends" >
         	<img  class="avatar" src="{{friend.face}}"/>
             <h2>{{friend.username}}</h2>

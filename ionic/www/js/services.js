@@ -150,7 +150,7 @@ angular.module('GroupEffort.services', [])
 		
 		function( result ) {
 			
-			$rootScope.error = 'Could Not Connect';
+			$rootScope.error = "Could Not Connect";
 			
 			return false;	
 			

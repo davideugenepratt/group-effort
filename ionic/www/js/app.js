@@ -10,9 +10,9 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
     
 	//$rootScope.baseURL = "http://127.0.0.1:8080/Local Web/group-effort/wordpress/";  
-	$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";  
+	$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";   
 	 
-  	Popup.errorWindow(); 								// This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.
+  	Popup.errorWindow(); // This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.	
 	
     $ionicPlatform.ready(function() {				  		
 			  
@@ -23,7 +23,8 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 		if (window.StatusBar) {
 		  // org.apache.cordova.statusbar required
 		  StatusBar.styleDefault();
-		}
+		}		
+		
     });
 })
 
@@ -349,7 +350,6 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       });
 	  
 	  element.bind('blur', function() {
-         console.log('blur');
          scope.$apply( model.assign(scope, false) );
       });
 	  

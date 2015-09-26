@@ -7,12 +7,6 @@
         </a>
       </div>
     <ion-list>
-    <!--
-      <ion-item class="item item-divider" >
-        Collaborators
-      </ion-item>
-      <ion-item class="item-text-wrap" ng-show="friends.requestAccepted.length == 0">You don't have anyone in your network yet.</ion-item>
-      -->
       
       <ion-item class="item item-avatar"  ng-repeat="friend in friends.requestReceived" >
         <img ng-src="{{friend.face}}" class="avatar">
@@ -21,12 +15,14 @@
             <button class="button button-outline button-positive button-small" ng-click="denyRequest( friend.email )"  ng-disabled="data.submitted"><i class="ion-minus"></i></button>
         </div>      	        
         <h2>{{friend.username}}</h2>
-        <p>{{friend.email}}</p>     
+        <p>{{friend.location}}</p>
+        <p ng-hide="friend.location">No Location</p>     
       </ion-item>
       <ion-item class="item item-avatar item-text-wrap"   ng-repeat="friend in friends.requestAccepted" ng-click="goToFriend( friend.ID )" >
             <img ng-src="{{friend.face}}" class="avatar">
             <h2>{{friend.username}}</h2>
-            <p>{{friend.email}}</p>         
+            <p>{{friend.location}}</p>
+        	<p ng-hide="friend.location">No Location</p>        
       </ion-item>
       
     </ion-list>

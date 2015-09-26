@@ -1,20 +1,17 @@
 <ion-view view-title="Add Someone">
   <ion-content>
     <ion-list>
-    <ion-item class="item item-divider" >
-        Send Request
-      </ion-item>
-    <!-- <form ng-submit="addFriend()"> -->
-        <ion-item class="item item-input-inset">
-                <label class="item-input-wrapper">
-                  <input type="text" placeholder="Email Address" ng-model="newFriendData.searchTerm" ng-change="searchUsers()" >
-                </label>        
-                
-        </ion-item>
+  
+    <ion-item class="item item-input-inset">
+            <label class="item-input-wrapper">
+              <input type="text" placeholder="Email Address or Username" ng-model="newFriendData.searchTerm" ng-change="searchUsers()" >
+            </label>        
+    </ion-item>
     <ion-item class="item item-avatar item-button-right" ng-repeat="friend in searchResults" type="item-text-wrap"  >
     	<img ng-src="{{friend.face}}" class="avatar">
         <h2>{{friend.username}}</h2>
-        <p>{{friend.email}}</p>
+        <p>{{friend.location}}</p>
+        <p ng-hide="friend.location">No Location</p>
         <button class="button button-positive button-medium add-user-button" ng-hide="friends.ids.indexOf( friend.id ) != -1" ng-click="addFriend( friend )" ><i class="icon ion-plus"></i></button>
     </ion-item>
                     
@@ -25,7 +22,8 @@
       <ion-item class="item item-avatar" ng-repeat="friend in friends.requestSent" type="item-text-wrap"  >
         <img ng-src="{{friend.face}}" class="avatar">
         <h2>{{friend.username}}</h2>
-        <p>{{friend.email}}</p>
+        <p>{{friend.location}}</p>
+        <p ng-hide="friend.location">No Location</p>
       </ion-item>            
     </ion-list>
   </ion-content>

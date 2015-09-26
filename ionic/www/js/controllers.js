@@ -192,27 +192,6 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.effort = effort;	
 
 })
-/*
-.controller('EffortsDetailTasksCtrl', function( $rootScope, $scope, $state, Popup, Efforts, effort  ) {
-	
-	$scope.current = "tasks";
-	
-	for ( var i = 0; i < effort.contributors.length; i++ ) {
-		
-		if ( effort.contributors[i]["id"] == $rootScope.user.id ) {						
-			
-			$scope.self = effort.contributors[i];
-		
-		}
-		
-	}
-		
-	effort.activity.reverse();	
-	
-	$scope.effort = effort;	
-		
-})
-*/
 
 .controller('EffortsDetailSettingsCtrl', function( $rootScope, $scope, $state, Popup, Efforts, Friends, effort, friends  ) {
 	
@@ -307,20 +286,33 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.autoExpand = function( event ) {
 		
 		var element = event.target;
+		
 		var minimum = element.getAttribute( 'data-min-height' );
+		
 		var maximum = element.getAttribute( 'data-max-height' );
 		
 		element.style.height = Math.max( 0, minimum ) + "px";
-			  
-		
-		if ( element.scrollHeight < maximum ) {					// Set overflow:hidden if height is < maximum
-		  element.style.overflow = "hidden";				  
+			  		
+		if ( element.scrollHeight < maximum || maximum == "" ) {
+			
+		  element.style.overflow = "hidden";				  // Set overflow:hidden if height is < maximum
+		  
 		} else {
+			
 		  element.style.overflow = "auto";
+		  
 		}
-						
-		element.style.height = Math.min( element.scrollHeight, maximum ) + "px";	// Sets the element's new height to it's scroll height.
 		
+		if ( maximum != "" ) {
+
+			element.style.height = Math.min( element.scrollHeight, maximum ) + "px";	// Sets the element's new height to it's scroll height.
+			
+		} else {
+
+			element.style.height = Math.max( element.scrollHeight, minimum ) + "px";	// Sets the element's new height to it's scroll height.
+			
+		}
+				
 	};
 	
 	$scope.data = {};	
@@ -365,7 +357,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 		element.style.height = Math.max( 0, minimum ) + "px";
 			  		
-		if ( element.scrollHeight < maximum ) {
+		if ( element.scrollHeight < maximum || maximum == "" ) {
 			
 		  element.style.overflow = "hidden";				  // Set overflow:hidden if height is < maximum
 		  
@@ -375,8 +367,16 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		  
 		}
 		
-		element.style.height = Math.min( element.scrollHeight, maximum ) + "px";				// Sets the element's new height to it's scroll height.
-		
+		if ( maximum != "" ) {
+
+			element.style.height = Math.min( element.scrollHeight, maximum ) + "px";	// Sets the element's new height to it's scroll height.
+			
+		} else {
+
+			element.style.height = Math.max( element.scrollHeight, minimum ) + "px";	// Sets the element's new height to it's scroll height.
+			
+		}
+				
 	};
 	
 	$scope.addTask = function() {
@@ -567,7 +567,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		
 	for( var i = 0, x = friends.length; i < x; i++ ) {
 		
-		$scope.friends.ids.push( friends[i]["ID"] );
+		$scope.friends.ids.push( parseInt( friends[i]["ID"] ) );
     	
 		if ( friends[i].status == "Request Sent" ) {
 			
@@ -588,8 +588,6 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		}
 		
 	}	
-	
-	console.log( $scope.friends.requestSentIds );
 		
 })
 

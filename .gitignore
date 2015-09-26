@@ -1,6 +1,9 @@
 /*
 /*/*
 
+*/*/_notes/
+*/*/.sass-cache/
+
 !.gitignore
 
 # This block prevents the GroupEffort plugin from being ignored
@@ -14,5 +17,4 @@
 
 # This block prevents the GroupEffort Ionic files from being ignored
 !/ionic
-/ionic/*
-!/ionic/www
+/ionic/.sass-cache/
