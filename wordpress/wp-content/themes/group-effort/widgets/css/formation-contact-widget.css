@@ -1,0 +1,79 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+div.formation_contact_wrapper {
+	margin-bottom:20px;
+	margin-top:15px;
+}
+
+.formation_contact_title_container, .formation_contact_email_container, .formation_contact_fields_container {
+	padding-bottom:10px;
+	margin-bottom:10px;
+}
+
+.formation_contact_title_container label input, .formation_contact_email_container label input, .formation_contact_fields_container label input {
+	display:inline-block;
+	margin-top:3px;
+}
+.formation_contact_fields_container .tablenav {
+	margin-top:10px;
+}
+
+.formation_contact_fields_container table.fields-table th {
+	padding:5px 0px;
+}
+
+.formation_contact_fields_container table.fields-table td {
+	padding-left:0px;
+}
+
+.formation_contact_fields_container table.fields-table tr.fields td {
+	border-bottom:1px solid #ddd;
+}
+
+.formation_contact_fields_container table.fields-table tr.fields:last-child td {
+	border-bottom:none;
+}
+
+
+.formation_contact_fields_container table.fields-table tr.template-row, .formation_contact_fields_container table.fields-table tr.all-fields {
+	display:none;
+}
+
+
+.formation_contact_fields_container table.fields-table td.row-delete {
+	padding-left:5px;
+}
+
+.formation_contact_fields_container table.fields-table td.row-delete a {
+	position:relative;
+	top:2px;
+}
+
+.formation_contact_fields_container .select-option {
+	margin-top:3px;
+}
+
+.formation_contact_fields_container .add_option {
+	margin-top:6px;
+}
+
+.formation_contact_fields_container  .formation_contact_option_remove {
+	position:relative;
+	top:4px;
+}
+
+.formation_contact_option_container {
+	text-align:right;
+}
+
+.formation_contact_field_group.required {
+	margin-top:10px;
+	clear:both;
+}
+
+.formation_contact_field_group.required label {
+	position:relative;
+	top:-2px;
+}

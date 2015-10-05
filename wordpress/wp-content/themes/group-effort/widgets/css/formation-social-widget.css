@@ -1,0 +1,46 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url(foundation-icons.css); 
+
+.formation_social_title {
+	border-bottom:1px solid #ddd;
+	margin-bottom:20px;
+	margin-top:20px;
+	padding-bottom:20px;
+}
+
+.formation_social_table {
+	margin-bottom:20px;
+}
+
+.formation_social_table .icon_cell {
+	width:30px;
+	padding:0px;
+	padding-top:8px;
+}
+
+.formation_social_table .selector {
+	margin-bottom:10px;
+}
+
+.formation_social_table .hidden {
+	display:none;
+}
+
+.formation_social_table .delete_service {
+	display:inline-block;
+	height:30px;
+	width:30px;
+	line-height:30px;
+	text-align:center;
+}
+
+.formation_social_table .delete_service i {
+	vertical-align:middle;
+}
+
+.formation_social_table .service_icon {
+	font-size:30px;
+}
+

@@ -1,0 +1,22 @@
+{
+  "name": "GameOfNewps",
+  "dir": "game-of-newps",
+  "version": "0.1.0",
+  "homepage": "http://www.gameofnewps.com/",
+  "title": "The Game Of NEWPS",
+  "description": "A fun scavenger hunt type game",
+  "author": {
+    "name": "David Eugene Pratt",
+    "email": "david@davideugenepratt.com",
+    "url": "http://www.davideugenepratt.com"
+  },
+  "devDependencies": {
+    "grunt-contrib-sass": "^0.8.1",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-css": "^0.5.4",
+    "grunt-phpunit": "~0.3.2",
+    "grunt-shell": "^1.1.2",
+    "matchdep": "^0.3.0"
+  }
+}

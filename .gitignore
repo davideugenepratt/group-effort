@@ -1,5 +1,4 @@
-/*
-/*/*
+/etc/
 
 */*/_notes/
 */*/.sass-cache/
@@ -7,14 +6,15 @@
 !.gitignore
 
 # This block prevents the GroupEffort plugin from being ignored
-!/wordpress
-/wordpress/*
-!/wordpress/wp-content
-/wordpress/wp-content/*
-!/wordpress/wp-content/plugins
-/wordpress/wp-content/plugins/*
-!/wordpress/wp-content/plugins/group-effort
+#!/wordpress
+#/wordpress/*
+#!/wordpress/wp-content
+#/wordpress/wp-content/*
+#!/wordpress/wp-content/plugins
+#/wordpress/wp-content/plugins/*
+#!/wordpress/wp-content/plugins/group-effort
 
 # This block prevents the GroupEffort Ionic files from being ignored
 !/ionic
-/ionic/.sass-cache/
+/ionic/*
+!/ionic/www
