@@ -624,7 +624,9 @@ class Group_Effort_Ajax {
 		add_post_meta( $formData["id"], '_tasks', $task, false );
 		
 		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "added a task:" , $task["title"] );
-							
+		                
+        return $this->get_effort_Tasks( $formData );
+        					
 	}
 	
 	/** 
@@ -751,6 +753,8 @@ class Group_Effort_Ajax {
 		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "commented" , ' on '.get_post( $formData["id"] )->post_title );
 		
 		$comment_id = wp_new_comment($commentdata);
+        
+        return $this->get_effort_comments( $formData );
 								
 	} // All effort functions
 	
@@ -773,7 +777,7 @@ class Group_Effort_Ajax {
 		foreach ( $users as $key => $user ) {
 						
 			if ( strpos( $user->data->user_login , $term ) || strpos( $user->data->user_email , $term ) ) {
-				
+				/*
 				$status = '';
 				
 				foreach ( $friends as $friend ) {
@@ -794,12 +798,14 @@ class Group_Effort_Ajax {
 										'status' => $status
 										 );	
 				}
+                */
 									 
 			}			
 		
 		}
-								
-		return array( "success" => true, "data" => array_slice( $result, 0, 6 ) );
+		
+        return array( "success" => true, "data" => $friends );						
+		// return array( "success" => true, "data" => array_slice( $result, 0, 6 ) );
 		
 	}
 	
@@ -1006,28 +1012,46 @@ class Group_Effort_Ajax {
 						
 		$results = get_users( array( 'search' => '*'.$formData["query"].'*' ) );
 		
-		$users = array();
-		
+		$users = array();        
+        
 		if ( count( $results ) < 10 && $formData["query"] != "" ) {	
 					  
 			foreach( $results as $user ) {
 				
 				if ( $user->ID != $current_user->ID && isset( $user->caps["group_effort"] ) && $user->caps["group_effort"] ) {
-				
-					$profile = get_user_meta( $user->ID , "profile", true );
-					
-					$profile["phone"] = ( isset( $profile["phone"] ) ) ? $profile["phone"] : "";
-					$profile["location"] = ( isset( $profile["location"] ) ) ? $profile["location"] : "";
-					
-					$users[] = array(	
-								'id' => $user->ID,
-								'username' => $user->data->user_login,
-								'email' => $user->data->user_email,
-								'face' => get_user_meta( $user->ID, "avatar", true ),
-								'phone' => $profile["phone"],
-								'location' => $profile["location"],
-								'extra' => $user->data
-								);
+                    
+                    $friends = get_user_meta( $user->ID , "_friends" );
+                    
+                    $areFriends = false;
+                    
+                    foreach ( $friends as $friend ) {
+                                              
+                       if( $friend["ID"] == $current_user->ID && $friend["status"] == "Request Accepted" ) {
+                       
+                           $areFriends = true;
+                                    
+                       }
+                     
+                   }  
+
+                   if( !$areFriends ) {
+                   
+                       $profile = get_user_meta( $user->ID , "profile", true ); 
+                           
+                       $profile["phone"] = ( isset( $profile["phone"] ) ) ? $profile["phone"] : "";
+                       $profile["location"] = ( isset( $profile["location"] ) ) ? $profile["location"] : "";
+                       
+                       $users[] = array(	
+                                'id' => $user->ID,
+                                'username' => $user->data->user_login,
+                                'email' => $user->data->user_email,
+                                'face' => get_user_meta( $user->ID, "avatar", true ),
+                                'phone' => $profile["phone"],
+                                'location' => $profile["location"],
+                                'friends' => $friends
+                                );
+                            
+                   }
 							
 				}
 				

@@ -334,10 +334,18 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.addEffortComment = function() {
 		
 		$scope.data.submitted = true;
+        
+        $scope.data.commentFormShow = false;
 		
 		Efforts.addEffortComment( effort.id , $scope.data.comment ).then( function( response ) {
-						
-			$state.go( 'tab.effort-detail-comments' , { effortId : effort.id } , { reload : true } );
+			
+            console.info( $scope.comments , response.data );
+            			
+			$scope.comments = response.data;
+            
+            $scope.data.comment = "";
+            
+            $scope.data.submitted = false;
 			
 		});
 		
@@ -408,15 +416,23 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		task.dibs = $scope.data.dibs;
 		
 		task.finished = false;
-		
-		console.log( task );
+        
+        $scope.data.title = "";
+        
+        tasks.push( task );
+        
+        $scope.data.tasks = Efforts.assignTasks( tasks , effort );
+        
+        $scope.tasks = tasks;
 						
 		Efforts.addEffortTask( effort.id , task ).then( function( result ) {
-			
-			console.log( result );
-			
-			$state.go('tab.effort-detail-tasks' , { effortId : effort.id } , { reloat : true } );
-			
+			            
+            $scope.data.tasks = Efforts.assignTasks( result.data , effort );
+	                
+            $scope.tasks = result.data;
+                        
+            $scope.data.submitted = false;
+						
 		});		
 		
 	};
@@ -486,12 +502,12 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	$scope.searchUsers = function() {
 				
 		var searchTerm = $scope.newFriendData.searchTerm;
-		console.log( searchTerm );
+		console.info( searchTerm );
 		
 		Friends.searchUsers( searchTerm ).then( function( result ) {
 			
 			if ( result.success) {
-				console.log( result.data );
+				console.info( result.data );
 				$scope.searchResults = result.data;
 				
 			} else {

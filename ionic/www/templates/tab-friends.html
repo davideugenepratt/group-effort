@@ -1,11 +1,25 @@
 <ion-view view-title="People">
   <ion-content  on-swipe-right="goBack()" on-swipe-left="goForward()">
+    <!--
     <div class="item item-button-right">
         Add Someone
         <a href="#/tab/friends/requests" class="button button-positive">
           <i class="icon ion-person-add"></i>
         </a>
-      </div>
+    </div>
+    -->
+    <ion-item class="item item-input-inset">
+            <label class="item-input-wrapper">
+              <input type="text" placeholder="Search by Email Address or Username" ng-model="newFriendData.searchTerm" ng-change="searchUsers()" >
+            </label>        
+    </ion-item>    
+    <ion-item class="item item-avatar item-button-right" ng-repeat="friend in searchResults" type="item-text-wrap"  >
+    	<img ng-src="{{friend.face}}" class="avatar">
+        <h2>{{friend.username}}</h2>
+        <p>{{friend.location}}</p>
+        <p ng-hide="friend.location">No Location</p>
+        <button class="button button-positive button-medium add-user-button" ng-disabled="friends.ids.indexOf( friend.id ) != -1" ng-click="addFriend( friend )" ><i class="icon ion-plus"></i></button>
+    </ion-item>
     <ion-list>
       
       <ion-item class="item item-avatar"  ng-repeat="friend in friends.requestReceived" >

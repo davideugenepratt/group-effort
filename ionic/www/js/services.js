@@ -467,7 +467,7 @@ angular.module('GroupEffort.services', [])
 												"&effort_task=" + encodeURIComponent( JSON.stringify( task ) ) )
 												
 		.then( function( response ) {
-			
+			            
 			return response.data;
 			
 		},
@@ -653,7 +653,7 @@ angular.module('GroupEffort.services', [])
 												
 		.then( function( response ) {
 			
-			return response;
+			return response.data;
 			
 		},
 		
