@@ -77,6 +77,9 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 	  resolve: {
             efforts : function( $stateParams, Efforts ) {
                 return Efforts.allEfforts();
+        	},
+            friends : function( $stateParams, Friends ) {
+                return Friends.allFriends();
         	}
 	  }
     })
