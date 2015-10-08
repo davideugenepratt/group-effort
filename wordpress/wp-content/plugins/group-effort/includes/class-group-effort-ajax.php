@@ -710,6 +710,67 @@ class Group_Effort_Ajax {
 	}
 	
 	/** 
+    * @desc Let's a user change the finished status of the task.
+    * @params $formData["id"] (int) = The id of the requested effort.
+    * @params $formData["effort_task"] (int) = The index of the task that the user wants to call dibs on.
+    * @return JSON - A JSON success message with the task attached as data.
+    */
+    
+    public function delete_task( $formData ) {
+        
+        $this->check_contributor( $formData["id"] );
+        
+        $tasks = get_post_meta( $formData["id"], '_tasks', false );
+        
+        $task = (array) $tasks[ $formData["effort_task"] ];
+        
+        if ( $formData["title"] == $task["title"] ) {        
+                
+            $this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , 'Deleted the task' , $task["title"] );
+        
+            delete_post_meta( $formData["id"] , '_tasks' , $task );
+        
+        }
+        
+        $tasks = get_post_meta( $formData["id"], '_tasks', false );
+        
+        return array( "success" => true, "data" => $tasks );
+                            
+	}
+	
+	/** 
+    * @desc Let's a user change the finished status of the task.
+    * @params $formData["id"] (int) = The id of the requested effort.
+    * @params $formData["effort_task"] (int) = The index of the task that the user wants to call dibs on.
+    * @return JSON - A JSON success message with the task attached as data.
+    */
+    
+    public function change_task( $formData ) {
+        
+        $this->check_contributor( $formData["id"] );
+        
+        $tasks = get_post_meta( $formData["id"], '_tasks', false );
+        
+        $task = (array) $tasks[ $formData["effort_task"] ];
+        
+        $newTask = $task;
+        
+        if ( $formData["title"] != "" ) {
+        
+            $newTask["title"] = $formData["title"];          
+        
+            $this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , 'Edited the task' , $task["title"] );
+        
+            update_post_meta( $formData["id"] , '_tasks' , $newTask, $task );
+        
+        }
+        
+		return array( "success" => true, "data" => $newTask );
+                            
+    }
+	
+	
+	/** 
 	* @desc Gets all the comments for the specified effort.
 	* @params $formData["id"] (int) = The id of the requested effort.
 	* @return JSON - A JSON success message with the task attached as data.

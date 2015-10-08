@@ -84,23 +84,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 	  }
     })
 	
-    .state('tab.effort-new', {
-	  cache : false,
-      url: '/efforts/new',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-new.html',
-          controller: 'EffortsDetailNewCtrl'
-        }
-      },
-	  resolve: {
-			friends : function( $stateParams, Friends ) {
-                return Friends.allFriends();
-        	}
-	  }
-    })
-	
-	.state('tab.effort-detail-tasks', {
+    .state('tab.effort-detail-tasks', {
 	  cache : false,
       url: '/efforts/:effortId/tasks',
       views: {
@@ -118,26 +102,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         	}
 	  }
     })	
-	
-	.state('tab.effort-detail-task-add', {
-		cache : false,
-      url: '/efforts/:effortId/tasks/add',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-tasks-add.html',
-          controller: 'EffortsDetailTasksCtrl'
-        }
-      },
-	  resolve: {
-		    tasks : function( $stateParams, Efforts ) {
-                return Efforts.getEffortTasks( $stateParams.effortId );
-        	},
-			effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	}
-	  }
-    })
-	
+
 	.state('tab.effort-detail-notes', {
 		cache : false,
       url: '/efforts/:effortId/notes',
@@ -152,23 +117,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
                 return Efforts.getEffort( $stateParams.effortId );
         	}
 	  }
-    })
-	
-	.state('tab.effort-detail-notes-add', {
-	  cache : false,
-      url: '/efforts/:effortId/notes/add',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-notes-add.html',
-          controller: 'EffortsDetailNotesCtrl'
-        }
-      },
-	  resolve: {
-			effort : function( $stateParams, $ionicLoading, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	}
-	  }
-    })		
+    })	
 	
 	.state('tab.effort-detail-comments', {
 		cache : false,
@@ -176,25 +125,6 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-comments.html',
-          controller: 'EffortsDetailCommentsCtrl'
-        }
-      },
-	  resolve: {
-            comments : function( $stateParams, Efforts ) {
-                return Efforts.getEffortComments( $stateParams.effortId );
-        	},
-			effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	}
-	  }
-    })
-	
-	.state('tab.effort-detail-comments-add', {
-		cache : false,
-      url: '/efforts/:effortId/comments/add',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-comments-add.html',
           controller: 'EffortsDetailCommentsCtrl'
         }
       },
@@ -313,15 +243,6 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
     views: {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  }).state('tab.account-profile', {
-	cache : false,
-    url: '/account/profile',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/account-profile.html',
         controller: 'AccountCtrl'
       }
     }

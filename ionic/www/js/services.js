@@ -281,7 +281,7 @@ angular.module('GroupEffort.services', [])
 		login : login,
 		register : register,
 		logout : logout
-	}
+	};
 })
 
 /**  
@@ -609,7 +609,75 @@ angular.module('GroupEffort.services', [])
 		});
 				
 	};	
-
+    
+    /** 
+    * @desc Deletes the specified task for the specified effort.
+    * @params var id (int) = the id of the effort that the task belongs to.
+    * @params var task (int) = the index of the task that is to be changed.
+    * @params var title (string) = the title of the task to be deleted
+    * @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user
+    */
+    
+    var deleteTask = function( id, task , title ) {
+        
+        return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=delete_task&" +
+                                                "id=" + encodeURIComponent( id )  +
+                                                "&effort_task=" + encodeURIComponent( task ) +
+                                                "&title=" + encodeURIComponent( title )
+                                                )
+                                                
+        .then( function( response ) {
+            
+            return response.data;
+            
+        },
+        
+        function( result ) {
+            
+            $rootScope.error = 'Could Not Connect';
+            
+            return false;   
+            
+        });
+                
+	};
+    
+    /** 
+    * @desc Deletes the specified task for the specified effort.
+    * @params var id (int) = the id of the effort that the task belongs to.
+    * @params var task (int) = the index of the task that is to be changed.
+    * @params var title (string) = the title of the task to be deleted
+    * @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user
+    */
+    
+    var changeTask = function( id, task , title ) {
+        
+        if ( title != undefined ) {
+        
+            return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=change_task&" +
+                                                "id=" + encodeURIComponent( id )  +
+                                                "&effort_task=" + encodeURIComponent( task ) +
+                                                "&title=" + encodeURIComponent( title )
+                                                )
+                                                
+            .then( function( response ) {
+            
+                return response.data;
+            
+            },
+        
+            function( result ) {
+            
+                $rootScope.error = 'Could Not Connect';
+            
+                return false;   
+            
+            });
+        
+        };
+                
+	};
+    
 	/** 
 	* @desc Gets all the comments of the specified effort.
 	* @params var id (int) = the id of the effort that the task belongs to.
@@ -710,6 +778,8 @@ angular.module('GroupEffort.services', [])
 	assignTasks : assignTasks,
 	dibs : dibs,
 	changeTaskStatus : changeTaskStatus,
+    deleteTask : deleteTask,
+    changeTask : changeTask,
 	getEffortComments : getEffortComments,
 	addEffortComment : addEffortComment
 
