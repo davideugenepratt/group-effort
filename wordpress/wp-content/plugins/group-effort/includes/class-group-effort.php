@@ -42,6 +42,7 @@ class Group_Effort {
  
         $ajax = new Group_Effort_Ajax();
 		$this->loader->add_filter( 'auth_cookie_expiration', $ajax, 'extend_cookie' ); 
+        $this->loader->add_filter('comment_flood_filter', $ajax, 'remove_flood_filter');
 		$this->loader->add_action( 'wp_ajax_nopriv_group_effort', $ajax, 'not_logged_in' );
 		$this->loader->add_action( 'wp_ajax_group_effort', $ajax, 'ajax_controller' ); 		
 		

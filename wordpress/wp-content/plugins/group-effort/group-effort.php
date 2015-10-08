@@ -1,7 +1,7 @@
 <?php
 /*
- * Plugin Name:       The base files for a plugin
- * Plugin URI:        http://github.com/davideugenepratt/plugin-base
+ * Plugin Name:       Group-Effort
+ * Plugin URI:        http://github.com/davideugenepratt/group-effort.git
  * Description:       Single Post Meta Manager displays the post meta data associated with a given post.
  * Version:           0.1.0
  * Author:            David Pratt

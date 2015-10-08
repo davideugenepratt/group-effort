@@ -47,6 +47,12 @@ class Group_Effort_Ajax {
 		die();
 		
 	}
+    
+    public function remove_flood_filter() {
+        
+        return false;
+        
+    }
 	
 	/** 
 	* @desc Ensures the current user is listed in the list of an efforts contributors.
@@ -54,7 +60,7 @@ class Group_Effort_Ajax {
 	* @return JSON - If not a member of the effort it returns a JSON error response and exits the script.
 	*/	
 	
-	public function check_contributor( $effort ) {
+	private function check_contributor( $effort ) {
 		
 		$user = wp_get_current_user();
 		
@@ -93,7 +99,7 @@ class Group_Effort_Ajax {
 	* @params $comment (string) = Additional information regarding the activity.
 	*/	
 	
-	public function add_activity( $effort , $username , $activity , $comment ) {
+	private function add_activity( $effort , $username , $activity , $comment ) {
 		
 		$activity = array( 	'username' => $username,
 							'activity' => $activity,
@@ -108,7 +114,7 @@ class Group_Effort_Ajax {
 							
 	} 
 	
-	public function current_user() {
+	private function current_user() {
 		
 		$current_user = wp_get_current_user();
 		
@@ -752,7 +758,7 @@ class Group_Effort_Ajax {
 		
 		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "commented" , ' on '.get_post( $formData["id"] )->post_title );
 		
-		$comment_id = wp_new_comment($commentdata);
+		$comment_id = wp_new_comment( $commentdata );
         
         return $this->get_effort_comments( $formData );
 								

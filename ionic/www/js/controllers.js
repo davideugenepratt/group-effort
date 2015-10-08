@@ -161,16 +161,14 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	};
 })
 
-.controller('EffortsCtrl', function( $rootScope, $scope, $state, $ionicLoading, Popup, Efforts, Friends, efforts ) {
+.controller('EffortsCtrl', function( $rootScope, $scope, $state, $ionicLoading, Popup, Efforts, Friends, efforts , friends ) {
 		
 	$scope.efforts = efforts;
 	
+    $scope.friends = friends;
+    
 	$ionicLoading.hide();
-	
-})
-
-.controller('EffortsDetailNewCtrl', function( $rootScope, $scope, $state, $sce, Popup, Efforts, Friends, friends  ) {
-	
+    
 	$scope.data = {};
 	
 	$scope.addEffort = function() {
@@ -183,17 +181,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 			
 		});
 		
-	}
-	
-	$scope.friends = friends;
-	
-})
-
-.controller('EffortsDetailNotesCtrl', function( $rootScope, $scope, $state, Popup, Efforts, effort  ) {
-
-	effort.activity.reverse();
-	
-	$scope.effort = effort;	
+	};
 	
 })
 
@@ -336,6 +324,8 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		$scope.data.submitted = true;
         
         $scope.data.commentFormShow = false;
+        
+        console.info( effort.id , $scope.data.comment );
 		
 		Efforts.addEffortComment( effort.id , $scope.data.comment ).then( function( response ) {
 			
