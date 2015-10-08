@@ -470,7 +470,45 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 		});
 			
 	}
+    
+    $scope.deleteTask = function( effortId , index , title ) {
+        
+        $scope.data.tasks[ index ].editable = false;
+        
+        tasks.slice(index, 1);
+        
+        $scope.data.tasks = Efforts.assignTasks( tasks , effort );
+        
+        $scope.tasks = tasks;
+        
+        Efforts.deleteTask( effortId , index , title).then( function( result ) {
+            
+            tasks = result.data;
+            
+            $scope.data.tasks = Efforts.assignTasks( tasks , effort );
+            
+            $scope.tasks = tasks;
+            
+            
+                        
+        });
+            
+	};
 	
+    $scope.changeTask = function( effortId , index , title ) {
+        
+        if( title != "" ){
+        
+        Efforts.changeTask( effortId , index , title).then( function( result ) {
+            
+           
+                        
+        });
+        
+        }
+        
+    };
+    
 	for ( var i = 0; i < effort.contributors.length; i++ ) {
 		
 		if ( effort.contributors[i]["id"] == $rootScope.user.id ) {						

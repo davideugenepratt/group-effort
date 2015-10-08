@@ -16,7 +16,7 @@
                     <div class="item-input-wrapper" >
                       <input type="text" placeholder="New Task" ng-model="data.title" required >
                     </div>
-                    <button class="button button-positive" ng-click="showForm = true;" ng-disabled="data.submitted" >
+                    <button class="button button-positive" ng-click="showForm = true;" ng-disabled="data.submitted || addTaskForm.$invalid" >
                       <i class="icon ion-plus"></i>
                     </button>                    
                   </ion-item>
@@ -30,42 +30,39 @@
     </div>
     -->
     <div class="item item-icon-left item-icon-right task item-text-wrap"  ng-repeat="task in tasks track by $index" ng-hide="task.finished" >
-            <div class="icon" ng-show="data.tasks[ $index ].available">
-            	<button class="button button-light button-small" ng-show="!task.finished" ng-click="changeStatus( effort.id , $index , !task.finished );" >
-                </button>                
-            </div>
-            
-            <div class="item-toggle">
-            {{task.title}}
+      <div class="icon" ng-show="data.tasks[ $index ].available"  ng-hide="data.tasks[ $index ].editable">
+          <button class="button button-light button-small" ng-show="!task.finished" ng-click="changeStatus( effort.id , $index , !task.finished );" >
+          </button>                
+      </div>
+      <div class="icon" ng-show="data.tasks[ $index ].editable && self.role == 'admin'">
+        <button class="button button-assertive button-small ion-close" ng-show="!task.finished" ng-click="deleteTask( effort.id , $index , task.title );" >
+        </button>                
+      </div>
+      <div ng-hide="self.role == 'admin'" >{{task.title}}</div>
+      <input type="text" ng-model="task.title" ng-show="self.role == 'admin'" ng-focus="data.tasks[ $index ].editable = true;" ng-blur="data.tasks[ $index ].editable = false; changeTask(  effort.id , $index , task.title )" required >
+      <div class="item-toggle" >
             <label class="toggle toggle-calm task" ng-show="data.tasks[ $index ].available" >
                <input type="checkbox" ng-model="data.tasks[ $index ].dibs" ng-checked="data.tasks[ $index ].dibs" ng-click="dibs( effort.id , $index )">               
                <div class="track">
                  <div class="handle"></div>
                </div>
-            </label>
-            
-            
-            </div>
+            </label>     
+       </div>
             <!--
             <div class="item-avatar icon hidden-for-now" ng-bind-html="data.tasks[ $index  ].face" ng-hide="data.tasks[ $index ].available"></div>                
             -->
     </div>
-    <!--
-    <div class="item item-divider" >
-    	Finished Tasks
-    </div>
-    -->
     <div class="item item-icon-left item-icon-right task item-text-wrap"  ng-repeat="task in tasks track by $index"  ng-show="task.finished" >
-            <div class="icon" ng-show="data.tasks[ $index ].available">
-            	<button class="button button-light button-small ion-close" ng-show="task.finished && self.role == 'admin'" ng-click="changeStatus( effort.id , $index , !task.finished );" >                
-                </button>                
-            </div>
-            <div class="item-toggle">
-            	{{task.title}}                     
-            </div>
-            <div class="item-avatar icon" ng-bind-html="data.tasks[ $index  ].face" ng-hide="data.tasks[ $index ].available"></div>                
-    </div>
-    
+      <div class="icon" ng-show="data.tasks[ $index ].available" ng-hide="data.tasks[ $index ].editable" >
+         <button class="button button-light button-small ion-close" ng-show="task.finished && self.role == 'admin'" ng-click="changeStatus( effort.id , $index , !task.finished );" ></button>                
+      </div>
+      <div class="icon" ng-show="data.tasks[ $index ].editable && self.role == 'admin'">
+        <button class="button button-assertive button-small ion-close" ng-click="deleteTask( effort.id , $index , task.title );" >
+        </button>                
+      </div>
+      <div ng-hide="self.role == 'admin'" >={{task.title}}</div>
+      <input type="text" ng-model="task.title" ng-show="self.role == 'admin'" ng-focus="data.tasks[ $index ].editable = true;" ng-blur="data.tasks[ $index ].editable = false; changeTask(  effort.id , $index , task.title )" required >
+     </div>    
   </ion-list>
   </ion-content>
 </ion-view>
