@@ -497,15 +497,7 @@ angular.module('GroupEffort.controllers', [ 'GroupEffort.services' ])
 	
     $scope.changeTask = function( effortId , index , title ) {
         
-        if( title != "" ){
-        
-        Efforts.changeTask( effortId , index , title).then( function( result ) {
-            
-           
-                        
-        });
-        
-        }
+        Efforts.changeTask( effortId , index , title).then( function( result ) { });
         
     };
     

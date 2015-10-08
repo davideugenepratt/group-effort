@@ -281,7 +281,7 @@ angular.module('GroupEffort.services', [])
 		login : login,
 		register : register,
 		logout : logout
-	}
+	};
 })
 
 /**  
@@ -652,7 +652,7 @@ angular.module('GroupEffort.services', [])
     
     var changeTask = function( id, task , title ) {
         
-        if ( title != null ) {
+        if ( title != undefined ) {
         
             return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=change_task&" +
                                                 "id=" + encodeURIComponent( id )  +
