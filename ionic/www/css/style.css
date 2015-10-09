@@ -173,6 +173,10 @@ label.newComment {
 	margin-top:10px;
 }
 
+.remove-user-button {
+	margin-top:2px;
+}
+
 .item-input-inset .item-input-wrapper input {
 	font-size:18px;
 	height:auto;

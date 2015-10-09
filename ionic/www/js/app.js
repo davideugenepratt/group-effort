@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.services'])
+angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.factories'])
 
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
     
@@ -38,35 +38,35 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
-  .state('tab', {
-    url: "/tab",
-    abstract: true,
-	controller: 'TabCtrl',
-    templateUrl: "templates/tabs.html",
-	  resolve: {		  
-			loggedIn : function( $rootScope, Authenticate ) {								
-				return Authenticate.authenticate();
-			}
-	  }
-  })
-
-  .state('login', {
-	cache : false,
-    url: "/login",
-    templateUrl: "templates/login.html",
-    controller: 'LoginCtrl'
-  })
+    // setup an abstract state for the tabs directive
+    .state('tab', {
+      url: "/tab",
+      abstract: true,
+      controller: 'TabCtrl',
+      templateUrl: "templates/tabs.html",
+      resolve: {		  
+        loggedIn : function( $rootScope, Authenticate ) {								
+          return Authenticate.authenticate();
+        }
+      }
+    })
   
-  .state('register', {
-	  cache : false,
-    url: "/register",
-    templateUrl: "templates/register.html",
-    controller: 'RegisterCtrl'
-  })
+    .state('login', {
+    cache : false,
+      url: "/login",
+      templateUrl: "templates/login.html",
+      controller: 'AuthenticateCtrl'
+    })
+    
+    .state('register', {
+      cache : false,
+      url: "/register",
+      templateUrl: "templates/register.html",
+      controller: 'AuthenticateCtrl'
+    })
   
-  .state('tab.efforts', {
-	  cache : false,
+    .state('tab.efforts', {
+      cache : false,
       url: '/efforts',
       views: {
         'tab-efforts': {
@@ -74,67 +74,63 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
           controller: 'EffortsCtrl'
         }
       },
-	  resolve: {
+      resolve: {
             efforts : function( $stateParams, Efforts ) {
-                return Efforts.allEfforts();
-        	},
-            friends : function( $stateParams, Friends ) {
-                return Friends.allFriends();
-        	}
-	  }
+                  return Efforts.allEfforts();
+            },
+              friends : function( $stateParams, Friends ) {
+                  return Friends.allFriends();
+            }
+      }
     })
 	
     .state('tab.effort-detail-tasks', {
-	  cache : false,
+      cache : false,
       url: '/efforts/:effortId/tasks',
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-tasks.html',
-          controller: 'EffortsDetailTasksCtrl'
+          controller: 'EffortsDetailCtrl'
         }
       },
-	  resolve: {
-			tasks : function( $stateParams, Efforts ) {
-                return Efforts.getEffortTasks( $stateParams.effortId );
-        	},
-			effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	}
-	  }
+      resolve: {
+        tasks : function( $stateParams, Efforts ) {
+          return Efforts.getEffortTasks( $stateParams.effortId );
+        },
+        effort : function( $stateParams, Efforts ) {
+          return Efforts.getEffort( $stateParams.effortId );
+        },
+        comments : function( $stateParams, Efforts ) {
+          return Efforts.getEffortComments( $stateParams.effortId );
+        },
+        friends : function( $stateParams, Friends ) {
+          return Friends.allFriends(  );
+        }
+      }
     })	
 
-	.state('tab.effort-detail-notes', {
-		cache : false,
-      url: '/efforts/:effortId/notes',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-notes.html',
-          controller: 'EffortsDetailNotesCtrl'
-        }
-      },
-	  resolve: {
-			effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	}
-	  }
-    })	
-	
 	.state('tab.effort-detail-comments', {
 		cache : false,
       url: '/efforts/:effortId/comments',
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-comments.html',
-          controller: 'EffortsDetailCommentsCtrl'
+          controller: 'EffortsDetailCtrl'
         }
       },
 	  resolve: {
-            comments : function( $stateParams, Efforts ) {
-                return Efforts.getEffortComments( $stateParams.effortId );
-        	},
-			effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	}
+        tasks : function( $stateParams, Efforts ) {
+          return Efforts.getEffortTasks( $stateParams.effortId );
+        },
+        effort : function( $stateParams, Efforts ) {
+          return Efforts.getEffort( $stateParams.effortId );
+        },
+        comments : function( $stateParams, Efforts ) {
+          return Efforts.getEffortComments( $stateParams.effortId );
+        },
+        friends : function( $stateParams, Friends ) {
+          return Friends.allFriends(  );
+        }
 	  }
     })
 	
@@ -144,13 +140,22 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-activity.html',
-          controller: 'EffortsDetailActivityCtrl'
+          controller: 'EffortsDetailCtrl'
         }
       },
 	  resolve: {
-            effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	}
+        tasks : function( $stateParams, Efforts ) {
+          return Efforts.getEffortTasks( $stateParams.effortId );
+        },
+        effort : function( $stateParams, Efforts ) {
+          return Efforts.getEffort( $stateParams.effortId );
+        },
+        comments : function( $stateParams, Efforts ) {
+          return Efforts.getEffortComments( $stateParams.effortId );
+        },
+        friends : function( $stateParams, Friends ) {
+          return Friends.allFriends(  );
+        }
 	  }
     })
 	
@@ -160,16 +165,22 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-contributors.html',
-          controller: 'EffortsDetailSettingsCtrl'
+          controller: 'EffortsDetailCtrl'
         }
       },
 	  resolve: {
-            effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	},
-			friends : function( $stateParams, Friends ) {
-                return Friends.allFriends(  );
-        	}
+        tasks : function( $stateParams, Efforts ) {
+          return Efforts.getEffortTasks( $stateParams.effortId );
+        },
+        effort : function( $stateParams, Efforts ) {
+          return Efforts.getEffort( $stateParams.effortId );
+        },
+        comments : function( $stateParams, Efforts ) {
+          return Efforts.getEffortComments( $stateParams.effortId );
+        },
+        friends : function( $stateParams, Friends ) {
+          return Friends.allFriends(  );
+        }
 	  }
     })
 	
@@ -179,16 +190,22 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       views: {
         'tab-efforts': {
           templateUrl: 'templates/effort-detail-settings.html',
-          controller: 'EffortsDetailSettingsCtrl'
+          controller: 'EffortsDetailCtrl'
         }
       },
-	  resolve: {
-            effort : function( $stateParams, Efforts ) {
-                return Efforts.getEffort( $stateParams.effortId );
-        	},
-			friends : function( $stateParams, Friends ) {
-                return Friends.allFriends( );
-        	}
+	    resolve: {
+        tasks : function( $stateParams, Efforts ) {
+          return Efforts.getEffortTasks( $stateParams.effortId );
+        },
+        effort : function( $stateParams, Efforts ) {
+          return Efforts.getEffort( $stateParams.effortId );
+        },
+        comments : function( $stateParams, Efforts ) {
+          return Efforts.getEffortComments( $stateParams.effortId );
+        },
+        friends : function( $stateParams, Friends ) {
+          return Friends.allFriends(  );
+        }
 	  }
     })
 
@@ -207,36 +224,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         	}
 	  }
     })
-   .state('tab.friends-requests', {
-	  cache : false,
-      url: '/friends/requests',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friends-requests.html',
-          controller: 'FriendsCtrl'
-        }
-      },
-	  resolve: {
-            friends : function( Friends ) {
-                return Friends.allFriends();
-        	}
-	  }
-    })
-  .state('tab.friends-detail', {
-	  cache : false,
-      url: '/friends/:friendID',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friends-detail.html',
-          controller: 'FriendsDetailCtrl'
-        }
-      },
-	  resolve: {
-            friend : function( $stateParams, Friends ) {
-                return Friends.getFriend( $stateParams.friendID );
-        	}
-	  }
-    })
+
   .state('tab.account', {
 	cache : false,
     url: '/account',

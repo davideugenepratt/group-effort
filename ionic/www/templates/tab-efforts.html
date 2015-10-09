@@ -14,16 +14,9 @@
                         <input type="text" placeholder="Title" ng-model="data.title" required >
                       </div>                    
                     </ion-item>
-                    <ion-item class="item item-avatar item-icon-left" ng-repeat="friend in friends" >
-                      <img  class="avatar" src="{{friend.face}}"/>
-                      <h2>{{friend.username}}</h2>
-                      <p>{{friend.email}}</p>
-                      <label class="toggle">            
-                        <input type="checkbox" ng-model="data.friends[friend.username]" >
-                        <div class="track"><div class="handle"></div></div>
-                      </label>
-                    </ion-item>
-                    
+                    <ion-checkbox class="item item-checkbox-right" ng-model="data.friends[friend.username]" ng-repeat="friend in friends" >
+                      {{friend.username}}
+                    </ion-checkbox >
                     <ion-item class="button-bar" >
                       <button class="button" ng-click="data.title = ''; data.newForm = false; " ng-disabled="data.submitted" >Cancel</a>
                         <button class="button button-positive" ng-click="addEffort()" ng-disabled="data.submitted || newEffortForm.$invalid " >Ok</button>
@@ -32,10 +25,7 @@
                 </div>
               </div>
         <ion-item class="item item-text-wrap" ng-repeat="effort in efforts" ng-click="goToEffort( effort.ID )" ng-hide="data.newForm" >
-        	<!-- <a href="#/tab/efforts/{{effort.ID}}/tasks"> -->
             	{{effort.title}}
-                <!-- <p ng-repeat"contributor in effort.contributors">{{contributor}}</p> -->
-            <!-- </a> -->
         </ion-item>
     </ion-list>
   </ion-content>

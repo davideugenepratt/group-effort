@@ -704,8 +704,10 @@ class Group_Effort_Ajax {
 		$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , $action.' the task' , $task["title"] );
 		
 		update_post_meta( $formData["id"] , '_tasks' , $newTask, $task );
+    
+    $tasks = get_post_meta( $formData["id"], '_tasks', false );
 		
-		return array( "success" => true, "data" => $newTask );
+		return array( "success" => true, "data" => $tasks );
 							
 	}
 	

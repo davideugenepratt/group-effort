@@ -1,44 +1,28 @@
 <ion-view view-title="People">
   <ion-content  on-swipe-right="goBack()" on-swipe-left="goForward()">
-    <!--
-    <div class="item item-button-right">
-        Add Someone
-        <a href="#/tab/friends/requests" class="button button-positive">
-          <i class="icon ion-person-add"></i>
-        </a>
-    </div>
-    -->
     <ion-item class="item item-input-inset">
             <label class="item-input-wrapper">
               <input type="text" placeholder="Search by Email Address or Username" ng-model="newFriendData.searchTerm" ng-change="searchUsers()" >
             </label>        
     </ion-item>    
-    <ion-item class="item item-avatar item-button-right" ng-repeat="friend in searchResults" type="item-text-wrap"  >
-    	<img ng-src="{{friend.face}}" class="avatar">
+    <ion-item class="item item-button-right" ng-repeat="friend in searchResults" type="item-text-wrap"  >
         <h2>{{friend.username}}</h2>
-        <p>{{friend.location}}</p>
-        <p ng-hide="friend.location">No Location</p>
-        <button class="button button-positive button-medium add-user-button" ng-disabled="friends.ids.indexOf( friend.id ) != -1" ng-click="addFriend( friend )" ><i class="icon ion-plus"></i></button>
+        <button class="button button-positive button-medium" ng-disabled="friends.ids.indexOf( friend.id ) != -1" ng-click="addFriend( friend )" ><i class="icon ion-plus"></i></button>
     </ion-item>
     <ion-list>
       
-      <ion-item class="item item-avatar"  ng-repeat="friend in friends.requestReceived" >
-        <img ng-src="{{friend.face}}" class="avatar">
+      <ion-item class="item"  ng-repeat="friend in friends.requestReceived track by $index" >
         <div class="item-note">
-            <button class="button button-positive button-small" ng-click="acceptRequest( friend.email )"  ng-disabled="data.submitted" ><i class="ion-plus"></i></button>
-            <button class="button button-outline button-positive button-small" ng-click="denyRequest( friend.email )"  ng-disabled="data.submitted"><i class="ion-minus"></i></button>
+            <button class="button button-positive button-medium" ng-click="acceptRequest( $index , friend )"  ng-disabled="data.submitted" ><i class="ion-plus"></i></button>
+            <button class="button button-outline button-positive button-medium" ng-click="denyRequest( $index , friend )"  ng-disabled="data.submitted"><i class="ion-minus"></i></button>
         </div>      	        
         <h2>{{friend.username}}</h2>
-        <p>{{friend.location}}</p>
-        <p ng-hide="friend.location">No Location</p>     
+        <p>{{friend.email}}</p>
       </ion-item>
-      <ion-item class="item item-avatar item-text-wrap"   ng-repeat="friend in friends.requestAccepted" ng-click="goToFriend( friend.ID )" >
-            <img ng-src="{{friend.face}}" class="avatar">
+      <ion-item class="item item-button-right"  ng-repeat="friend in friends.requestAccepted track by $index" ng-click="friend.editable = !friend.editable;" > <!-- ng-click="goToFriend( friend.ID )" -->
             <h2>{{friend.username}}</h2>
-            <p>{{friend.location}}</p>
-        	<p ng-hide="friend.location">No Location</p>        
+            <button class="button button-positive button-medium remove-user-button" ng-show="friend.editable"  ng-click="removeFriend( $index , friend.email ); friend.editable = true;" ng-disabled="data.submitted"  ><i class="icon ion-minus"></i></button>
       </ion-item>
-      
     </ion-list>
   </ion-content>
 </ion-view>

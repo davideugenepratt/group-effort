@@ -7,19 +7,13 @@
 <ion-view view-title="{{effort.title}} - Settings">
    <ion-content >
   <div ng-include src="'templates/effort-tabs.html'"></div>
-    <ion-list class=list">
-        <div class="item item-button-right" ng-show="self.role == 'admin'" >
-            Edit Group Members
-            <a class="button button-positive" href="#/tab/efforts/{{effort.id}}/contributors" >
-              <i class="icon ion-person"></i>
-            </a>
-        </div>
-   		<div class="item item-button-right">
-            Leave Effort
-            <button class="button button-assertive" ng-click="deleteEffort( effort.id )">
-              <i class="icon ion-close"></i>
-            </button>
-        </div>
+    <ion-list class="list">    
+    <ion-checkbox class="item item-checkbox-right" ng-checked="true" ng-click="deleteEffort( effort.id );" >
+        Me
+    </ion-checkbox>
+    <ion-checkbox class="item item-checkbox-right" ng-repeat="friend in friends"  ng-checked="data[friend.username].contributor" ng-model="data[friend.username].contributor"  ng-click="editFriends( effort.id )" >
+        {{friend.username}}
+    </ion-checkbox>
     </ion-list>
   </ion-content>
 </ion-view>

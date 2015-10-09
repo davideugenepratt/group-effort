@@ -9,28 +9,20 @@
   <ion-content >
   <div ng-include src="'templates/effort-tabs.html'"></div>
   <ion-list>    
-    <ion-item class="item item-avatar item-icon-left" ng-repeat="friend in friends" >
-        <img class="avatar" src="{{friend.face}}"/>
+    <ion-item class="item" ng-repeat="friend in friends" >
         <h2>{{friend.username}}</h2>
         <p>{{friend.email}}</p>
-        <div class="row row-top">
-        <div class="col col-50 align-center item-note">
-        Contributor
-        <br>
+
         <label class="toggle">        	
             <input type="checkbox" ng-checked="data[friend.username].contributor" ng-model="data[friend.username].contributor" ng-click="editFriends( effort.id )" >
             <div class="track"><div class="handle"></div></div>
         </label>
-        </div>
-        <div class="col col-50 align-center item-note" ng-show="data[friend.username].contributor">
-        Admin
-        <br>
+
         <label class="toggle toggle-assertive">        	
             <input type="checkbox" ng-checked="data[friend.username].admin" ng-model="data[friend.username].admin" ng-click="editFriends( effort.id )">
             <div class="track"><div class="handle"></div></div>
         </label>
-        </div>
-        </div>
+
     </ion-item>
   </ion-list>
   </ion-content>
