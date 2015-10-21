@@ -35,9 +35,7 @@ angular.module('GroupEffort.factories')
 				}
 													
 				$rootScope.loggedIn = false;
-				
-				console.log( 'Not logged in. Going from ' + $location.path() + ' to login screen' );
-				
+								
 				// "Not logged in. Going from /tab/account to login screen"
 				
 				if ( "/login" != $location.path() ) {
@@ -84,9 +82,7 @@ angular.module('GroupEffort.factories')
 		.then( function( response ) {
 									
 			if ( false == response.data.success ) {	
-				
-				console.log( response.data.reason );
-				
+								
 				$rootScope.error = response.data.reason;
 								
 				return false;

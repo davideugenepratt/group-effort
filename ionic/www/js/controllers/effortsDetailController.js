@@ -19,9 +19,7 @@ angular.module('GroupEffort.controllers')
 				if ( confirm ) {
 					
 					Efforts.leaveEffort( id ).then( function( result ) {
-												
-						// Popup.alertPrompt( "Ok, you did it," , "You have left the effort" );
-						
+																		
 						$state.go( 'tab.efforts' );
 						
 					});
@@ -34,8 +32,6 @@ angular.module('GroupEffort.controllers')
 			
 			Efforts.leaveEffort( id ).then( function( result ) {
 				
-				// Popup.alertPrompt( "Ok, you did it," , "You have left the effort" );
-
 				$state.go( 'tab.efforts' );	
 									
 			});	
@@ -47,9 +43,7 @@ angular.module('GroupEffort.controllers')
 	$scope.editFriends = function( id ) {
 				
 		Efforts.editContributors( id , $scope.data ).then( function( response ) {
-			
-			// console.log( response );
-			
+						
 		});
 		
 	};				
@@ -120,13 +114,9 @@ angular.module('GroupEffort.controllers')
 		$scope.data.submitted = true;
         
         $scope.data.commentFormShow = false;
-        
-        console.info( effort.id , $scope.data.comment );
-		
+        		
 		Efforts.addEffortComment( effort.id , $scope.data.comment ).then( function( response ) {
-			
-            console.info( $scope.comments , response.data );
-            			
+			            			
 			$scope.comments = response.data;
             
             $scope.data.comment = "";
@@ -135,131 +125,143 @@ angular.module('GroupEffort.controllers')
 			
 		});
 		
-	};	
-		
-	
+	};	    
     
+  $scope.addTask = function() {
     
-    $scope.addTask = function() {
-      
-      $scope.data.submitted = true;
-          
-      var task = {};
-      
-      task.title = $scope.data.title;
-      
-      task.deadline = $scope.data.deadline;
-      
-      task.schedule = $scope.data.schedule;
-      
-      task.dibs = $scope.data.dibs;
-      
-      task.finished = false;
-          
-          $scope.data.title = "";
-          
-          tasks.push( task );
-          
-          $scope.data.tasks = Efforts.assignTasks( tasks , effort );
-          
-          $scope.tasks = tasks;
+    $scope.data.submitted = true;
+        
+    var task = {};
+    
+    task.title = $scope.data.title;
+    
+    task.deadline = $scope.data.deadline;
+    
+    task.schedule = $scope.data.schedule;
+    
+    task.dibs = $scope.data.dibs;
+    
+    task.finished = false;
+        
+    $scope.data.title = "";
+    
+    tasks.push( task );
+    
+    $scope.data.tasks = Efforts.assignTasks( tasks , effort );
+    
+    $scope.tasks = tasks;
+            
+    Efforts.addEffortTask( effort.id , task ).then( function( result ) {
+            
+            if ( tasks != result.data ) {
               
-      Efforts.addEffortTask( effort.id , task ).then( function( result ) {
+              tasks = result.data;
                     
               $scope.data.tasks = Efforts.assignTasks( result.data , effort );
                     
               $scope.tasks = result.data;
-                          
-              $scope.data.submitted = false;
-              
-      });		
-      
-    };
-		
-    $scope.dibs = function( id , task ) {
-      
-      Efforts.dibs( id , task ).then( function( result ) {
-              
-        if ( !result.success ) {
-          
-          for ( var a = 0; a < effort.contributors.length; a++) {
             
-            if ( result.data == effort.contributors[a].id ) {
-              
-              Popup.alertPrompt( "Sorry" , "Looks like " + effort.contributors[a].username + " already called dibs on this one." );
-              
-              $scope.data.tasks[ task ].face = effort.contributors[a].face;
-              
-              $scope.data.tasks[ task ].available = false;
-              
             }
+                        
+            $scope.data.submitted = false;
+            
+            
+    });		
+    
+  };
+  
+  $scope.dibs = function( id , task ) {
+    
+    Efforts.dibs( id , task ).then( function( result ) {
+            
+      if ( !result.success ) {
+        
+        for ( var a = 0; a < effort.contributors.length; a++) {
+          
+          if ( result.data == effort.contributors[a].id ) {
+            
+            Popup.alertPrompt( "Sorry" , "Looks like " + effort.contributors[a].username + " already called dibs on this one." );
+            
+            $scope.data.tasks[ task ].face = effort.contributors[a].face;
+            
+            $scope.data.tasks[ task ].available = false;
             
           }
           
         }
         
-      });
+      }
       
-    }			
-	
-    $scope.changeStatus = function( effortId , index ) {
+    });
+    
+  }			
+
+  $scope.changeStatus = function( effortId , index, guid ) {
+          
+    var finished = !$scope.data.tasks[ index ]['finished'];
+    
+    $scope.data.tasks[ index ]['finished'] = finished;
+    
+    Efforts.changeTaskStatus( effortId , guid , finished ).then( function( response ) {
+      
+      if ( tasks != response.data ) {
+        
+        tasks = response.data;
             
-      var finished = !$scope.data.tasks[ index ]['finished'];
-      
-      $scope.data.tasks[ index ]['finished'] = finished;
-      
-      Efforts.changeTaskStatus( effortId , index , finished ).then( function( response ) {
-        
-        console.info( response );
-        
         $scope.data.tasks = Efforts.assignTasks( response.data , effort );
         
         $scope.tasks[ index ] = response.data;
+      
+      }
+            
+    });
+      
+  }
+	
+  $scope.changeTask = function( effortId , index , guid ) {
+            
+      if ( $scope.data.tasks[ index ].deleteTask ) {
+        
+        tasks.splice(index, 1);
               
-      });
-        
-    }
-    
-    $scope.deleteTask = function( effortId , index , title ) {
-        
-        $scope.data.tasks[ index ].editable = false;
-        
-        tasks.slice(index, 1);
-        
         $scope.data.tasks = Efforts.assignTasks( tasks , effort );
         
         $scope.tasks = tasks;
         
-        Efforts.deleteTask( effortId , index , title).then( function( result ) {
+        Efforts.deleteTask( effortId , guid ).then( function( result ) {
             
-            tasks = result.data;
+            if ( tasks != result.data ) {
+              
+              tasks = result.data;
+              
+              $scope.data.tasks = Efforts.assignTasks( tasks , effort );
+              
+              $scope.tasks = tasks;
             
-            $scope.data.tasks = Efforts.assignTasks( tasks , effort );
-            
-            $scope.tasks = tasks;
-            
-            
-                        
+            }
+                                    
         });
-            
-	};
-	
-  $scope.changeTask = function( effortId , index , title ) {
       
-      Efforts.changeTask( effortId , index , title).then( function( result ) { });
+      }
+      
+      if ( $scope.data.tasks[ index ].title != tasks[index].title ) {
+      
+        Efforts.changeTask( effortId , guid, $scope.data.tasks[ index ].title ).then( function( result ) { });
+      
+      }
       
   };
   
 	$scope.data.tasks = Efforts.assignTasks( tasks , effort );
-	
-  console.info( $scope.data.tasks );
-    		
+	    		
 	$scope.tasks = tasks;
+  
+  console.info( tasks );
 	  
   $scope.effort = effort;		  
   
 	$scope.friends = friends;
-  
+    
   $scope.comments = comments.data;
   		
 });

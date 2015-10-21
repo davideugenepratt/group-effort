@@ -95,12 +95,54 @@ angular.module('GroupEffort.factories')
   */ 	
 	
 	var allFriends = function() {	
-	
+	  
+    var sortFriends = function( friends ) {
+      
+      newFriends = {};
+      
+      newFriends.friends = friends;
+      
+      newFriends.requestSent = [];
+      
+      newFriends.requestReceived = [];
+        
+      newFriends.requestAccepted = [];
+      
+      newFriends.ids = [];
+      
+      for( var i = 0, x = friends.length; i < x; i++ ) {
+                
+        newFriends.ids.push( parseInt( friends[i]["ID"] ) );
+          
+        if ( friends[i].status == "Request Sent" ) {
+          
+          newFriends.requestSent.push( friends[i] );			
+          
+        } else if ( friends[i].status == "Request Received" ) {
+          
+          newFriends.requestReceived.push( friends[i] );
+          
+        } else if ( friends[i].status == "Invitation Sent" ) {
+          
+          newFriends.invitationSent.push( friends[i] );
+          
+        } else if ( friends[i].status == "Request Accepted" ) {
+          
+          newFriends.requestAccepted.push( friends[i] );
+          
+        }
+        
+      } 
+      
+      return newFriends;
+      
+    }
+    
 		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=all_friends" )
 		
 		.then( function( response ) {
 			
-			return response.data.data;
+			return sortFriends( response.data.data );
 			
 		},
 		
@@ -112,7 +154,7 @@ angular.module('GroupEffort.factories')
 				
 		});
 		
-	};
+	};    
 	
 	var getFriend = function( id ) {
 		

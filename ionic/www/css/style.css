@@ -192,4 +192,8 @@ label.newComment {
 .icon.account-input {
 	font-size:28px;
 }
+
+.item-toggle .toggle {
+  top:17px;
+}
 	

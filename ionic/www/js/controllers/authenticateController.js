@@ -19,9 +19,7 @@ angular.module('GroupEffort.controllers')
 	$scope.login = function() {
 		
 		$scope.data.submitted = true;
-		
-		console.log( 'logging in');
-		
+				
 		var username = $scope.data.username;
 		
     	var password = $scope.data.password;
@@ -70,10 +68,8 @@ angular.module('GroupEffort.controllers')
 			if ( result ) {
 				$rootScope.loggedIn = true;
 				$rootScope.user = result;
-				console.log( $rootScope.user );
 				$state.go('tab.account');	
 			} else {
-				console.log( result );
 				$rootScope.loggedIn = false;
 				$scope.data.submitted = false;
 			}

@@ -5,10 +5,10 @@ angular.module('GroupEffort.factories')
   var changePhoto = function() {
 		
 		var options =   {			
-            quality: 100,
-            destinationType: 1,
-            sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
-            encodingType: 0,    // 0=JPG 1=PNG
+      quality: 100,
+      destinationType: 1,
+      sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
+      encodingType: 0,    // 0=JPG 1=PNG
 			cameraDirection: 1,
 			targetWidth: 100,
 			targetHeight: 100,

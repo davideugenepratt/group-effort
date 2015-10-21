@@ -13,11 +13,17 @@ angular.module('GroupEffort.controllers')
 	$scope.addEffort = function() {
 		
 		$scope.data.submitted = true;
+    
+    $scope.efforts.push( $scope.data );
+    
+    var title = $scope.data.title;
+    
+    $scope.data.title = "";
 		
-		Efforts.addEffort( $scope.data.title , $scope.data.friends ).then( function( result ) {
+		Efforts.addEffort( title , $scope.data.friends ).then( function( result ) {
 			
-			$state.go( 'tab.effort-detail-tasks' , { effortId : result.data } );
-			
+      $scope.efforts = result.data;
+      			
 		});
 		
 	};

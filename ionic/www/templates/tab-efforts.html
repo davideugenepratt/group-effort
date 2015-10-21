@@ -1,29 +1,16 @@
 <ion-view view-title="Efforts">
   <ion-content  on-swipe-right="goBack()" on-swipe-left="goForward()">
     <ion-list>    
-            <div class="item item-button-right">
-                Add Effort
-                <button class="button button-positive" ng-click="data.newForm = true;" ng-disabled="data.newForm;">
-                  <i class="icon ion-plus"></i>
-                </button>
+        <form name="newEffortForm" novalidate >
+          <ion-item class="item item-input-inset">
+            <div class="item-input-wrapper" >
+              <input type="text" placeholder="Title" ng-model="data.title" required >
             </div>
-                <div ng-show="data.newForm">
-                  <form name="newEffortForm" novalidate >
-                    <ion-item class="item item-input-inset ">
-                      <div class="item-input-wrapper" >
-                        <input type="text" placeholder="Title" ng-model="data.title" required >
-                      </div>                    
-                    </ion-item>
-                    <ion-checkbox class="item item-checkbox-right" ng-model="data.friends[friend.username]" ng-repeat="friend in friends" >
-                      {{friend.username}}
-                    </ion-checkbox >
-                    <ion-item class="button-bar" >
-                      <button class="button" ng-click="data.title = ''; data.newForm = false; " ng-disabled="data.submitted" >Cancel</a>
-                        <button class="button button-positive" ng-click="addEffort()" ng-disabled="data.submitted || newEffortForm.$invalid " >Ok</button>
-                    </ion-item>
-                  </form>
-                </div>
-              </div>
+            <button class="button button-positive" ng-click="addEffort()" ng-disabled="data.submitted || newEffortForm.$invalid ">
+              <i class="icon ion-plus"></i>
+            </button>                    
+          </ion-item>                  
+        </form>
         <ion-item class="item item-text-wrap" ng-repeat="effort in efforts" ng-click="goToEffort( effort.ID )" ng-hide="data.newForm" >
             	{{effort.title}}
         </ion-item>

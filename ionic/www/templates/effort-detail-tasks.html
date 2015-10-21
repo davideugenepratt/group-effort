@@ -25,38 +25,24 @@
     </div>
     <div class="item item-icon-left item-icon-right task item-text-wrap"  ng-repeat="task in data.tasks track by $index" >
       <div class="icon" ng-hide="task.editable">
-          <button class="button button-light button-small" ng-click="changeStatus( effort.id , $index );" >
+          <button class="button button-light button-small" ng-click="changeStatus( effort.id , $index , task.guid );" >
             <i class="ion-close" ng-show="task.finished" ></i>
           </button>                
       </div>
       <div class="icon" ng-show="task.editable && self.role == 'admin'">
-        <button class="button button-assertive button-small ion-close" ng-click="deleteTask( effort.id , $index , task.title );" >
+        <button class="button button-assertive button-small ion-trash-b" ng-click="data.tasks[ $index ].deleteTask = true;" >
         </button>                
       </div>
-      <div ng-hide="self.role == 'admin'" >{{task.title}}</div>
-      <input type="text" ng-model="task.title" ng-show="self.role == 'admin'" ng-focus="task.editable = true;" ng-blur="task.editable = false; changeTask(  effort.id , $index , task.title )" required >
+      <input type="text" ng-model="task.title" ng-focus="task.editable = true;" ng-blur="task.editable = false; changeTask(  effort.id , $index , task.guid )" required >
       <div class="item-toggle" >
-            <label class="toggle toggle-calm task" ng-show="task.available && !task.finished" >
-               <input type="checkbox" ng-model="task.dibs" ng-checked="task.dibs" ng-click="dibs( effort.id , $index )">               
-               <div class="track">
-                 <div class="handle"></div>
-               </div>
-            </label>     
-       </div>
-    </div>
-    <!--
-    <div class="item item-icon-left item-icon-right task item-text-wrap"  ng-repeat="task in tasks track by $index"  ng-show="task.finished" >
-      <div class="icon" ng-show="data.tasks[ $index ].available" ng-hide="data.tasks[ $index ].editable" >
-         <button class="button button-light button-small ion-close" ng-show="task.finished && self.role == 'admin'" ng-click="changeStatus( effort.id , $index , !task.finished );" ></button>                
+        <label class="toggle toggle-calm task" ng-show="task.available && !task.finished" >          
+           <input type="checkbox" ng-model="task.dibs" ng-checked="task.dibs" ng-click="dibs( effort.id , task.guid )">               
+           <div class="track">
+             <div class="handle"></div>
+           </div>
+        </label>     
       </div>
-      <div class="icon" ng-show="data.tasks[ $index ].editable && self.role == 'admin'">
-        <button class="button button-assertive button-small ion-close" ng-click="deleteTask( effort.id , $index , task.title );" >
-        </button>                
-      </div>
-      <div ng-hide="self.role == 'admin'" >={{task.title}}</div>
-      <input type="text" ng-model="task.title" ng-show="self.role == 'admin'" ng-focus="data.tasks[ $index ].editable = true;" ng-blur="data.tasks[ $index ].editable = false; changeTask(  effort.id , $index , task.title )" required >
-    </div>
-    -->    
+    </div>   
   </ion-list>
   </ion-content>
 </ion-view>

@@ -131,7 +131,23 @@ class Group_Effort_Ajax {
 								
 		return $user;
 		
-	} // Helper functions for the class
+	} 
+  
+  private function get_task_by_guid( $tasks, $guid ) {
+            
+    foreach ( $tasks as $task ) {
+                  
+      if ( $task["guid"] == $guid ) {
+       
+         return $task;
+        
+      }
+    
+    }
+    
+  }
+  
+  // Helper functions for the class
 
 	/** 
 	* @desc Extends the users login cookie so that they don't have to keep logging in on their phone.
@@ -323,7 +339,7 @@ class Group_Effort_Ajax {
 		$post = array(
 			'post_title' => $formData["title"],
 			'post_status' => 'publish',
-		  	'post_type'      => 'group-effort'  // Default 'post'.
+		  'post_type'      => 'group-effort'  // Default 'post'.
 		);						 		
 		
 		$effort = wp_insert_post( $post );
@@ -333,11 +349,13 @@ class Group_Effort_Ajax {
 		add_post_meta( $effort, '_contributors', array( 'id' => $current_user->ID, 'username' => $current_user->user_login, 'face' => get_user_meta( $current_user->ID, "avatar", true ), 'role' => 'admin' ), false ); 
 		
 		$this->add_activity( $effort , wp_get_current_user()->data->user_login , "created effort" , $formData["title"] );
-			
-		add_user_meta( $current_user->ID, '_efforts', array(	'ID' => $effort,
-																'title' => $post['post_title'],
-																'activity' => 0 ),
-																false ); 
+		
+    $new_effort = array(	'ID' => $effort,
+                          'title' => $post['post_title'],
+                          'activity' => 0 
+                          );
+    	
+		add_user_meta( $current_user->ID, '_efforts', $new_effort, false ); 
 						
 		if ( is_array( $contributors ) ) {
 			
@@ -359,8 +377,8 @@ class Group_Effort_Ajax {
 			}
 			
 		}
-		
-		return array( "success" => true, "data" => $effort );
+						
+		return array( "success" => true, "data" => get_user_meta( $current_user->ID , '_efforts' , false) );
 				
 	}
 	
@@ -625,7 +643,8 @@ class Group_Effort_Ajax {
 		
 		$this->check_contributor( $formData["id"] );
 		
-		$task = (array) json_decode( stripslashes( $formData["effort_task"] ) );			
+		$task = (array) json_decode( stripslashes( $formData["effort_task"] ) );	
+    $task["guid"] = uniqid();	
 						
 		add_post_meta( $formData["id"], '_tasks', $task, false );
 		
@@ -646,15 +665,17 @@ class Group_Effort_Ajax {
 		
 		$this->check_contributor( $formData["id"] );
 		
-		$tasks = (array) get_post_meta( $formData["id"], '_tasks', false );
-		
-		$task = (array) $tasks[ $formData["effort_task"] ];
-		
+		$tasks = (array) get_post_meta( $formData["id"], '_tasks', false );		    
+    
+    $task = $this->get_task_by_guid( $tasks , $formData["effort_task"] );        
+    
+    $newTask = $task;
+            		
 		if ( ( !isset( $task['dibs'] ) || '' == $task['dibs'] ) ) {
 			
-			$task['dibs'] = wp_get_current_user()->ID;		
+			$newTask['dibs'] = wp_get_current_user()->ID;		
 				
-			update_post_meta( $formData["id"] , '_tasks' , $task, $tasks[ $formData["effort_task"] ] );
+			update_post_meta( $formData["id"] , '_tasks' , $newTask, $task );
 			
 			$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "called dibs on" , $task["title"] );
 			
@@ -662,9 +683,9 @@ class Group_Effort_Ajax {
 			
 		} elseif ( $task['dibs'] == wp_get_current_user()->ID ) {
 			
-			$task['dibs'] = '';
+			$newTask['dibs'] = '';
 			
-			update_post_meta( $formData["id"] , '_tasks' , $task, $tasks[ $formData["effort_task"] ] );
+			update_post_meta( $formData["id"] , '_tasks' , $newTask, $task );
 			
 			$this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , "no longer has dibs on" , $task["title"] );
 			
@@ -672,10 +693,10 @@ class Group_Effort_Ajax {
 			
 		} else {
 			
-			return array( "success" => false, "data" => $task['dibs'] );
+			return array( "success" => false, "data" => $newTask );
 				
 		} 
-									
+    									
 	}
 
 	/** 
@@ -691,12 +712,11 @@ class Group_Effort_Ajax {
 		
 		$tasks = get_post_meta( $formData["id"], '_tasks', false );
 		
-		$task = (array) $tasks[ $formData["effort_task"] ];
-		
+		$task = $this->get_task_by_guid( $tasks , $formData["effort_task"] );
+    //$task = (array) $tasks[ $formData["effort_task"] ];
+		    
 		$newTask = $task;
-		
-		$newTask["dibs"] = null;
-		
+		    
 		$newTask['finished'] = 	json_decode( $formData["finished"] );			
 		
 		$action = ( $newTask['finished'] ) ? 'finished' : 'removed finished status of';
@@ -724,15 +744,9 @@ class Group_Effort_Ajax {
         
         $tasks = get_post_meta( $formData["id"], '_tasks', false );
         
-        $task = (array) $tasks[ $formData["effort_task"] ];
+        $task = $this->get_task_by_guid( $tasks , $formData["effort_task"] );
         
-        if ( $formData["title"] == $task["title"] ) {        
-                
-            $this->add_activity( $formData["id"] , wp_get_current_user()->data->user_login , 'Deleted the task' , $task["title"] );
-        
-            delete_post_meta( $formData["id"] , '_tasks' , $task );
-        
-        }
+        delete_post_meta( $formData["id"] , '_tasks' , $task );
         
         $tasks = get_post_meta( $formData["id"], '_tasks', false );
         
@@ -753,7 +767,7 @@ class Group_Effort_Ajax {
         
         $tasks = get_post_meta( $formData["id"], '_tasks', false );
         
-        $task = (array) $tasks[ $formData["effort_task"] ];
+        $task = $this->get_task_by_guid( $tasks , $formData["effort_task"] );
         
         $newTask = $task;
         

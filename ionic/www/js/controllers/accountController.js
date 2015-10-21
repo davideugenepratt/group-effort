@@ -43,9 +43,7 @@ angular.module('GroupEffort.controllers')
 				$ionicLoading.hide();
 				
 			} else {
-				
-				console.log( $rootScope.error );
-				
+								
 			}
 			
 		});

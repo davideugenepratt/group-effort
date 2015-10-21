@@ -58,9 +58,7 @@ angular.module('GroupEffort.factories')
 												)
 												
 		.then( function( response ) {
-			
-			console.log( response.data );
-			
+						
 			return response.data;
 			
 		},
@@ -252,6 +250,8 @@ angular.module('GroupEffort.factories')
         assignedTasks[i].title = tasks[i].title;
         
         assignedTasks[i].finished = tasks[i].finished;
+        
+        assignedTasks[i].guid = tasks[i].guid;
 				
 			} else if ( ( tasks[i].dibs == '' ) || ( tasks[i].dibs == null ) ) {
 				
@@ -262,6 +262,8 @@ angular.module('GroupEffort.factories')
         assignedTasks[i].title = tasks[i].title;
         
         assignedTasks[i].finished = tasks[i].finished;
+        
+        assignedTasks[i].guid = tasks[i].guid;
 				
 			} else {
 				
@@ -270,6 +272,8 @@ angular.module('GroupEffort.factories')
 				assignedTasks[i].title = tasks[i].title;
         
         assignedTasks[i].finished = tasks[i].finished;
+        
+        assignedTasks[i].guid = tasks[i].guid;
 				
 			}
 				
@@ -334,12 +338,11 @@ angular.module('GroupEffort.factories')
     * @return bool - returns true or false as well as sets $rootScope.loggedIn and $rootScope.user
     */
     
-    var deleteTask = function( id, task , title ) {
+    var deleteTask = function( id, guid ) {
         
         return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=delete_task&" +
                                                 "id=" + encodeURIComponent( id )  +
-                                                "&effort_task=" + encodeURIComponent( task ) +
-                                                "&title=" + encodeURIComponent( title )
+                                                "&effort_task=" + encodeURIComponent( guid )
                                                 )
                                                 
         .then( function( response ) {
