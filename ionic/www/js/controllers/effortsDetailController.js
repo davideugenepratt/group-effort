@@ -1,6 +1,6 @@
 angular.module('GroupEffort.controllers')
 
-.controller('EffortsDetailCtrl', function( $rootScope, $scope, $state, Popup, Efforts, Friends , effort , friends , comments , tasks ) {
+.controller('EffortsDetailCtrl', function( $rootScope, $scope, $state, $ionicSlideBoxDelegate, Popup, Efforts, Friends , effort , friends , comments , tasks ) {
 	
 	$scope.current = "effort-detail";
   
@@ -9,7 +9,13 @@ angular.module('GroupEffort.controllers')
   $scope.data.tasks = {};
 	
 	effort.activity.reverse();
-			
+	
+  $scope.slideTo = function( index ) {
+    
+    $ionicSlideBoxDelegate.slide( index );
+  
+  }
+  		
 	$scope.deleteEffort = function( id ) {
 		
 		if ( effort.contributors.length == 1 ) {

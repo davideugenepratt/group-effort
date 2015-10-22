@@ -57,6 +57,23 @@ p.time {
 	padding:0;
 }
 
+.bar-subheader.bar {
+  padding:0;
+}
+
+.slider{
+  position: absolute !important;
+  top: 0 ;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.slider-pager {
+    top: initial;
+    bottom: 60px !important;
+}
+
 .item-content.activated,
 .effort-list-item a:active {
 	background:#387ef5;

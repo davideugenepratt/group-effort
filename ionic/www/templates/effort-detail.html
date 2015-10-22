@@ -4,11 +4,34 @@
   The FriendsCtrl pulls data from the Friends service (service.js)
   The Friends service returns an array of friend data
 -->
-<ion-view view-title="{{effort.title}}">
-  <ion-content >
-  <div ng-include src="'templates/effort-tabs.html'"></div>
-    <p>
-      {{effort.id}}
-    </p>
-  </ion-content>
+<ion-view view-title="{{effort.title}} - Tasks">
+	<ion-header-bar class="bar-subheader">
+    <div ng-include src="'templates/effort-tabs.html'"></div>
+  </ion-header-bar>
+  
+    <ion-slide-box show-pager="false" active-slide="currentSlide" > <!-- on-slide-changed="slideHasChanged($index)" -->
+      <ion-slide>
+      <ion-content >
+        <div class="box">
+          <div ng-include src="'templates/effort-detail-tasks.html'"></div>
+        </div>
+        </ion-content>
+      </ion-slide>
+      <ion-slide>
+      <ion-content >
+        <div class="box"><div ng-include src="'templates/effort-detail-comments.html'"></div></div>
+        </ion-content>
+      </ion-slide>
+      <ion-slide>
+      <ion-content >
+        <div class="box"><div ng-include src="'templates/effort-detail-activity.html'"></div></div>
+        </ion-content>
+      </ion-slide>
+      <ion-slide>
+      <ion-content >
+        <div class="box"><div ng-include src="'templates/effort-detail-settings.html'"></div></div>
+        </ion-content>
+      </ion-slide>
+    </ion-slide-box>  
+  
 </ion-view>

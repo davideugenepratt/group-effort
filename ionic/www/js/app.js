@@ -8,9 +8,9 @@
 angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.factories'])
 
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
-    
-	//$rootScope.baseURL = "http://127.0.0.1/group-effort/wordpress/";  
-	$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";   
+     
+	$rootScope.baseURL = "http://127.0.0.1/group-effort/wordpress/";    
+	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";   
 	 
   	Popup.errorWindow(); // This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.	
 	
@@ -83,7 +83,33 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
             }
       }
     })
-	
+    
+    .state('tab.effort-detail', {
+      cache : false,
+      url: '/efforts/:effortId',
+      views: {
+        'tab-efforts': {
+          templateUrl: 'templates/effort-detail.html',
+          controller: 'EffortsDetailCtrl'
+        }
+      },
+      resolve: {
+        tasks : function( $stateParams, Efforts ) {
+          return Efforts.getEffortTasks( $stateParams.effortId );
+        },
+        effort : function( $stateParams, Efforts ) {
+          return Efforts.getEffort( $stateParams.effortId );
+        },
+        comments : function( $stateParams, Efforts ) {
+          return Efforts.getEffortComments( $stateParams.effortId );
+        },
+        friends : function( $stateParams, Friends ) {
+          return Friends.allFriends(  );
+        }
+      }
+    })	
+    
+	  /*
     .state('tab.effort-detail-tasks', {
       cache : false,
       url: '/efforts/:effortId/tasks',
@@ -208,7 +234,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
         }
 	  }
     })
-
+  */
   .state('tab.friends', {
 	  cache : false,
       url: '/friends',

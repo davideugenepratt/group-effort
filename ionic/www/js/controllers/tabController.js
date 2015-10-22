@@ -30,7 +30,7 @@ angular.module('GroupEffort.controllers')
 	
 	$scope.goToEffort = function( id ) {
 	
-		$state.go( 'tab.effort-detail-tasks' , { 'effortId' : id } );	
+		$state.go( 'tab.effort-detail' , { 'effortId' : id } );	
 	
 	};
 	

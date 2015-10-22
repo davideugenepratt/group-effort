@@ -4,35 +4,30 @@
   The FriendsCtrl pulls data from the Friends service (service.js)
   The Friends service returns an array of friend data
 -->
-<ion-view view-title="{{effort.title}} - Comments">
-  <ion-content >
-  <div ng-include src="'templates/effort-tabs.html'"></div>
-  <ion-list>
-    <div class="item item-button-right">
-        Add Comment
-        <button class="button button-positive" ng-click="data.commentFormShow = true;" ng-disabled="data.commentFormShow" >
-          <i class="icon ion-plus"></i>
-        </button>
-    </div>
-    <div ng-show="data.commentFormShow" >
-      <form name="newCommentForm" novalidate>
-        <ion-item class="item item-input-inset item-stacked-label ">
-            <div class="item-input-wrapper" >
-              <textarea placeholder="Comment" ng-model="data.comment" ng-keyup="autoExpand($event)" data-min-height="0" data-max-height="" required ></textarea>
-            </div>                    
-        </ion-item>
-        <ion-item class="button-bar">
-            <button class="button" ng-disabled="data.submitted" ng-click="data.comment = ''; data.commentFormShow = false;" >Cancel</button>        
-            <button class="button button-positive" ng-click="addEffortComment()" ng-disabled="data.submitted || newCommentForm.$invalid " >Ok</button>        
-        </ion-item>
-      </form>
-    </div>
-    <ion-item class="item item-text-wrap" ng-repeat="comment in comments">
-        <h2>{{comment.comment_author}}</h2>
-        <p>{{comment.comment_content}}</p>
-        <p class="time">{{comment.comment_date}}</p>
-    </ion-item>
-    
-  </ion-list>
-  </ion-content>
-</ion-view>
+<ion-list>
+  <div class="item item-button-right">
+      Add Comment
+      <button class="button button-positive" ng-click="data.commentFormShow = true;" ng-disabled="data.commentFormShow" >
+        <i class="icon ion-plus"></i>
+      </button>
+  </div>
+  <div ng-show="data.commentFormShow" >
+    <form name="newCommentForm" novalidate>
+      <ion-item class="item item-input-inset item-stacked-label ">
+          <div class="item-input-wrapper" >
+            <textarea placeholder="Comment" ng-model="data.comment" ng-keyup="autoExpand($event)" data-min-height="0" data-max-height="" required ></textarea>
+          </div>                    
+      </ion-item>
+      <ion-item class="button-bar">
+          <button class="button" ng-disabled="data.submitted" ng-click="data.comment = ''; data.commentFormShow = false;" >Cancel</button>        
+          <button class="button button-positive" ng-click="addEffortComment()" ng-disabled="data.submitted || newCommentForm.$invalid " >Ok</button>        
+      </ion-item>
+    </form>
+  </div>
+  <ion-item class="item item-text-wrap" ng-repeat="comment in comments">
+      <h2>{{comment.comment_author}}</h2>
+      <p>{{comment.comment_content}}</p>
+      <p class="time">{{comment.comment_date}}</p>
+  </ion-item>
+  
+</ion-list>
