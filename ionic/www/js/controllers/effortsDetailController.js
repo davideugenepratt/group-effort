@@ -2,7 +2,7 @@ angular.module('GroupEffort.controllers')
 
 .controller('EffortsDetailCtrl', function( $rootScope, $scope, $state, $ionicSlideBoxDelegate, Popup, Efforts, Friends , effort , friends , comments , tasks ) {
 	
-	$scope.current = "effort-detail";
+	$scope.currentSlide = 0;
   
   $scope.data = {};
   

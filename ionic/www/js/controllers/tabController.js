@@ -8,6 +8,8 @@ angular.module('GroupEffort.controllers')
 			
 	}
 	
+  
+  
 	$scope.goForward = function () {
         var selected = $ionicTabsDelegate.selectedIndex();
         if (selected != -1) {
@@ -30,7 +32,7 @@ angular.module('GroupEffort.controllers')
 	
 	$scope.goToEffort = function( id ) {
 	
-		$state.go( 'tab.effort-detail' , { 'effortId' : id } );	
+		$state.go( 'effort-detail' , { 'effortId' : id } );	
 	
 	};
 	

@@ -10,8 +10,10 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
      
 	$rootScope.baseURL = "http://127.0.0.1/group-effort/wordpress/";    
-	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";   
-	 
+	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";
+  $rootScope.$state = $state;
+  
+  
   	Popup.errorWindow(); // This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.	
 	
     $ionicPlatform.ready(function() {				  		
@@ -30,7 +32,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 
 .config( function( $stateProvider, $urlRouterProvider, $ionicConfigProvider ) {
     
-  $ionicConfigProvider.backButton.text( '' ).icon('ion-arrow-left-b').previousTitleText(false);				// Removes the back button text and icon. 
+  //$ionicConfigProvider.backButton.text( '' ).icon('ion-arrow-left-b').previousTitleText(false);				// Removes the back button text and icon. 
   
   $ionicConfigProvider.tabs.position( 'bottom' );															// Ensures the tabs stay on the bottom
     
@@ -84,15 +86,11 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       }
     })
     
-    .state('tab.effort-detail', {
+    .state('effort-detail', {
       cache : false,
       url: '/efforts/:effortId',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail.html',
-          controller: 'EffortsDetailCtrl'
-        }
-      },
+      templateUrl: 'templates/effort-detail.html',
+      controller: 'EffortsDetailCtrl',
       resolve: {
         tasks : function( $stateParams, Efforts ) {
           return Efforts.getEffortTasks( $stateParams.effortId );
@@ -109,132 +107,6 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       }
     })	
     
-	  /*
-    .state('tab.effort-detail-tasks', {
-      cache : false,
-      url: '/efforts/:effortId/tasks',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-tasks.html',
-          controller: 'EffortsDetailCtrl'
-        }
-      },
-      resolve: {
-        tasks : function( $stateParams, Efforts ) {
-          return Efforts.getEffortTasks( $stateParams.effortId );
-        },
-        effort : function( $stateParams, Efforts ) {
-          return Efforts.getEffort( $stateParams.effortId );
-        },
-        comments : function( $stateParams, Efforts ) {
-          return Efforts.getEffortComments( $stateParams.effortId );
-        },
-        friends : function( $stateParams, Friends ) {
-          return Friends.allFriends(  );
-        }
-      }
-    })	
-
-	.state('tab.effort-detail-comments', {
-		cache : false,
-      url: '/efforts/:effortId/comments',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-comments.html',
-          controller: 'EffortsDetailCtrl'
-        }
-      },
-	  resolve: {
-        tasks : function( $stateParams, Efforts ) {
-          return Efforts.getEffortTasks( $stateParams.effortId );
-        },
-        effort : function( $stateParams, Efforts ) {
-          return Efforts.getEffort( $stateParams.effortId );
-        },
-        comments : function( $stateParams, Efforts ) {
-          return Efforts.getEffortComments( $stateParams.effortId );
-        },
-        friends : function( $stateParams, Friends ) {
-          return Friends.allFriends(  );
-        }
-	  }
-    })
-	
-	.state('tab.effort-detail-activity', {
-		cache : false,
-      url: '/efforts/:effortId/activity',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-activity.html',
-          controller: 'EffortsDetailCtrl'
-        }
-      },
-	  resolve: {
-        tasks : function( $stateParams, Efforts ) {
-          return Efforts.getEffortTasks( $stateParams.effortId );
-        },
-        effort : function( $stateParams, Efforts ) {
-          return Efforts.getEffort( $stateParams.effortId );
-        },
-        comments : function( $stateParams, Efforts ) {
-          return Efforts.getEffortComments( $stateParams.effortId );
-        },
-        friends : function( $stateParams, Friends ) {
-          return Friends.allFriends(  );
-        }
-	  }
-    })
-	
-	.state('tab.effort-detail-contributors', {
-		cache : false,
-      url: '/efforts/:effortId/contributors',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-contributors.html',
-          controller: 'EffortsDetailCtrl'
-        }
-      },
-	  resolve: {
-        tasks : function( $stateParams, Efforts ) {
-          return Efforts.getEffortTasks( $stateParams.effortId );
-        },
-        effort : function( $stateParams, Efforts ) {
-          return Efforts.getEffort( $stateParams.effortId );
-        },
-        comments : function( $stateParams, Efforts ) {
-          return Efforts.getEffortComments( $stateParams.effortId );
-        },
-        friends : function( $stateParams, Friends ) {
-          return Friends.allFriends(  );
-        }
-	  }
-    })
-	
-    .state('tab.effort-detail-settings', {
-		cache : false,
-      url: '/efforts/:effortId/settings',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/effort-detail-settings.html',
-          controller: 'EffortsDetailCtrl'
-        }
-      },
-	    resolve: {
-        tasks : function( $stateParams, Efforts ) {
-          return Efforts.getEffortTasks( $stateParams.effortId );
-        },
-        effort : function( $stateParams, Efforts ) {
-          return Efforts.getEffort( $stateParams.effortId );
-        },
-        comments : function( $stateParams, Efforts ) {
-          return Efforts.getEffortComments( $stateParams.effortId );
-        },
-        friends : function( $stateParams, Friends ) {
-          return Friends.allFriends(  );
-        }
-	  }
-    })
-  */
   .state('tab.friends', {
 	  cache : false,
       url: '/friends',
