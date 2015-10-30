@@ -9,10 +9,9 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
      
-	$rootScope.baseURL = "http://127.0.0.1/group-effort/wordpress/";    
-	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";
+	//$rootScope.baseURL = "http://127.0.0.1/group-effort/wordpress/";    
+	$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";
   $rootScope.$state = $state;
-  
   
   	Popup.errorWindow(); // This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.	
 	
@@ -28,6 +27,7 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 		}		
 		
     });
+    
 })
 
 .config( function( $stateProvider, $urlRouterProvider, $ionicConfigProvider ) {
@@ -41,14 +41,20 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
   $stateProvider
 
     // setup an abstract state for the tabs directive
-    .state('tab', {
-      url: "/tab",
-      abstract: true,
-      controller: 'TabCtrl',
+    .state('tabs', {
+      cached: false,
+      url: "/tabs/:tabId",
+      controller: 'TabsCtrl',
       templateUrl: "templates/tabs.html",
       resolve: {		  
         loggedIn : function( $rootScope, Authenticate ) {								
           return Authenticate.authenticate();
+        },
+        efforts : function( $stateParams, Efforts ) {
+              return Efforts.allEfforts();
+        },
+        friends : function( $stateParams, Friends ) {
+              return Friends.allFriends();
         }
       }
     })
@@ -67,25 +73,6 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       controller: 'AuthenticateCtrl'
     })
   
-    .state('tab.efforts', {
-      cache : false,
-      url: '/efforts',
-      views: {
-        'tab-efforts': {
-          templateUrl: 'templates/tab-efforts.html',
-          controller: 'EffortsCtrl'
-        }
-      },
-      resolve: {
-            efforts : function( $stateParams, Efforts ) {
-                  return Efforts.allEfforts();
-            },
-              friends : function( $stateParams, Friends ) {
-                  return Friends.allFriends();
-            }
-      }
-    })
-    
     .state('effort-detail', {
       cache : false,
       url: '/efforts/:effortId',
@@ -105,87 +92,10 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
           return Friends.allFriends(  );
         }
       }
-    })	
-    
-  .state('tab.friends', {
-	  cache : false,
-      url: '/friends',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
-        }
-      },
-	  resolve: {
-            friends : function( Friends ) {
-                return Friends.allFriends();
-        	}
-	  }
-    })
-
-  .state('tab.account', {
-	cache : false,
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+    });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/efforts');
+  $urlRouterProvider.otherwise('/tabs/0');
 
-}).directive('focus', function($timeout, $parse) {
-	
-  return {
-	  
-    link: function(scope, element, attrs) {
-		
-      var model = $parse( attrs.focus );
-	  
-      scope.$watch( model, function(value) {
-		  
-        if(value === true) { 
-		
-          $timeout(function() {
-			  
-            element[0].focus(); 
-			
-          });
-		  
-        }
-		
-      });
-	  
-	  element.bind('blur', function() {
-         scope.$apply( model.assign(scope, false) );
-      });
-	  
-    }
-	
-  };
-  
-}).directive( 'autoexpand' , function( $window ) {
-
-  return {
-	  
-        link: function ( scope, element, attrs, ctrl) {
-			
-            element.bind('keyup', function( event ) {
-				
-				event.preventDefault();
-				
-				var textarea = element[0];
-				
-				textarea.style.height =  "0px";
-												
-				textarea.style.height = textarea.scrollHeight + "px";	// Sets the element's new height to it's scroll height.
-								
-            });
-        }
-	
-  };
 });
 

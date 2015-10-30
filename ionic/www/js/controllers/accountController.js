@@ -1,14 +1,8 @@
 angular.module('GroupEffort.controllers')
 
 .controller('AccountCtrl', function( $rootScope, $scope, $state, $ionicLoading, Popup, Authenticate, Account ) {
-    
-	$scope.changePicture = function() {
-	    		
-        Account.changePhoto();
-		
-    };
 	
-    $scope.updateProfile = function() {
+  $scope.updateProfile = function() {
 				
 		$scope.data.submitted = true;
 		

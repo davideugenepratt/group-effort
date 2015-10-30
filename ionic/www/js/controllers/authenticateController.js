@@ -30,7 +30,7 @@ angular.module('GroupEffort.controllers')
 				
 				$rootScope.loggedIn = true;								
 				
-				$state.go('tab.efforts');
+				$state.go( 'tabs' , { 'tabId' : 0 } );
 				
 				$rootScope.tabs = true;
 								

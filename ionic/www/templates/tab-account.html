@@ -1,36 +1,33 @@
-<ion-view view-title="Settings">
-  <ion-content  on-swipe-right="goBack()" on-swipe-left="goForward()">
-      <ion-list>
-      	<form name="profileForm" ng-submit="updateProfile()" novalidate >
-          <ion-item >
-            <h1>{{data.username}}</h1>
-          </ion-item> 
-          <ion-item class="item item-input-inset item-stacked-label ">
-                <label class="item-input-wrapper" >
-                <span class="input-label" ng-hide="true" >Email Address</span> 
-                  <i class="icon ion-email placeholder-icon account-input"></i>   
-                  <input name="email" type="text" ng-model="data.email" ng-change="updateProfile()" required >
-                </label>                    
-          </ion-item>
-          <ion-item class="item item-input-inset item-stacked-label ">
-                <label class="item-input-wrapper" >
-                <span class="input-label" ng-hide="true" >Email Address</span> 
-                  <i class="icon ion-android-call placeholder-icon account-input"></i>   
-                  <input name="phone" type="text" ng-model="data.phone" ng-change="updateProfile()" >
-                </label>                    
-          </ion-item>
-          <ion-item class="item item-input-inset item-stacked-label ">
-                <label class="item-input-wrapper" >
-                <span class="input-label" ng-hide="true" >Email Address</span> 
-                  <i class="icon ion-location placeholder-icon account-input"></i>   
-                  <input name="location" type="text" ng-model="data.location" ng-change="updateProfile()" >
-                </label>                    
-          </ion-item>
-      	</form>
-      	<form ng-submit="logout()"  class="item">
-        	<button class="button button-block button-assertive" type="submit">Log out</button>
-      	</form>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-view>
+<ion-list>
+  <form name="profileForm" ng-submit="updateProfile()" novalidate >
+    <ion-item >
+      <h1>{{data.self.username}}</h1>
+    </ion-item> 
+    <ion-item class="item item-input-inset item-stacked-label ">
+          <label class="item-input-wrapper" >
+          <span class="input-label" ng-hide="true" >Email Address</span> 
+            <i class="icon ion-email placeholder-icon account-input"></i>   
+            <input name="email" type="text" ng-model="data.self.email" ng-blur="updateProfile()" required >
+          </label>                    
+    </ion-item>
+    <ion-item class="item item-input-inset item-stacked-label ">
+          <label class="item-input-wrapper" >
+          <span class="input-label" ng-hide="true" >Email Address</span> 
+            <i class="icon ion-android-call placeholder-icon account-input"></i>   
+            <input name="phone" type="text" ng-model="data.self.phone" ng-blur="updateProfile()" >
+          </label>                    
+    </ion-item>
+    <ion-item class="item item-input-inset item-stacked-label ">
+          <label class="item-input-wrapper" >
+          <span class="input-label" ng-hide="true" >Email Address</span> 
+            <i class="icon ion-location placeholder-icon account-input"></i>   
+            <input name="location" type="text" ng-model="data.self.location" ng-blur="updateProfile()" >
+          </label>                    
+    </ion-item>
+  </form>
+  <form ng-submit="logout()"  class="item">
+    <button class="button button-block button-assertive" type="submit">Log out</button>
+  </form>
+</ion-item>
+</ion-list>
+

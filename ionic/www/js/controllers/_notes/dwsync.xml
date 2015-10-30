@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="accountController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130888977581342358" remote="130889230200000000" Dst="2" />
+<file name="accountController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130902211217969725" remote="130902502800000000" Dst="2" />
 <file name="authenticateController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130888977853417895" remote="130889230200000000" Dst="2" />
 <file name="controllers.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130888853068124803" remote="130889222400000000" Dst="2" />
 <file name="effortsController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130891527583953314" remote="130891937400000000" Dst="2" />
-<file name="effortsDetailController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130899103538231758" remote="130899357000000000" Dst="2" />
+<file name="effortsDetailController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130900011513824056" remote="130902502800000000" Dst="2" />
 <file name="friendsController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130888978199027536" remote="130889230200000000" Dst="2" />
-<file name="tabController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130898789153119225" remote="130899357000000000" Dst="2" />
+<file name="tabsController.js" server="ftp.davideugenepratt.com/public_html/group-effort/" local="130902249732458206" remote="130902502800000000" Dst="2" />
 </dwsync>

@@ -1,12 +1,11 @@
-<ion-view view-title="Efforts">
-  <ion-content  on-swipe-right="goBack()" on-swipe-left="goForward()">
+
     <ion-list>    
         <form name="newEffortForm" novalidate >
           <ion-item class="item item-input-inset">
             <div class="item-input-wrapper" >
-              <input type="text" placeholder="Title" ng-model="data.title" required >
+              <input type="text" placeholder="Title" ng-model="data.efforts.title" required >
             </div>
-            <button class="button button-positive" ng-click="addEffort()" ng-disabled="data.submitted || newEffortForm.$invalid ">
+            <button class="button button-positive" ng-click="addEffort()" ng-disabled="data.efforts.submitted || newEffortForm.$invalid ">
               <i class="icon ion-plus"></i>
             </button>                    
           </ion-item>                  
@@ -15,5 +14,4 @@
             	{{effort.title}}
         </ion-item>
     </ion-list>
-  </ion-content>
-</ion-view>
+

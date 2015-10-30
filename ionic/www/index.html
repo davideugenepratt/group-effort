@@ -21,12 +21,9 @@
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers/controllers.js"></script>    
-    <script src="js/controllers/accountController.js"></script>
     <script src="js/controllers/authenticateController.js"></script>
-    <script src="js/controllers/effortsController.js"></script>
     <script src="js/controllers/effortsDetailController.js"></script>
-    <script src="js/controllers/friendsController.js"></script>
-    <script src="js/controllers/tabController.js"></script>
+    <script src="js/controllers/tabsController.js"></script>
     
     <script src="js/factories/factories.js"></script>
     <script src="js/factories/accountFactory.js"></script>
@@ -49,7 +46,7 @@
       
       <ion-nav-buttons side="left" >
         <img src="logo.png" ng-hide="$state.current.name == 'effort-detail'" >
-        <button class="button-clear button- button icon-left back-button" ng-click="$state.go( 'tab.efforts' )" ng-show="$state.current.name == 'effort-detail'" >
+        <button class="button-clear button- button icon-left back-button" ng-click="$state.go( 'tabs' , { 'tabId' : 0 } )" ng-show="$state.current.name == 'effort-detail'" >
           <i class="ion-arrow-left-a"></i>  
         </button>
       </ion-nav-buttons>   
