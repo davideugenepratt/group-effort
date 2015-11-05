@@ -1,17 +1,13 @@
 angular.module('GroupEffort.controllers')
 
 .controller('AuthenticateCtrl', function( $rootScope, $scope, $state, Authenticate ) {
-	
-	$rootScope.tabs = false;
-		
+			
 	if ( $rootScope.loggedIn ) {
 		
-		$state.go( 'tab.efforts' );
-		
-		$rootScope.tabs = true;
-			
+		$state.go( 'tabs' , { 'tabId' : 0 } );
+					
 	}
-		
+	  	
 	$scope.data = {};
 	
 	$scope.data.submitted = false;
@@ -22,7 +18,7 @@ angular.module('GroupEffort.controllers')
 				
 		var username = $scope.data.username;
 		
-    	var password = $scope.data.password;
+    var password = $scope.data.password;
 				
 		Authenticate.login( username, password ).then( function(result ) {
 			

@@ -170,10 +170,12 @@ class Group_Effort_Ajax {
 		$task = $formData['task'];
 		
 		if ( $task == "login" ) {
-						
+			      			
 			$result = $this->$task( $formData );
 			
 			echo( json_encode( $result ) );
+      
+      if ( !$result["success"] ) { status_header( 511 ); }
 			
 			die();
 		
@@ -183,12 +185,16 @@ class Group_Effort_Ajax {
 			
 			echo( json_encode( $result ) );
 			
+      if ( !$result["success"] ) { status_header( 511 ); }
+      
 			die();
 		
 		}
 		
 		echo json_encode( array( "success" => false, "reason" => "The user is not logged in." ) );
 		
+    status_header( 511 );
+    
 		die();
 		
 	}
@@ -204,7 +210,7 @@ class Group_Effort_Ajax {
 		
 		$profile = get_user_meta( $current_user->ID , "profile", true );
 		
-		if ( !$profile != '' ) {
+		if ( $profile == '' ) {
 		
 			add_user_meta( $current_user->ID , "profile" , array( "location" => "" , "phone" => "" , "avatar" => plugins_url( 'group-effort/img/avatar.jpg' ) ), true );
 	
@@ -236,9 +242,7 @@ class Group_Effort_Ajax {
 		}
 		
 		$current_user = wp_get_current_user();
-		
-		var_dump( $current_user );
-		
+				
 		$profile = get_user_meta( $current_user->ID , "profile", true );
 		
 		if ( !$profile != '' ) {
@@ -470,16 +474,16 @@ class Group_Effort_Ajax {
 	
 		$this->check_contributor( $formData["id"] );
 		
-		$contributors =  (array) json_decode( stripslashes( $formData["contributors"] ) );
+		$contributors = (array) json_decode( stripslashes( $formData["contributors"] ) );
 				
 		$newList = array();
 		
 		$newContributors = array();
 		
 		if( count( $contributors ) != 0 ) {
-		
+		        
 			foreach ( $contributors as $key => $contributor ) {
-				
+				        
 				if ( $contributor->contributor == true ) {
 					
 					$newList[] = $key;

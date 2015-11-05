@@ -27,7 +27,8 @@ module.exports = function(grunt) {
 	'sass': {
 		'dist': {
 			'files': {
-				'wordpress/wp-content/themes/<%= pkg.dir %>/style.css' : 'wordpress/wp-content/themes/<%= pkg.dir %>/sass/style.scss'
+				'ionic/www/css/ionic.app.css' : 'ionic/scss/ionic.app.scss'
+        //'wordpress/wp-content/themes/<%= pkg.dir %>/style.css' : 'wordpress/wp-content/themes/<%= pkg.dir %>/sass/style.scss'
 			}
 		}
 	},   

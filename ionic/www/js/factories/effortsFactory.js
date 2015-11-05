@@ -15,7 +15,7 @@ angular.module('GroupEffort.factories')
   * @author David Eugene Pratt - david@davideugenepratt.com
 */
 
-.factory('Efforts', function( $rootScope, $http, $state ) {
+.factory('Efforts', function( $rootScope, $http, $state, remoteStore ) {
  	
 	/** 
 	* @desc determines whether or not the current user is logged in or not.
@@ -25,7 +25,9 @@ angular.module('GroupEffort.factories')
 	
  	var allEfforts = function() {	
 	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=all_efforts" )
+    var params = { "action" : "group_effort" , "task" : "all_efforts" };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 		
 		.then( function( response ) {
 			
@@ -52,10 +54,14 @@ angular.module('GroupEffort.factories')
 	
 	var addEffort = function( title , contributors ) {	
 		
-		return $http.get( $rootScope.baseURL + 	"wp-admin/admin-ajax.php?action=group_effort&task=add_effort" + 
-												"&title=" + encodeURIComponent( title ) +
-												"&contributors=" + encodeURIComponent( JSON.stringify( contributors ) ) 
-												)
+    var params = {
+      "action" : "group_effort",
+      "task" : "add_effort", 
+      "title" : encodeURIComponent( title ),
+      "contributors" : encodeURIComponent( JSON.stringify( contributors ) ) 
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 						
@@ -80,11 +86,16 @@ angular.module('GroupEffort.factories')
 	*/	
 	
 	var leaveEffort = function( id ) {	
-	
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=leave_effort&" +
-												"id=" + encodeURIComponent( id ) )
-												
-		.then( function( response ) {
+	  
+    var params = {
+      "action" : "group_effort",
+      "task" : "leave_effort",
+			"id" : encodeURIComponent( id )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )												
+		
+    .then( function( response ) {
 			
 			return response.data;
 			
@@ -108,8 +119,13 @@ angular.module('GroupEffort.factories')
 	
 	var getEffort = function( id ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_effort&" +
-												"id="+id )
+    var params = {
+      "action" : "group_effort",
+      "task" : "get_effort",
+			"id" : encodeURIComponent( id )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 			
@@ -148,8 +164,13 @@ angular.module('GroupEffort.factories')
 	
 	var getEffortTasks = function( id ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_effort_tasks&" +
-												"id=" + encodeURIComponent( id ) )
+    var params = {
+      "action" : "group_effort",
+      "task" : "get_effort_tasks",
+			"id" : encodeURIComponent( id )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 			
@@ -176,9 +197,14 @@ angular.module('GroupEffort.factories')
 	
 	var addEffortTask = function( id , task ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=add_effort_task" +
-												"&id=" + encodeURIComponent( id ) +
-												"&effort_task=" + encodeURIComponent( JSON.stringify( task ) ) )
+    var params = {
+      "action" : "group_effort",
+      "task" : "add_effort_task",
+			"id" : encodeURIComponent( id ),
+			"effort_task" : encodeURIComponent( JSON.stringify( task ) )
+    };
+    
+		return $http.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 			            
@@ -204,11 +230,15 @@ angular.module('GroupEffort.factories')
 	*/
 	
 	var dibs = function( id , task ) {
-
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=dibs" +
-												"&id=" + encodeURIComponent( id ) +
-												"&effort_task=" + encodeURIComponent( task ) 
-												)
+    
+    var params = {
+      "action" : "group_effort",
+      "task" : "dibs",
+			"id" : encodeURIComponent( id ),
+			"effort_task" : encodeURIComponent( task )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 			
@@ -308,11 +338,15 @@ angular.module('GroupEffort.factories')
 	
 	var changeTaskStatus = function( id, task , finished ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=change_task_status&" +
-												"id=" + encodeURIComponent( id )  +
-												"&effort_task=" + encodeURIComponent( task ) +
-												"&finished=" + encodeURIComponent( finished )
-												)
+    var params = {
+      "action" : "group_effort",
+      "task" : "change_task_status",
+			"id" : encodeURIComponent( id ),
+			"effort_task" : encodeURIComponent( task ),
+			"finished" : encodeURIComponent( finished )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 			
@@ -340,10 +374,14 @@ angular.module('GroupEffort.factories')
     
     var deleteTask = function( id, guid ) {
         
-        return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=delete_task&" +
-                                                "id=" + encodeURIComponent( id )  +
-                                                "&effort_task=" + encodeURIComponent( guid )
-                                                )
+        var params = {
+          "action" : "group_effort",
+          "task" : "delete_task",
+          "id" : encodeURIComponent( id ),
+          "effort_task" : encodeURIComponent( guid )
+        };
+        
+        return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
                                                 
         .then( function( response ) {
             
@@ -372,12 +410,16 @@ angular.module('GroupEffort.factories')
     var changeTask = function( id, task , title ) {
         
         if ( title != undefined ) {
-        
-            return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=change_task&" +
-                                                "id=" + encodeURIComponent( id )  +
-                                                "&effort_task=" + encodeURIComponent( task ) +
-                                                "&title=" + encodeURIComponent( title )
-                                                )
+            
+            var params = {
+              "action" : "group_effort",
+              "task" : "change_task",
+              "id" : encodeURIComponent( id ),
+              "effort_task" : encodeURIComponent( task ),
+              "title" : encodeURIComponent( title )
+            };
+            
+            return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
                                                 
             .then( function( response ) {
             
@@ -405,9 +447,13 @@ angular.module('GroupEffort.factories')
 		
 	var getEffortComments = function( id ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_effort_comments&" +
-												"id=" + encodeURIComponent( id )
-												)
+    var params = {
+      "action" : "group_effort",
+      "task" : "get_effort_comments",
+		  "id" : encodeURIComponent( id )
+    }
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 							
@@ -433,10 +479,15 @@ angular.module('GroupEffort.factories')
 	*/	
 	
 	var addEffortComment = function( id , comment ) {
-
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=add_effort_comment" +
-												"&id=" + encodeURIComponent( id ) +
-												"&comment=" + encodeURIComponent( comment ) )
+    
+    var params = {
+      "action" : "group_effort",
+      "task" : "add_effort_comment",
+			"id" : encodeURIComponent( id ),
+			"comment" : encodeURIComponent( comment )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 			
@@ -465,10 +516,15 @@ angular.module('GroupEffort.factories')
 		
 		data = JSON.stringify( data );
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=edit_contributors"+
-												"&id="+ encodeURIComponent( id ) +
-												"&contributors="+ encodeURIComponent( data )
-												 )	
+    var params = {
+      "action" : "group_effort",
+      "task" : "edit_contributors",
+      "id" : encodeURIComponent( id ),
+      "contributors" : encodeURIComponent( data )
+    };
+      
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )	
 												 	
 		.then( function( response ) {
 						
@@ -488,20 +544,19 @@ angular.module('GroupEffort.factories')
 	
   return {
   	addEffort : addEffort,
-	leaveEffort : leaveEffort,
-	getEffort : getEffort,
-	allEfforts : allEfforts,
-	editContributors : editContributors,
-	getEffortTasks : getEffortTasks,
-	addEffortTask : addEffortTask,
-	assignTasks : assignTasks,
-	dibs : dibs,
-	changeTaskStatus : changeTaskStatus,
-  deleteTask : deleteTask,
-  changeTask : changeTask,
-	getEffortComments : getEffortComments,
-	addEffortComment : addEffortComment
-
+    leaveEffort : leaveEffort,
+    getEffort : getEffort,
+    allEfforts : allEfforts,
+    editContributors : editContributors,
+    getEffortTasks : getEffortTasks,
+    addEffortTask : addEffortTask,
+    assignTasks : assignTasks,
+    dibs : dibs,
+    changeTaskStatus : changeTaskStatus,
+    deleteTask : deleteTask,
+    changeTask : changeTask,
+    getEffortComments : getEffortComments,
+    addEffortComment : addEffortComment
   }
   
 });

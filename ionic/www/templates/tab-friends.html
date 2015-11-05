@@ -1,4 +1,4 @@
-<ion-item class="item item-input-inset">
+<ion-item class="item item-input-inset search-field">
         <label class="item-input-wrapper">
           <input type="text" placeholder="Search by Email Address or Username" ng-model="newFriendData.searchTerm" ng-change="searchUsers()" >
         </label>        
@@ -19,7 +19,7 @@
   </ion-item>
   <ion-item class="item item-button-right"  ng-repeat="friend in friends.requestAccepted track by $index" ng-click="friend.editable = !friend.editable;" > <!-- ng-click="goToFriend( friend.ID )" -->
         <h2>{{friend.username}}</h2>
-        <button class="button button-positive button-medium remove-user-button" ng-show="friend.editable"  ng-click="removeFriend( $index , friend.email ); friend.editable = true;" ng-disabled="data.submitted"  ><i class="icon ion-minus"></i></button>
+        <button class="button button-right button-icon button-clear"><i class="ion-more"></i></button>
   </ion-item>
 </ion-list>
 

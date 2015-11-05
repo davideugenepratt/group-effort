@@ -19,9 +19,9 @@
           </ion-list>
       </form>
   </div>
-  <div class="item item-icon-left item-icon-right task item-text-wrap"  ng-repeat="task in data.tasks track by $index" >
+  <div class="item item-icon-left item-icon-right task item-text-wrap item-button-right"  ng-class="{ 'finished' : task.finished && !task.editable }" ng-repeat="task in data.tasks track by $index" >
     <div class="icon" ng-hide="task.editable">
-        <button class="button button-light button-small" ng-click="changeStatus( effort.id , $index , task.guid );" >
+        <button class="button button-light button-small" ng-disabled="task.submitted" ng-click="changeStatus( effort.id , $index , task.guid );" >
           <i class="ion-close" ng-show="task.finished" ></i>
         </button>                
     </div>
@@ -30,13 +30,18 @@
       </button>                
     </div>
     <input type="text" ng-model="task.title" ng-focus="task.editable = true;" ng-blur="task.editable = false; changeTask(  effort.id , $index , task.guid )" required >
-    <div class="item-toggle" >
+    
+    <!--
+    <button class="button button-right button-icon button-clear"><i class="ion-more"></i></button>
+    <div class="item-toggle" >            
       <label class="toggle toggle-calm task" ng-show="task.available && !task.finished" >          
          <input type="checkbox" ng-model="task.dibs" ng-checked="task.dibs" ng-click="dibs( effort.id , task.guid )">               
          <div class="track">
            <div class="handle"></div>
          </div>
-      </label>     
+      </label>
     </div>
+    -->     
+    
   </div>   
 </ion-list>

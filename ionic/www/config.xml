@@ -31,4 +31,7 @@
   <gap:config-file platform="android" parent="/manifest">
     <application android:theme="@android:style/Theme.Light.NoTitleBar"></application>
   </gap:config-file>  
+  <widget ...>
+    <preference name="BackupWebStorage" value="none" />
+  </widget>
 </widget>

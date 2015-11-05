@@ -8,6 +8,8 @@ angular.module('GroupEffort.controllers')
   
   $scope.data.tasks = {};
 	
+  $scope.data.contributors = {};
+  
 	effort.activity.reverse();
 	
   $scope.slideTo = function( index ) {
@@ -25,8 +27,8 @@ angular.module('GroupEffort.controllers')
 				if ( confirm ) {
 					
 					Efforts.leaveEffort( id ).then( function( result ) {
-																		
-						$state.go( 'tab.efforts' );
+						            												
+						$state.go( 'tabs' , { 'tabId' : 0 } );
 						
 					});
 					
@@ -38,7 +40,7 @@ angular.module('GroupEffort.controllers')
 			
 			Efforts.leaveEffort( id ).then( function( result ) {
 				
-				$state.go( 'tab.efforts' );	
+				$state.go( 'tabs' , { 'tabId' : 0 } );
 									
 			});	
 			
@@ -47,8 +49,8 @@ angular.module('GroupEffort.controllers')
 	}	
 		
 	$scope.editFriends = function( id ) {
-				
-		Efforts.editContributors( id , $scope.data ).then( function( response ) {
+		    		
+		Efforts.editContributors( id , $scope.data.contributors ).then( function( response ) {
 						
 		});
 		
@@ -63,17 +65,18 @@ angular.module('GroupEffort.controllers')
 		
 		}
 		
-		for ( var a = 0; a < friends.length; a++ ) {
-			
-			if ( friends[a].ID == effort.contributors[i].id ) {
+    
+		for ( var a = 0; a < friends.requestAccepted.length; a++ ) {
+			            
+			if ( friends.requestAccepted[a].ID == effort.contributors[i].id ) {
 				
-				$scope.data[effort.contributors[i].username] = {};
+				$scope.data.contributors[effort.contributors[i].username] = {};
 				
-				$scope.data[effort.contributors[i].username].contributor = true;
-				
+				$scope.data.contributors[effort.contributors[i].username].contributor = true;
+				        
 				if ( effort.contributors[i].role == "admin" ) {
 				
-					$scope.data[effort.contributors[i].username].admin = true;
+					$scope.data.contributors[effort.contributors[i].username].admin = true;
 				
 				} 
 				
@@ -119,7 +122,7 @@ angular.module('GroupEffort.controllers')
 		
 		$scope.data.submitted = true;
         
-        $scope.data.commentFormShow = false;
+    $scope.data.commentFormShow = false;
         		
 		Efforts.addEffortComment( effort.id , $scope.data.comment ).then( function( response ) {
 			            			
@@ -203,6 +206,8 @@ angular.module('GroupEffort.controllers')
   }			
 
   $scope.changeStatus = function( effortId , index, guid ) {
+    
+    $scope.data.tasks[ index ]['submitted'] = true;
           
     var finished = !$scope.data.tasks[ index ]['finished'];
     
@@ -219,6 +224,8 @@ angular.module('GroupEffort.controllers')
         $scope.tasks[ index ] = response.data;
       
       }
+      
+      $scope.data.tasks[ index ]['submitted'] = false;
             
     });
       
@@ -261,13 +268,11 @@ angular.module('GroupEffort.controllers')
 	$scope.data.tasks = Efforts.assignTasks( tasks , effort );
 	    		
 	$scope.tasks = tasks;
-  
-  console.info( tasks );
-	  
+  	  
   $scope.effort = effort;		  
   
 	$scope.friends = friends;
-    
+      
   $scope.comments = comments.data;
   		
 });

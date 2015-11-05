@@ -1,27 +1,63 @@
-/* Empty. Add your own CSS if you like */
-
-/*
-body {
-	background-image:url('../img/bg.png');
-	background-size:cover;
-	background-position:center center;
-	background-repeat:no-repeat;
-}
-*/
-
 *{-webkit-backface-visibility: hidden;}
+
+body {
+	color:#242D3C;
+}
+
+body,
+.scroll-content,
+.item,
+.item input {
+ background:#DDE7E8;
+}
+
+.view {
+  background-color:transparent;
+}
 
 /* .keyboard-open .tabs{ display:none; } */
 .keyboard-open .tabs{ visibility:hidden; }  
 .keyboard-open .has-tabs{ bottom:0; }
  
- .hidden-for-now {
-	 display:none;
- }
- 
- .backdrop {
-	 background:rgba( 255, 255, 255, .5);
- }
+.hidden-for-now {
+ display:none;
+}
+
+.main-header-bar .title {
+  overflow:visible; 
+  text-align:center;
+}
+
+.main-header-bar .title .header-logo-cont {
+  display:inline-block;
+  height:60px;
+  width:60px;
+  border:5px solid #455265;
+  border-radius:50%;
+  background:#455265;
+  padding:0px;
+  position:fixed;
+  top:0px;
+  left:50%;
+  margin-left:-35px;
+}
+
+.main-header-bar .title .header-logo-cont .inner {
+    display:block;
+    height:100%;
+    width:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    border:2px solid #AAA;
+    border-radius:50%;
+    padding:6px 0px;
+    text-align:center;
+}
+
+.backdrop {
+ background:rgba( 255, 255, 255, .5);
+}
  
 .loading-container .loading {
 	background:transparent;
@@ -38,7 +74,8 @@ body {
 
 .back-button i {
   padding:0 10px;
-  font-size:32px;
+  font-size:22px;
+  color:#DDE7E8;
 }
  
 .align-center {
@@ -62,12 +99,35 @@ p.time {
 	padding:0 10px;
 }
 
+
+
 .effort-list-item {
 	padding:0;
 }
 
-.bar-subheader.bar {
+.bar-subheader {
+  height:34px;
   padding:0;
+}
+
+.has-subheader {
+  top:78px;
+}
+
+.bar-subheader .button-bar > .button:first-child,
+.bar-subheader .button-bar > .button:last-child {
+  border-radius:0;
+  
+}
+
+.bar-subheader .button-bar > .button {
+  height:34px;
+  line-height:34px;
+}
+
+.bar-subheader .button-bar > .button .icon:before {
+  font-size:14px;
+  line-height:28px;
 }
 
 .slider{
@@ -203,10 +263,15 @@ label.newComment {
 	margin-top:2px;
 }
 
+.item-input-inset .item-input-wrapper {
+  background:#FFF;
+}
+
 .item-input-inset .item-input-wrapper input {
 	font-size:18px;
 	height:auto;
 	padding:15px;
+  background:#FFF;
 }
 
 .item-input-inset .item-input-wrapper textarea {
@@ -222,4 +287,29 @@ label.newComment {
 .item-toggle .toggle {
   top:17px;
 }
+
+.checkbox-icon:before  {
+  height:28px;
+  width:28px;
+  border-radius:50%;
+}
+
+.task input {
+  padding:0 20px;
+}
+
+.task .toggle .track,
+.task .toggle.toggle-calm input:checked + .track {
+  background:#56C6DA;
+}
 	
+.item.add-effort,
+.item.search-field {
+  padding-top:20px;
+  padding-bottom:20px;
+}
+
+.task.finished input {
+  color:#666;
+  text-decoration:line-through;
+}

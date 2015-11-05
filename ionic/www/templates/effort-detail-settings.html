@@ -8,7 +8,7 @@
   <ion-checkbox class="item item-checkbox-right" ng-checked="true" ng-click="deleteEffort( effort.id );" >
       Me
   </ion-checkbox>
-  <ion-checkbox class="item item-checkbox-right" ng-repeat="friend in friends.requestAccepted track by $index"  ng-checked="data[friend.username].contributor" ng-model="data[friend.username].contributor"  ng-click="editFriends( effort.id )" >
+  <ion-checkbox class="item item-checkbox-right" ng-repeat="friend in friends.requestAccepted track by $index"  ng-checked="data.contributors[friend.username].contributor" ng-model="data.contributors[friend.username].contributor"  ng-click="editFriends( effort.id )" >
       {{friend.username}}
   </ion-checkbox>
 </ion-list>

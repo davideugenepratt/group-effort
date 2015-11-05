@@ -1,7 +1,7 @@
 angular.module('GroupEffort.controllers')
 
 .controller('TabsCtrl', function( $rootScope, $scope, $state, $stateParams, $location, $ionicPopup, $ionicLoading, $ionicSlideBoxDelegate, Authenticate, Account, Efforts, Friends, loggedIn, efforts, friends ) {		
-	
+	  
 	if ( !loggedIn ) {
 		
 		$state.go( 'login' );
@@ -13,13 +13,9 @@ angular.module('GroupEffort.controllers')
   $scope.slideTo = function( index ) {
         
     $ionicSlideBoxDelegate.slide( index );
-    
-    // console.info( $location.path( "/tabs/"+index ) );
-            
+                
     $scope.newFriendData = {};
-    
-    //console.info( $stateParams.tabId );
-  
+      
   }    
   
 	// This will show a loading screen while a request is made
@@ -46,6 +42,8 @@ angular.module('GroupEffort.controllers')
   
   $scope.efforts = efforts;
 	
+  
+  
   $scope.friends = friends;      	
   
   $scope.newFriendData = {};
@@ -66,7 +64,11 @@ angular.module('GroupEffort.controllers')
 		    
 		$scope.data.efforts.submitted = true;
     
+    
+    
     $scope.efforts.push( $scope.data.efforts );
+    
+    console.info( $scope.efforts );
     
     var title = $scope.data.efforts.title;
     

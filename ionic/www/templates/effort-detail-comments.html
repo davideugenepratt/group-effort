@@ -5,22 +5,22 @@
   The Friends service returns an array of friend data
 -->
 <ion-list>
-  <div class="item item-button-right">
+  <div class="item item-button-right" ng-hide="true" >
       Add Comment
       <button class="button button-positive" ng-click="data.commentFormShow = true;" ng-disabled="data.commentFormShow" >
         <i class="icon ion-plus"></i>
       </button>
   </div>
-  <div ng-show="data.commentFormShow" >
+  <div >
     <form name="newCommentForm" novalidate>
       <ion-item class="item item-input-inset item-stacked-label ">
-          <div class="item-input-wrapper" >
-            <textarea placeholder="Comment" ng-model="data.comment" ng-keyup="autoExpand($event)" data-min-height="0" data-max-height="" required ></textarea>
-          </div>                    
-      </ion-item>
-      <ion-item class="button-bar">
-          <button class="button" ng-disabled="data.submitted" ng-click="data.comment = ''; data.commentFormShow = false;" >Cancel</button>        
-          <button class="button button-positive" ng-click="addEffortComment()" ng-disabled="data.submitted || newCommentForm.$invalid " >Ok</button>        
+        <div class="item-input-wrapper" >
+          <textarea placeholder="Comment" ng-model="data.comment" ng-keyup="autoExpand($event)" ng-change="autoExpand($event)" data-min-height="0" data-max-height="" required ></textarea>
+        </div>                    
+        <div class="button-bar">
+            <button class="button" ng-disabled="data.submitted" ng-click="data.comment = ''; data.commentFormShow = false;" >Cancel</button>        
+            <button class="button button-positive" ng-click="addEffortComment()" ng-disabled="data.submitted || newCommentForm.$invalid " >Ok</button>        
+        </div>
       </ion-item>
     </form>
   </div>

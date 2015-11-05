@@ -1,7 +1,7 @@
 
     <ion-list>    
         <form name="newEffortForm" novalidate >
-          <ion-item class="item item-input-inset">
+          <ion-item class="item item-input-inset add-effort">
             <div class="item-input-wrapper" >
               <input type="text" placeholder="Title" ng-model="data.efforts.title" required >
             </div>
@@ -10,8 +10,8 @@
             </button>                    
           </ion-item>                  
         </form>
-        <ion-item class="item item-text-wrap" ng-repeat="effort in efforts" ng-click="goToEffort( effort.ID )" ng-hide="data.newForm" >
-            	{{effort.title}}
+        <ion-item class="item item-text-wrap item-button-left" ng-repeat="effort in efforts" ng-click="goToEffort( effort.ID )" ng-hide="data.newForm" >
+            	<button class="button button-right button-icon button-clear"><i class="ion-navicon-round"></i></button>{{effort.title}}
         </ion-item>
     </ion-list>
 

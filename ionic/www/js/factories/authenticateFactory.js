@@ -8,7 +8,7 @@ angular.module('GroupEffort.factories')
   * @author David Eugene Pratt - david@davideugenepratt.com
 */  
 
-.factory( 'Authenticate' , function( $rootScope , $http, $location, $state ) {		
+.factory( 'Authenticate' , function( $rootScope , $http, $location, $state , remoteStore ) {		
 	
 	/** 
 	  * @desc determines whether or not the current user is logged in or not.
@@ -17,11 +17,13 @@ angular.module('GroupEffort.factories')
 	*/	
 	
 	var authenticate = function() {
-				
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=authenticate" )
+		    
+    var params = { "action" : "group_effort" , "task" : "authenticate" };
+    		
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 		
 		.then( function( response ) {
-			
+
 			if ( false == response.data.success ) {
 				
 				if ( !$rootScope.loggedIn ) {
@@ -64,7 +66,7 @@ angular.module('GroupEffort.factories')
 			
 			return false;	
 			
-		});						
+		});        					
 							  
 	};
 						
@@ -77,7 +79,14 @@ angular.module('GroupEffort.factories')
 	
 	var login = function( username , password ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=login&username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password) )
+    var params = {
+      "action" : "group_effort",
+      "task" : "login",
+      "username" : encodeURIComponent(username),
+      "password" : encodeURIComponent(password)
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 		
 		.then( function( response ) {
 									
@@ -118,8 +127,10 @@ angular.module('GroupEffort.factories')
 	*/
 	
 	var logout = function() {
-				
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=logout" )
+		
+    var params = { "action" : "group_effort" , "task" : "logout" };
+    		
+		return $http.get( "wp-admin/admin-ajax.php" , params , {} )
 		
 		.then( function( response ) {
 			
@@ -150,11 +161,15 @@ angular.module('GroupEffort.factories')
 	
 	var register = function( email, username , password ) {
 		
-		return $http.get( 	$rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=register" +
-						"&email=" + encodeURIComponent(email) + 
-						"&username=" + encodeURIComponent(username) + 
-						"&password=" + encodeURIComponent(password) 						
-						)
+    var params = {
+      "action" : "group_effort",
+      "task" : "register",
+      "email" : encodeURIComponent(email),
+      "username" : encodeURIComponent(username),
+      "password" : encodeURIComponent(password) 	
+    };
+    
+		return $http.get( "wp-admin/admin-ajax.php" , params , {}	)
 						
 			.then( function( response ) {
 								

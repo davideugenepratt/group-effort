@@ -5,12 +5,12 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.factories'])
+angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.factories' , 'remoteStore.service' ])
 
 .run( function ( $ionicPlatform, $rootScope, $location, $state, Authenticate, Popup ) {
      
-	//$rootScope.baseURL = "http://127.0.0.1/group-effort/wordpress/";    
-	$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";
+	$rootScope.baseURL = "http://127.0.0.1/group-effort/wordpress/";    
+	//$rootScope.baseURL = "http://www.davideugenepratt.com/group-effort/wordpress/";
   $rootScope.$state = $state;
   
   	Popup.errorWindow(); // This calls the listener on $rootScope.error so that when it is given a value it opens an error dialogue.	
@@ -42,19 +42,19 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
 
     // setup an abstract state for the tabs directive
     .state('tabs', {
-      cached: false,
+      cache: false,
       url: "/tabs/:tabId",
       controller: 'TabsCtrl',
       templateUrl: "templates/tabs.html",
       resolve: {		  
-        loggedIn : function( $rootScope, Authenticate ) {								
+        loggedIn : function( Authenticate ) {								
           return Authenticate.authenticate();
         },
-        efforts : function( $stateParams, Efforts ) {
-              return Efforts.allEfforts();
+        efforts : function( Efforts ) {
+          return Efforts.allEfforts();
         },
-        friends : function( $stateParams, Friends ) {
-              return Friends.allFriends();
+        friends : function( Friends ) {
+          return Friends.allFriends();
         }
       }
     })
@@ -79,6 +79,9 @@ angular.module('GroupEffort', ['ionic', 'GroupEffort.controllers', 'GroupEffort.
       templateUrl: 'templates/effort-detail.html',
       controller: 'EffortsDetailCtrl',
       resolve: {
+        loggedIn : function( Authenticate ) {								
+          return Authenticate.authenticate();
+        },
         tasks : function( $stateParams, Efforts ) {
           return Efforts.getEffortTasks( $stateParams.effortId );
         },

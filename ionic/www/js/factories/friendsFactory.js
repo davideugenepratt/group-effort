@@ -7,7 +7,7 @@ angular.module('GroupEffort.factories')
   * @author David Eugene Pratt - david@davideugenepratt.com
 */  
 
-.factory('Friends', function( $rootScope, $http, $state, Popup ) {
+.factory('Friends', function( $rootScope, $http, $state, Popup, remoteStore ) {
 	
   /** 
   * @desc Sends a friend request to the specified email address
@@ -17,8 +17,13 @@ angular.module('GroupEffort.factories')
 	
   var addFriend = function( email ) {
 	  
-	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=add_friend&" +
-												"email=" + encodeURIComponent( email ) )
+    var params = {
+      "action" : "group_effort",
+      "task" : "add_friend",
+			"email" : encodeURIComponent( email )
+    };
+    
+	  return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 												
 		.then( function( response ) {
 			
@@ -43,8 +48,13 @@ angular.module('GroupEffort.factories')
   
   var acceptRequest = function( email ) {
 	  
-	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=accept_request&" +
-													"email=" + encodeURIComponent( email ) )
+    var params = {
+      "action" : "group_effort",
+      "task" : "accept_request",
+      "email" : encodeURIComponent( email )
+    };
+    
+	  return $http.get( "wp-admin/admin-ajax.php" , params , {} )
 													
 		.then( function( response ) {
 			
@@ -70,8 +80,13 @@ angular.module('GroupEffort.factories')
   
   var denyRequest = function( email ) {
 	  
-	  return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=remove_friend&" +
-													"email=" + encodeURIComponent( email ) )
+    var params = {
+      "action" : "group_effort",
+      "task" : "remove_friend",
+			"email" : encodeURIComponent( email )
+    };
+    
+	  return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 													
 		.then( function( response ) {
 			
@@ -138,7 +153,12 @@ angular.module('GroupEffort.factories')
       
     }
     
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=all_friends" )
+    var params = {
+      "action" : "group_effort",
+      "task" : "all_friends"
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 		
 		.then( function( response ) {
 			
@@ -158,9 +178,13 @@ angular.module('GroupEffort.factories')
 	
 	var getFriend = function( id ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=get_friend&" + 
-											   "friendId=" + encodeURIComponent( id )
-												 )
+    var params = {
+      "action" : "group_effort",
+      "task" : "get_friend", 
+	    "friendId" : encodeURIComponent( id )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 		
 		.then( function( response ) {
 			
@@ -180,9 +204,13 @@ angular.module('GroupEffort.factories')
 	
 	var searchUsers = function( searchTerm ) {
 		
-		return $http.get( $rootScope.baseURL + "wp-admin/admin-ajax.php?action=group_effort&task=search_users&" + 
-											   "query=" + encodeURIComponent( searchTerm )
-												 )
+    var params = {
+      "action" : "group_effort",
+      "task" : "search_users", 
+	    "query" : encodeURIComponent( searchTerm )
+    };
+    
+		return remoteStore.get( "wp-admin/admin-ajax.php" , params , {} )
 		
 		.then( function( response ) {
 			
